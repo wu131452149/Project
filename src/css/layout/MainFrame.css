@@ -1,0 +1,18 @@
+.mainFrame .el-header {
+    background-color: #20a0ff;
+    color: #333;
+    text-align: center;
+    line-height: 60px;
+  }
+  .mainFrame .el-aside {
+    background-color: #E9EEF3;
+    color: #333;
+    text-align: center;
+    
+  }
+  .mainFrame .el-main {
+    background-color: #FFFFFF;
+    color: #333;
+  }
+  
+

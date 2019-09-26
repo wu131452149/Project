@@ -1,0 +1,236 @@
+/*聊天个人配置页 —— tab*/
+.chat-personal-config .el-tabs__content{
+  position:unset;
+}
+.chat-personal-config>.el-tabs>.el-tabs__header .el-tabs__nav-wrap .el-tabs__active-bar{
+  width: 220px !important;
+}
+#tab-chat-agent-basic-config,#tab-personal-reply-config,#tab-personal-shortcut-key{/*个人基础配置额tab页间距*/
+  padding:0 90px;
+}
+/*聊天个人配置页 —— 基础配置*/
+.chat-agent-config label {
+  text-align: left;
+  color: #a1a1a1;
+}
+/*聊天个人配置页--个人快捷回复*/
+.personal-replay-left-item .el-menu-item{
+  height:45px;
+  line-height:45px;
+}
+.personal-replay-left-item .is-active {
+  background-color: #d1dbe5;
+}
+.chat-personal-replay.is-opened>.el-submenu__title .el-submenu__icon-arrow{
+  transform: rotate(0deg);
+}
+.chat-personal-replay .el-menu-item.excessEllipsis:hover {
+  color: #20a0ff;
+}
+.send-reply:hover{
+  background-repeat: no-repeat;
+  padding-right: 24px;
+  margin-left: 25px;
+  background-size: 22px;
+  display: inline;
+}
+/*公共快捷回复*/
+.reply-search-btn{
+  padding:10px 15px;
+  white-space: nowrap;
+}
+.reply-search-btn .search-input input, .reply-search-btn button{
+  border-radius:5px !important;
+}
+.chat-model-personal-replay.is-opened>.el-submenu__title .el-submenu__icon-arrow{
+  transform: rotate(0deg);
+}
+.chat-model-personal-replay .el-menu .el-menu-item:hover{
+  background: #f1f3f5;
+}
+.chat-model-personal-replay .el-menu-item.excessEllipsis:hover {
+  color: #20a0ff;
+}
+
+.send-reply:hover{
+  padding-right: 24px;
+  margin-left: 25px;
+  background-size: 22px;
+  display: inline;
+}
+/*会话管理 —— 消息搜索输入框*/
+.all-history-dialog .input-with-select .el-input__inner{
+  text-indent:14px;
+}
+.all-history-dialog .input-with-select .el-input__icon{
+  color:#c0c4cc;
+  line-height: 39px;
+  width:18px;
+}
+
+/*历史会话/会话管理 —— 历史会话右拉，聊天会话tab*/
+.chat-record-page .full-width{
+  width:100% !important;
+}
+.chat-record-page img{
+  max-width:100%;
+}
+.chat-record-page .full-cus-height{
+  position: unset !important;
+  min-height: 300px;
+}
+.chat-record-page .message-list-pane .message-list-pane-info{
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 132px;
+}
+.chat-record-page .message-list-pane .full-height{
+  bottom:0;
+}
+.chat-record-page .message-list-pane .reply-content-div .re-send-message{
+  position: absolute;
+  left: -25px;
+  top:10px;
+}
+.chat-record-page .message-list-pane .reply-content-div .re-send-message i{
+  font-size:20px;
+  color:red;
+}
+.search-key{
+  color: #e03723;
+  background: #fcf8e3;
+}
+.visitor-info .show-history-chat{
+  padding-top:80px;
+  padding-left:20px;
+}
+.visitor-info .show-info .show-visitor-info .el-textarea{
+  display: block;
+  width: unset;
+  margin-right: 20px;
+}
+.visitor-info .show-info .show-visitor-info{
+  padding-left:20px;
+  padding-top: 10px;
+}
+.visitor-info .show-remark-info{
+  padding-left:20px;
+}
+.alreay-withdraw-message{
+  display: -webkit-inline-box;
+  color: grey;
+  font-size: 12px;
+}
+/*满意度*/
+.second-Tags{
+  border:1px solid black;
+  border-radius: 0.3px;
+  padding:2px 7px 2px 7px;
+}
+.satisfaction-column>.cell{
+  padding-right:15px !important;
+}
+.satisfaction-second-tag{
+  display: inline-block;
+  position: absolute;
+  top:2px;
+  right:0;
+  width:18px;
+}
+.move-upload-icon{
+  color: #fff;
+  width: 100%;
+  background: #00000045;
+  border-top: 1px solid #ffffffb0;
+  border-radius: 0 0 10px 10px;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 8;
+  height: 25px;
+  font-size: 20px;
+  line-height: 25px;
+  text-align: center;
+  font-weight: bold;
+  opacity: 0;
+}
+.move-icon-show:hover .move-upload-icon{
+  opacity: 1;
+}
+/*我的表单——右侧表单信息图片内容*/
+.chat-form-detail .content-img-body{
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-left: 80px;
+  min-height: 40px;
+  margin-top: 35px;
+}
+.chat-form-detail .content-img-body img{
+  width: 60px;
+  height: 60px;
+  margin-left: 10px;
+}
+.chat-form-detail .content-img-body{
+  border-radius: 5px;
+}
+.form-process .el-form-item__label{
+  width:120px !important;
+}
+/*图标按钮*/
+.chat-history-button-bar {
+  height: 30px;
+  border-top: 2px solid #ccc;
+  background: #fafafa;
+  position: absolute;
+  bottom: 102px;
+  width: 100%;
+  left:0;
+}
+
+/*我的表单——左侧列表*/
+/*高级查询*/
+.my-chat-form-left .advanced-query-form .el-form-item__label{
+  font-size: 13px;
+}
+/*会话管理右拉——客户工单tab悬浮暂存按钮*/
+.all-history-dialog .fix-btn, #app.app-mini .all-history-dialog .fix-btn,
+.my-history-chat .fix-btn, #app.app-mini .my-history-chat .fix-btn {
+  width: 798px;
+  left: auto;
+}
+/*会话质检右拉布局*/
+.record-quality-query .my-chat-content{
+  max-height: 400px;
+}
+.chat-quality-query .fix-btn, #app.app-mini .chat-quality-query .fix-btn{
+  left: auto;
+  width: 798px;
+}
+/*同事的会话列表*/
+.no-chat{
+  position: absolute;
+  color: #ccc;
+  width: 100%;
+  text-align: center;
+}
+.teamMate-inner .el-input__inner{
+  width:180px !important;
+}
+/*我的聊天左页面已超时会话组件*/
+.time-out-line{
+  margin:10px 0;
+}
+.time-out-line .row-line{
+  border-bottom: 1px dashed;
+  width: 100%;
+  margin-top: 10px;
+  position: absolute;
+  z-index: 0;
+}
+.time-out-line .time-out-row{
+  background: #fff;
+  position: relative;
+  padding: 0 5px;
+}

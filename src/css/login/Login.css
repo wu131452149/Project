@@ -1,0 +1,60 @@
+.login{
+    background-color: #fff;
+    position: fixed;
+    left:0;
+    top:0;
+    bottom: 0;
+    right: 0;
+}
+.login .el-main {
+    background: url("../../assets/images/background.jpg") no-repeat;
+}
+.login-envelope {
+    float: left;
+    margin-top: 3px;
+    margin-left: 83px;
+    line-height: 80px;
+    color: red
+}
+.login-emial {
+    line-height: 80px;
+    float: right;
+}
+.bg-login {
+    background-color: #FFFFFF;
+    border-radius: 4px;
+    height: 280px;
+    box-shadow: 0 4px 23px 5px rgba(0, 0, 0, .2),
+    0 2px 6px rgba(0, 0, 0, .15);
+    -webkit-box-shadow: 0 4px 23px 5px rgba(0, 0, 0, .2),
+    0 2px 6px rgba(0, 0, 0, .15);
+    padding-top: 10px;
+    margin-top:-80px;
+    min-width: 338px;
+    min-height: 290px;
+}
+.login .el-form-item__content {
+    margin-left: 25px;
+}
+.login-top {
+    background-color: #FFFFFF;
+    line-height: 80px;
+    text-align: right;
+}
+.login-bottom {
+    line-height: 80px;
+    text-align: center;
+}
+.login .el-input {
+    position: relative;
+    font-size: 14px;
+    display: inline-block;
+    width: 82%; 
+}
+.login .el-button {
+    width: 82%;
+}
+.login .el-form-item{
+    margin:10px 0;
+}
+
