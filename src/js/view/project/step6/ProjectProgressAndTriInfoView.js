@@ -219,11 +219,13 @@ export default {
                     let editBudgetData = _.cloneDeep(self.editPro);
                     //根据id来改变
                     editBudgetData.id = self.projectDetail.id;
-                    editBudgetData.step = 6;//新建的并且已经通过审核了的才能提交预算
-                    editBudgetData.suggestion = 1;//第一步已经通过审核
-                    //editBudgetData.stepSixApp = 2;//将第二步设置为待审核,不用审核
                     //存入数据库
-                    editBudgetData.speed = self.editPro.speed;//第一步已经通过审核
+                    editBudgetData.speed = self.editPro.speed;//更新工程进度
+                    if(editBudgetData.speed == 100 && self.projectDetail.stepSixApp==1){
+                        editBudgetData.step = 7;//审核通过并且工程进度为100%进入完工库，第7步设置为待审核，
+                        data.stepSevenApp = 2;
+                        //editBudgetData.suggestion = 1;//第6步已经通过审核
+                    }
                     self.$http.post('/api/project/updateProject', editBudgetData).then(res => {
                         let status = res.status;
                         let statusText = res.statusText;

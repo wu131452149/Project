@@ -93,6 +93,7 @@ var selectAll = async function (tableName, callBack) {
     try{
         var ps = new mssql.PreparedStatement(con);
         var sql = "select * from " + tableName + " ";
+        console.log(sql);
         ps.prepare(sql, err => {
             if (err)
                 console.log(err);

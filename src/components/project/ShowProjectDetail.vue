@@ -167,7 +167,7 @@
                         </div>
                         <div v-for="item in appropriateTopBudget" v-if="projectDetail.appropriateTopBudget">
                             <span class="info-val plan-years">
-                                {{item.date}},本级拨付{{parseInt(item.money)}}（万元）
+                                {{item.date}},上级拨付{{parseInt(item.money)}}（万元）
                             </span>
 
                     </div>
@@ -266,8 +266,10 @@
             </div>
         </div>
         <div v-if="user.grade==0||user.grade==2">
-            <div class="demo-drawer__footer margin-t-25" style="text-align: center;" v-if="step!=7">
+            <div class="demo-drawer__footer margin-t-25" style="text-align: center;">
                 <el-button type="primary" @click="approvalProject" :loading="loading">{{ loading ? '提交中 ...' : '审核通过' }}
+                </el-button>
+                <el-button type="primary" @click="disApprovalProject" :loading="loading">{{ loading ? '提交中 ...' : '审核不通过' }}
                 </el-button>
             </div>
         </div>

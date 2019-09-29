@@ -76,7 +76,7 @@ export default {
 
         },
         appUserPasswordUpdate: function () {
-            var self = this, user = Cache.session.user, passwordInfo = self.password;
+            var self = this, user = JSON.parse(sessionStorage.getItem("user")), passwordInfo = self.password;
             if (!passwordInfo.oldPassword) {
                 self.$message.error("请输入原密码!");
                 return;
@@ -126,20 +126,12 @@ export default {
                 passwordInfo.oldPassword = "";
                 return;
             }
-            passwordInfo.accountId = user.accountId;
-            passwordInfo.userId = user._id;
+            passwordInfo.grade = user.grade;
+            passwordInfo.id = user.id;
             passwordInfo.role = user.role;
-            passwordInfo.sipConfigId = user.sipConfigId;
-            passwordInfo.status = user.status;
-            passwordInfo.name = user.name;
-            passwordInfo.empNo = user.empNo;
-            passwordInfo.loginName = user.loginName;
-            passwordInfo.AutoBusyTime = user.AutoBusyTime;
-            passwordInfo.mobile = user.mobile;
-            passwordInfo.email = user.email;
-            passwordInfo.uversion = user.uversion;
-            passwordInfo.isCallAgent = user.isCallAgent;
-            self.$http.post('/api/changePwd', passwordInfo).then(res => {
+            passwordInfo.userName = user.userName;
+            passwordInfo.menu = user.menu;
+            self.$http.post('/api/user/changePwd', passwordInfo).then(res => {
                 self.logining = false;
                 let status = res.status;
                 let statusText = res.statusText;

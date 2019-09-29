@@ -120,6 +120,11 @@
                 <el-table-column width="95px" prop="projectContactUserPhone" label="联系人电话">
                     <template slot-scope="scope">{{scope.row.projectContactUserPhone}}</template>
                 </el-table-column>
+                <el-table-column label="操作" width="200" class="text-c" v-if="user.grade==1">
+                    <template slot-scope="scope">
+                        <a @click.stop="editBudgetFinishTab($event,scope.row)">录入决算</a>
+                    </template>
+                </el-table-column>
             </el-table>
         </div>
         <!--分页 start-->
@@ -127,22 +132,16 @@
             <div class="f-r clearFix">
                 <div class="f-l pagination-total">
                     <a class="" v-if="!showCountNumber && IsNewMediaSessionLargeData == '1'"
-                       @click="queryBudgetPlanProjectCount">查询总数</a>
+                       @click="queryFinishedProjectCount">查询总数</a>
                     <span class="" v-else>共 <span>{{finishedProject.count}}</span> 条</span>
                 </div>
                 <el-pagination class="f-r"
-                               @current-change="queryNewProject(false)"
+                               @current-change="queryFinishedProject(false)"
                                layout="prev, pager, next, jumper"
                                :total="finishedProject.count"
                                :current-page.sync="finishedProject.currentPage"
                 >
                 </el-pagination>
-            </div>
-            <div class="f-l medium-btn">
-                <el-button type="primary" @click.stop="ExportFinishedProject">导出</el-button>
-            </div>
-            <div class="small-tips f-l font13 margin-l10">
-                <span class="color-tips">注 : </span><span class="color-tips"> 仅对当前查询结果生效</span>
             </div>
         </div>
         <!--分页 end-->
@@ -158,6 +157,22 @@
                 <show-project-Detail @onListen="handleClose" :projectDetail="projectDetail" :step="7">
 
                 </show-project-Detail>
+                <!--录入决算信息-->
+                <div v-if="user.grade==1 && showEdit" class="padding-0-20">
+                    <span>项目决算信息录入</span>
+                    <el-form :model="editBudgetFinish" :rules="rules" class="width300" ref="editBudgetPlan">
+                        <el-form-item label="决算评审金额">
+                            <el-input placeholder="请输入决算评审金额" v-model="editBudgetFinish.finishMoney" maxlength="15">
+                                <template slot="append">万元</template>
+                            </el-input>
+                        </el-form-item>
+                    </el-form>
+                    <div class="demo-drawer__footer margin-t-25" style="text-align: center;">
+                        <el-button @click="closeForm">取 消</el-button>
+                        <el-button type="primary" @click="commitFinishMoneyForm" :loading="loading">{{ loading ? '提交中 ...' : '确定' }}
+                        </el-button>
+                    </div>
+                </div>
             </div>
         </el-drawer>
     </div>

@@ -129,6 +129,8 @@ export default {
                 self.approvalBudgetChange();
             } else if (self.step == 6) {
                 self.approvalTri();
+            }else if (self.step == 6) {
+                self.approvalFinish();
             }
 
         },
@@ -344,10 +346,59 @@ export default {
             let self = this;
             let data = {};
             data.id = self.projectDetail.id;
+            if(self.projectDetail.speed==100){//审核之后工程到百分之百才能进入完工库
+                data.approvalStep = 7;
+                data.stepSixApp = 1;
+                data.stepSevenApp = 2;
+                data.oldStep = 6;
+                data.oldSuggestion = 2;
+            }else{
+                data.approvalStep = 6;
+                data.stepSixApp = 1;
+                //data.stepSevenApp = 2;
+                data.oldStep = 6;
+                data.oldSuggestion = 2;
+            }
+
+            self.$http.post('/api/project/approvalProject', data).then(res => {
+                let status = res.status;
+                let statusText = res.statusText;
+                if (status !== 200) {
+                    self.$message({
+                        message: statusText,
+                        type: 'error'
+                    });
+                } else {
+                    if (res.data.length != 0) {
+                        self.$message({
+                            message: "审核成功",
+                            type: 'success'
+                        });
+                    } else {
+                        self.$message({
+                            message: "审核失败",
+                            type: 'warning'
+                        });
+                    }
+                }
+            })
+                .catch(error =>
+                    self.$message({
+                        message: error.message,
+                        type: 'error'
+                    }),
+                );
+        },
+        //7审核决算
+        approvalFinish: function () {
+            //审核通过，把第一步状态改为1，并且把项目step改成6
+            //todo 插入一张log表
+            let self = this;
+            let data = {};
+            data.id = self.projectDetail.id;
             data.approvalStep = 7;
-            data.stepSixApp = 1;
-            data.stepSevenApp = 2;
-            data.oldStep = 6;
+            data.stepSevenApp = 1;
+            data.oldStep = 7;
             data.oldSuggestion = 2;
             self.$http.post('/api/project/approvalProject', data).then(res => {
                 let status = res.status;
@@ -378,12 +429,17 @@ export default {
                     }),
                 );
         },
+        //显示文件
         initFileList:function () {
             var self =this;
             if( self.projectDetail.fileList){
                 self.fileList = JSON.parse(self.projectDetail.fileList);
             }
-        }
+        },
+        //审核不通过
+        disApprovalProject:function () {
+            var self = this;
+        },
 
     },
     filters: {

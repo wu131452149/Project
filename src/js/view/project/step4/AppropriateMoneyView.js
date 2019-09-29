@@ -13,7 +13,7 @@ export default {
     },
     data() {
         return {
-            showEdit:false,
+            showEdit: false,
             drawerDetails: false,
             drawerCreate: false,
             direction: 'rtl',
@@ -253,7 +253,7 @@ export default {
             self.projectDetail = data;
             self.showEdit = false;
         },
-        initCommitMoney:function(){
+        initCommitMoney: function () {
 
         },
         //提交预算拨付填写
@@ -274,11 +274,63 @@ export default {
                         var newObj = JSON.stringify(obj);
                         self.projectDetail.appropriateBudget = newObj;
                         editBudgetData.appropriateBudget = newObj;
+                        //拨付总表
+                        var planYearsMoney = "";
+                        if (self.projectDetail.appropriateTopBudget) {
+                            planYearsMoney = JSON.parse(self.projectDetail.appropriateTopBudget);
+                        }
+                        for (var x = 0; x < obj.length; x++) {
+                            if (obj[x].date) {
+                                obj[x].years = obj[x].date.substr(0, 4);
+                            }
+                        }
+                        for (var y = 0; y < planYearsMoney.length; y++) {
+                            if (planYearsMoney[y].date) {
+                                planYearsMoney[y].years = planYearsMoney[y].date.substr(0, 4);
+                            }
+                        }
+                        if (planYearsMoney.length > 0) {
+                            var concat = obj.concat(planYearsMoney);
+                        } else {
+                            var concat = obj;
+                        }
+                        var concat1 = Utils.mergeArr(concat);
+                        //计算合计累计安排
+                        editBudgetData.approTotalPlanMoneyNo = Utils.countTotalPlanMoney(concat1);
+                        editBudgetData.nonPaymentTotalMoneyNo = -parseInt(editBudgetData.approTotalPlanMoneyNo - self.projectDetail.yearsPlanTotalMoneyNo);
+                        //对象
+                        editBudgetData.approTotalMoney = JSON.stringify(concat1);
                     } else if (editBudgetData.type == "上级专款") {
                         var obj = self.initObj(self.projectDetail.appropriateTopBudget, editBudgetData);
                         var newObj = JSON.stringify(obj);
                         self.projectDetail.appropriateTopBudget = newObj;
                         editBudgetData.appropriateTopBudget = newObj;
+                        //拨付总计
+                        var planYearsMoney = "";
+                        if (self.projectDetail.appropriateBudget) {
+                            planYearsMoney = JSON.parse(self.projectDetail.appropriateBudget);
+                        }
+                        for (var x = 0; x < obj.length; x++) {
+                            if (obj[x].date) {
+                                obj[x].years = obj[x].date.substr(0, 4);
+                            }
+                        }
+                        for (var y = 0; y < planYearsMoney.length; y++) {
+                            if (planYearsMoney[y].date) {
+                                planYearsMoney[y].years = planYearsMoney[y].date.substr(0, 4);
+                            }
+                        }
+                        if (planYearsMoney.length > 0) {
+                            var concat = obj.concat(planYearsMoney);
+                        } else {
+                            var concat = obj;
+                        }
+                        var concat1 = Utils.mergeArr(concat);
+                        //计算合计累计安排
+                        editBudgetData.approTotalPlanMoneyNo = Utils.countTotalPlanMoney(concat1);
+                        editBudgetData.nonPaymentTotalMoneyNo = parseInt(editBudgetData.approTotalPlanMoneyNo - self.projectDetail.yearsPlanTotalMoneyNo);
+                        //对象
+                        editBudgetData.approTotalMoney = JSON.stringify(concat1);
                     }
                     delete editBudgetData.years;
                     delete editBudgetData.money;
@@ -371,10 +423,10 @@ export default {
                 }
             })
                 .catch(error =>
-                        self.$message({
-                            message: error.message,
-                            type: 'error'
-                        }),
+                    self.$message({
+                        message: error.message,
+                        type: 'error'
+                    }),
                 );
         },
         clearFormData: function () {

@@ -14,6 +14,7 @@ export default {
     },
     data() {
         return {
+            showEdit:false,
             drawerDetails: false,
             drawerCreate: false,
             direction: 'rtl',
@@ -52,11 +53,14 @@ export default {
             options: [],
             changeType: Utils.getChangeType(),
             rules: {
-                money: [
+                finishMoney: [
                     {required: true, message: '请输入金额', trigger: 'blur'},
                 ],
             },
             user: {},
+            editBudgetFinish:{
+                finishMoney:""
+            },
             budgetYearsPlanMoneyList: [],
         };
     },
@@ -198,17 +202,6 @@ export default {
         showDefaultQuickQuery: function () {
 
         },
-        handleSelectionChange: function () {
-
-        },
-        //录入预算拨付
-        editBudgetChangeTab: function (e, data) {
-            var self = this;
-            //显示项目详情，并且显示预算信息
-            self.drawerDetails = true;
-            self.projectDetail = data;
-            //self.editOptionYears(data.projectYears);
-        },
         closeForm: function () {
 
         },
@@ -217,89 +210,67 @@ export default {
             let self = this;
             self.drawerDetails = true;
             self.projectDetail = data;
+            self.showEdit = false;
+        },
+        //录入决算安排
+        editBudgetFinishTab:function (e,data) {
+            var self = this;
+            //显示项目详情，并且显示预算信息
+            self.drawerDetails = true;
+            self.projectDetail = data;
+            self.showEdit = true;
+
         },
         initCommitMoney: function () {
 
         },
-        //导出
-        ExportFinishedProject: function () {
+        //提交决算评审信息
+        commitFinishMoneyForm:function () {
             var self = this;
-            //todo 查询条件
-            var data = {};
-            self.$http.get('/api/export/exportExcel', data).then(res => {
-                let status = res.status;
-                let statusText = res.statusText;
-                if (status !== 200) {
-                    self.$message({
-                        message: statusText,
-                        type: 'error'
-                    });
-                } else {
-                    if (res.data.length != 0) {
-                        //self.finishedProject.count = res.data.recordset[0].num;
-                        //window.location = '/api/export/exportExcel';
-                        //Utils.downloadUrl(res.data.recordset);
-                        // let type = 'application/octet-stream';
-                        // // let type = result.type
-                        // // const buf = Buffer.from(result, 'binary')
-                        // let blob = new Blob([res.data], {type: type});
-                        // let fileName = res.headers.filename || "fileName.xlsx";
-                        // if (typeof window.navigator.msSaveBlob !== 'undefined') {
-                        //     /*
-                        //      * IE workaround for "HTML7007: One or more blob URLs were revoked by closing
-                        //      * the blob for which they were created. These URLs will no longer resolve as
-                        //      * the data backing the URL has been freed."
-                        //      */
-                        //     window.navigator.msSaveBlob(blob, fileName);
-                        // } else {
-                        //     let URL = window.URL || window.webkitURL
-                        //     let objectUrl = URL.createObjectURL(blob)
-                        //     console.log(objectUrl);
-                        //     if (fileName) {
-                        //         var a = document.createElement('a')
-                        //         // safari doesn't support this yet
-                        //         if (typeof a.download === 'undefined') {
-                        //             window.location = objectUrl
-                        //         } else {
-                        //             a.href = objectUrl
-                        //             a.download = fileName
-                        //             document.body.appendChild(a)
-                        //             a.click()
-                        //             a.remove();
-                        //            // message.success(`${fileName} 已下载`);
-                        //         }
-                        //     } else {
-                        //         window.location = objectUrl
-                        //     }
-                       // }
-                        // let blob = new Blob([res.data], {type: type});
-                        let fileName = res.headers.filename || "fileName.xlsx";
-                        var blob = new Blob([res.data], {type: "application/octet-stream"});
-                        if ('msSaveOrOpenBlob' in navigator) {
-
-                            // Microsoft Edge and Microsoft Internet Explorer 10-11
-                            window.navigator.msSaveOrOpenBlob(blob, fileName);
+            self.$refs.editBudgetFinish.validate((valid) => {
+                if (valid) {
+                    let editBudgetData = _.cloneDeep(self.editBudgetFinish);
+                    //根据id来改变
+                    editBudgetData.id = self.projectDetail.id;
+                    editBudgetData.step = 7;//新建的并且已经通过审核了的才能提交预算
+                    editBudgetData.suggestion = 1;//第一步已经通过审核
+                    editBudgetData.stepSevenApp = 2;//将第二步设置为待审核
+                    //存入数据库
+                    self.$http.post('/api/project/updateProject', editBudgetData).then(res => {
+                        let status = res.status;
+                        let statusText = res.statusText;
+                        if (status !== 200) {
+                            self.$message({
+                                message: statusText,
+                                type: 'error'
+                            });
                         } else {
-                            var a = document.getElementById("exportCSVlink");
-                            a.download = fileName;
-                            a.href = URL.createObjectURL(blob);
-                            a.click();
+                            if (res.data.length != 0) {
+                                self.$message({
+                                    message: "提交成功",
+                                    type: 'success'
+                                });
+                            } else {
+                                self.$message({
+                                    message: "提交失败",
+                                    type: 'warning'
+                                });
+                            }
                         }
-                    } else {
-                        self.$message({
-                            message: "查询失败",
-                            type: 'warning'
-                        });
-                    }
+                    })
+                        .catch(error =>
+                                self.$message({
+                                    message: error.message,
+                                    type: 'error'
+                                }),
+                            self.logining = false
+                        );
+                } else {
+                    console.log('error submit!!');
+                    return false;
                 }
-            })
-                .catch(error =>
-                    self.$message({
-                        message: error.message,
-                        type: 'error'
-                    }),
-                );
-        }
+            });
+        },
     },
     filters: {
         renderMoneyFrom: Filters.renderMoneyFrom,

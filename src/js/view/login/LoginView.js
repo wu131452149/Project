@@ -77,7 +77,7 @@ export default {
                                 type: 'error'
                             });
                         } else {
-                            if (res.data.length != 0) {
+                            if (res.data.recordset.length != 0) {
                                 let user = res.data.recordset[0];
                                 // self.$message({
                                 //     message: "欢迎您，"+user.userName+"管理员",

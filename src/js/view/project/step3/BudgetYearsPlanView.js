@@ -34,7 +34,7 @@ export default {
                             total2 = total2 + parseInt(planYearsTopMoney[y].money);
                         }
                     }
-                    var total = total1 + total2+parseInt(value);
+                    var total = total1 + total2 + parseInt(value);
                     console.log(total1);
                     console.log(total2);
                     console.log(total);
@@ -91,7 +91,7 @@ export default {
             yearsOptionType: Utils.getOptionYears(),//如果有自筹金额了就不用显示自筹的修改了
             rules: {
                 money: [
-                    {required: true,trigger: 'blur', validator: checkMoney},
+                    {required: true, trigger: 'blur', validator: checkMoney},
                 ],
             },
             user: {},
@@ -317,12 +317,62 @@ export default {
                         var newObj = JSON.stringify(obj);
                         self.projectDetail.planYearsMoney = newObj;
                         editBudgetData.planYearsMoney = newObj;
+                        //计算每一年拨付的总额,存入数据库
+                        var planYearsTopMoney = "";
+                        if (self.projectDetail.planYearsTopMoney) {
+                            planYearsTopMoney = JSON.parse(self.projectDetail.planYearsTopMoney);
+                        }
+                        for (var x = 0; x < obj.length; x++) {
+                            if (obj[x].years) {
+                                obj[x].years = obj[x].years.substr(0, 4);
+                            }
+                        }
+                        for (var y = 0; y < planYearsTopMoney.length; y++) {
+                            if (planYearsTopMoney[y].years) {
+                                planYearsTopMoney[y].years = planYearsTopMoney[y].years.substr(0, 4);
+                            }
+                        }
+                        if(planYearsTopMoney.length>0){
+                            var concat = obj.concat(planYearsTopMoney);
+                        }else{
+                            var concat = obj;
+                        }
+                        var concat1 = Utils.mergeArr(concat);
+                        //计算合计累计安排
+                        editBudgetData.yearsPlanTotalMoneyNo = Utils.countTotalPlanMoney(concat1);
+                        editBudgetData.yearsPlanTotalMoney = JSON.stringify(concat1);
                     } else if (editBudgetData.type == "上级专款") {
                         var obj = self.initObj(self.projectDetail.planYearsTopMoney, editBudgetData);
                         var newObj = JSON.stringify(obj);
                         self.projectDetail.planYearsTopMoney = newObj;
                         editBudgetData.planYearsTopMoney = newObj;
+                        var planYearsMoney = "";
+                        if (self.projectDetail.planYearsMoney) {
+                            planYearsMoney = JSON.parse(self.projectDetail.planYearsMoney);
+                        }
+                        for (var x = 0; x < obj.length; x++) {
+                            if (obj[x].years) {
+                                obj[x].years = obj[x].years.substr(0, 4);
+                            }
+                        }
+                        for (var y = 0; y < planYearsMoney.length; y++) {
+                            if (planYearsMoney[y].years) {
+                                planYearsMoney[y].years = planYearsMoney[y].years.substr(0, 4);
+                            }
+                        }
+                        if(planYearsMoney.length>0){
+                            var concat = obj.concat(planYearsMoney);
+                        }else{
+                            var concat = obj;
+                        }
+                        var concat1 = Utils.mergeArr(concat);
+                        //计算合计累计安排
+                        editBudgetData.yearsPlanTotalMoneyNo = Utils.countTotalPlanMoney(concat1);
+                        //对象
+                        editBudgetData.yearsPlanTotalMoney = JSON.stringify(concat1);
                     }
+
+
                     delete editBudgetData.years;
                     delete editBudgetData.type;
                     delete editBudgetData.money;
@@ -359,6 +409,7 @@ export default {
                 }
             });
         },
+
         initObj: function (oldObj, editBudgetData) {
             var returnObj;
             if (oldObj) {

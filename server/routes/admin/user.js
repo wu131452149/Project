@@ -56,7 +56,7 @@ router.post('/downloadFile', (req, res, next) => {
 
 router.post('/changePwd', function (req, res, next) {
     var param = req.body;
-    db.update({content:param}, {id:id}, "dbo.proUser",function (err, result) {//查询所有news表的数据
+    db.update({password:param.password}, {id:param.id}, "dbo.proUser",function (err, result) {//查询所有news表的数据
         res.json(result);
     });
 });

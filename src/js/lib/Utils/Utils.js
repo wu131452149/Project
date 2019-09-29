@@ -399,6 +399,42 @@ export default {
             };
         }
     },
-    //dowloadUtil(`${process.env.BASE_API}/table/downloadFile?filename=${filename}&oldname=${oldname}`);
+    mergeArr: function (arr) {
+        var newArr = [];
+        arr.forEach(item => {
+            var dataItem = item
+            if (newArr.length > 0) {
+                var filterValue = newArr.filter(v => {
+                    return v.years == dataItem.years
+                })
+                if (filterValue.length > 0) {
+                    newArr.forEach(n => {
+                        if (n.years == filterValue[0].years) {
+                            n.money = parseInt(filterValue[0].money) + parseInt(dataItem.money)
+                        }
+                    })
+                } else {
+                    newArr.push(dataItem)
+                }
+            } else {
+                newArr.push(dataItem)
+            }
 
-}
+        })
+        return newArr
+    },
+    //计算年度累计安排
+    countTotalPlanMoney: function (arr) {
+        var self = this;
+        var totalMoney = 0;
+        if (arr.length > 0) {
+            for (var i = 0; i < arr.length; i++) {
+                totalMoney = totalMoney + parseInt(arr[i].money);
+            }
+            return totalMoney;
+
+        }
+    },
+        //dowloadUtil(`${process.env.BASE_API}/table/downloadFile?filename=${filename}&oldname=${oldname}`);
+
+    }
