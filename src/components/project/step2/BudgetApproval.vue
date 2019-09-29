@@ -65,7 +65,7 @@
                     <span class="" v-else>共 <span>{{budgetPlanProject.count}}</span> 条</span>
                 </div>
                 <el-pagination class="f-r"
-                               @current-change="queryNewProject(false)"
+                               @current-change="queryBudgetPlanProject(false)"
                                layout="prev, pager, next, jumper"
                                :total="budgetPlanProject.count"
                                :current-page.sync="budgetPlanProject.currentPage"

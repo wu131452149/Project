@@ -185,6 +185,7 @@
                 <div class="inline-block font13 width-per45 ver-text-top margin-t-15 margin-r">
                     <div class="clearFix">
                         <span class="info-label">预算变更：</span>
+                        {{cutBudget}}
                         <div v-for="item in cutBudget" v-if="projectDetail.cutBudget">
                             <span class="info-val plan-years">
                                 {{item.date}},{{item.type}}{{parseInt(item.money)}}（万元）,评审文号为{{item.No}}

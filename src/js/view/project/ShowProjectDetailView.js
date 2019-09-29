@@ -129,7 +129,7 @@ export default {
                 self.approvalBudgetChange();
             } else if (self.step == 6) {
                 self.approvalTri();
-            }else if (self.step == 6) {
+            }else if (self.step == 7) {
                 self.approvalFinish();
             }
 
@@ -438,7 +438,63 @@ export default {
         },
         //审核不通过
         disApprovalProject:function () {
-            var self = this;
+            let self = this;
+            let data = {};
+            //步骤等于当前的步骤，把审核状态改为0
+            data.approvalStep = self.step;
+            data.id = self.projectDetail.id;
+            data.oldStep = self.step;
+            if (self.step == 1) {
+                data.oldSuggestion = self.projectDetail.stepOneApp;
+                data.stepOneApp = 0;
+            } else if (self.step == 2) {
+                data.oldSuggestion = self.projectDetail.stepTwoApp;
+                data.stepTwoApp = 0;
+            } else if (self.step == 3) {
+                data.oldSuggestion = self.projectDetail.stepThreeApp;
+                data.stepThreeApp = 0;
+            } else if (self.step == 4) {
+                data.oldSuggestion = self.projectDetail.stepFourApp;
+                data.stepFourApp = 0;
+            } else if (self.step == 5) {
+                data.oldSuggestion = self.projectDetail.stepFiveApp;
+                data.stepFiveApp = 0;
+            } else if (self.step == 6) {
+                data.oldSuggestion = self.projectDetail.stepSixApp;
+                data.stepSixApp = 0;
+            }else if (self.step == 7) {
+                data.oldSuggestion = self.projectDetail.stepSevenApp;
+                data.stepSevenApp = 0;
+            }
+
+            self.$http.post('/api/project/approvalProject', data).then(res => {
+                let status = res.status;
+                let statusText = res.statusText;
+                if (status !== 200) {
+                    self.$message({
+                        message: statusText,
+                        type: 'error'
+                    });
+                } else {
+                    if (res.data.length != 0) {
+                        self.$message({
+                            message: "审核成功",
+                            type: 'success'
+                        });
+                    } else {
+                        self.$message({
+                            message: "审核失败",
+                            type: 'warning'
+                        });
+                    }
+                }
+            })
+                .catch(error =>
+                    self.$message({
+                        message: error.message,
+                        type: 'error'
+                    }),
+                );
         },
 
     },

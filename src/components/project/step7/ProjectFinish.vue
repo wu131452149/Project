@@ -120,6 +120,9 @@
                 <el-table-column width="95px" prop="projectContactUserPhone" label="联系人电话">
                     <template slot-scope="scope">{{scope.row.projectContactUserPhone}}</template>
                 </el-table-column>
+                <el-table-column width="95px" prop="projectContactUserPhone" label="审核意见">
+                    <template slot-scope="scope">{{scope.row.stepSevenApp|renderStatus}}</template>
+                </el-table-column>
                 <el-table-column label="操作" width="200" class="text-c" v-if="user.grade==1">
                     <template slot-scope="scope">
                         <a @click.stop="editBudgetFinishTab($event,scope.row)">录入决算</a>

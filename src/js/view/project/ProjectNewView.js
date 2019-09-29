@@ -47,7 +47,7 @@ export default {
             moneyFrom: Utils.getMoneyFrom(),
             projectType: Utils.getProjectType(),
             getProjectYears: Utils.getProjectYears(),
-
+            user:{},
         }
 
     },
@@ -56,6 +56,7 @@ export default {
         // 验证码初始化
         $('.main-content').height($(window).height() - 200);
         self.projectInstitution = JSON.parse(window.sessionStorage.getItem('institution'));
+        self.user = JSON.parse(sessionStorage.getItem('user'));
     }
     ,
     methods: {
@@ -74,7 +75,7 @@ export default {
                     createProject.approvalStep = 1;
                     createProject.ifReturned = 0;
                     createProject.stepOneApp = 2;
-                    createProject.commitName = window.sessionStorage.getItem('user').userName;
+                    createProject.commitName = self.user.role;
                     createProject.projectCommitTime = Utils.formatDate(new Date()) + ".000";
                     for (var i = 0; i < self.getProjectYears.length; i++) {
                         if (createProject.projectYears == self.getProjectYears[i].name) {

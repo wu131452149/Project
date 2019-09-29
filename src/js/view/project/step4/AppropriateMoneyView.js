@@ -65,10 +65,11 @@ export default {
         }
     },
     mounted: function () {
-        this.queryAppropriateMoneyProject();
-        this.queryAppropriateMoneyProjectCount();
-        this.queryAppropriateMoney();
-        this.user = JSON.parse(sessionStorage.getItem('user'));
+        var self = this;
+        self.queryAppropriateMoneyProject();
+        self.queryAppropriateMoneyProjectCount();
+        self.queryAppropriateMoney();
+        self.user = JSON.parse(sessionStorage.getItem('user'));
     },
     methods: {
         editOptionYears: function (data) {

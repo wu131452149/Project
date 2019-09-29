@@ -60,11 +60,11 @@
             <div class="f-r clearFix">
                 <div class="f-l pagination-total">
                     <a class="" v-if="!showCountNumber && IsNewMediaSessionLargeData == '1'"
-                       @click="queryBudgetPlanProjectCount">查询总数</a>
+                       @click="queryBudgetYearsPlanProjectCount">查询总数</a>
                     <span class="" v-else>共 <span>{{budgetYearsPlanProject.count}}</span> 条</span>
                 </div>
                 <el-pagination class="f-r"
-                               @current-change="queryNewProject(false)"
+                               @current-change="queryBudgetYearsPlanProject(false)"
                                layout="prev, pager, next, jumper"
                                :total="budgetYearsPlanProject.count"
                                :current-page.sync="budgetYearsPlanProject.currentPage"
