@@ -156,6 +156,7 @@
             title="项目信息详情"
             :visible.sync="drawerDetails"
             :direction="direction"
+            ref = "drawerBudgetPlan"
             custom-class="demo-drawer"
             size=55%
             :before-close="handleClose">

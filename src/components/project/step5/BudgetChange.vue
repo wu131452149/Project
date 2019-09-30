@@ -157,6 +157,7 @@
             :visible.sync="drawerDetails"
             :direction="direction"
             custom-class="demo-drawer"
+            ref = "budgetChange"
             size=55%
             :before-close="handleClose">
             <div style="overflow: auto;height: 500px;">

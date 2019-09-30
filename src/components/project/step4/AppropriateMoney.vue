@@ -159,6 +159,7 @@
             title="项目信息详情"
             :visible.sync="drawerDetails"
             :direction="direction"
+            ref = "approMoney"
             custom-class="demo-drawer"
             size=55%
             :before-close="handleClose">
@@ -196,8 +197,7 @@
                     </el-form>
                     <div class="demo-drawer__footer margin-t-25" style="text-align: center;">
                         <el-button @click="closeForm">取 消</el-button>
-                        <el-button type="primary" @click="commitAppMoneyForm" :loading="loading">{{ loading ? '提交中 ...'
-                            : '确定' }}
+                        <el-button type="primary" @click="commitAppMoneyForm" :loading="loading">{{ loading ? '提交中 ...' : '确定' }}
                         </el-button>
                     </div>
                 </div>

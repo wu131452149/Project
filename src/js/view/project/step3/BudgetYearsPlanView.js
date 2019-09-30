@@ -85,7 +85,7 @@ export default {
             },
             user: {},
             budgetYearsPlanMoneyList: [],
-            projectInstitutionList:[]
+            projectInstitutionList: []
 
         }
     },
@@ -249,28 +249,7 @@ export default {
 
         },
         handleClose(done) {
-            this.$confirm('确定要提交表单吗？')
-                .then(_ => {
-                    this.loading = true;
-                    setTimeout(() => {
-                        this.loading = false;
-                        done();
-                    }, 2000);
-                })
-                .catch(_ => {
-                });
-        },
-        handleCreatedClose: function () {
-            this.$confirm('确定要提交表单吗？')
-                .then(_ => {
-                    this.loading = true;
-                    setTimeout(() => {
-                        this.loading = false;
-                        done();
-                    }, 2000);
-                })
-                .catch(_ => {
-                });
+            done();
         },
         //录入预算安排
         editBudgetYearsPlanTab: function (e, data) {
@@ -282,7 +261,9 @@ export default {
             self.editOptionYears(data.projectYears);
         },
         closeForm: function () {
-
+            var self = this;
+            self.$refs.drawerBudgetPlan.closeDrawer();
+            self.showEdit = false;
         },
         //显示新建库详情
         showNewProjectDetails: function (e, data) {
@@ -331,9 +312,9 @@ export default {
                                 planYearsTopMoney[y].years = planYearsTopMoney[y].years.substr(0, 4);
                             }
                         }
-                        if(planYearsTopMoney.length>0){
+                        if (planYearsTopMoney.length > 0) {
                             var concat = obj.concat(planYearsTopMoney);
-                        }else{
+                        } else {
                             var concat = obj;
                         }
                         var concat1 = Utils.mergeArr(concat);
@@ -359,9 +340,9 @@ export default {
                                 planYearsMoney[y].years = planYearsMoney[y].years.substr(0, 4);
                             }
                         }
-                        if(planYearsMoney.length>0){
+                        if (planYearsMoney.length > 0) {
                             var concat = obj.concat(planYearsMoney);
-                        }else{
+                        } else {
                             var concat = obj;
                         }
                         var concat1 = Utils.mergeArr(concat);

@@ -41,7 +41,7 @@
             </el-form-item>
             <el-form-item label="资金来源">
                 <el-checkbox-group v-model="createProject.projectMoneyFrom">
-                    <el-checkbox v-for="(item,index) in moneyFrom"
+                    <el-checkbox v-for="item in moneyFrom"
                                  :label="item.name" :key="item.index"></el-checkbox>
                 </el-checkbox-group>
             </el-form-item>

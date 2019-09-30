@@ -153,6 +153,39 @@ export default {
         //重新入库
         updateForm: function () {
             let self = this;
+            //更新新建表的退库状态为false，更新表的step为1
+            let data = _.cloneDeep(self.createProject);
+            data.step = 1;
+            data.ifReturned = 0;
+            self.$http.post('/api/project/updateProject', data).then(res => {
+                let status = res.status;
+                let statusText = res.statusText;
+                if (status !== 200) {
+                    self.$message({
+                        message: statusText,
+                        type: 'error'
+                    });
+                } else {
+                    if (res.data.length != 0) {
+                        self.$message({
+                            message: "提交成功",
+                            type: 'success'
+                        });
+                    } else {
+                        self.$message({
+                            message: "提交失败",
+                            type: 'warning'
+                        });
+                    }
+                }
+            })
+                .catch(error =>
+                    self.$message({
+                        message: error.message,
+                        type: 'error'
+                    }),
+                );
+
 
         }
         ,
@@ -230,7 +263,14 @@ export default {
                     self.createProject.projectType = val.projectType;
                     self.createProject.projectMoney = val.projectMoney;
                     self.createProject.projectIndustry = val.projectIndustry;
-                    self.createProject.projectMoneyFrom = val.projectMoneyFrom;
+                    var ins1 = val.projectIndustry.split(",")[0].split(":")[1];
+                    var ins2 = val.projectIndustry.split(",")[1].split(":")[1].replace("}","");
+                    // console.log(ins1);
+                    // console.log(ins2);
+                    // self.createProject.projectIndustry.first = ins1;
+                    // self.createProject.projectIndustry.second = ins2;
+                    self.createProject.projectIndustry = {first:ins1,second:ins2};
+                    self.createProject.projectMoneyFrom = JSON.parse(val.projectMoneyFrom.replace("{", "[").replace("}", "]"));
                     self.createProject.projectBeginTime = val.projectBeginTime;
                     self.createProject.projectContactUserName = val.projectContactUserName;
                     self.createProject.projectContactUserPhone = val.projectContactUserPhone;

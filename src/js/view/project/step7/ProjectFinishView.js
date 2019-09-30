@@ -14,7 +14,7 @@ export default {
     },
     data() {
         return {
-            showEdit:false,
+            showEdit: false,
             drawerDetails: false,
             drawerCreate: false,
             direction: 'rtl',
@@ -47,8 +47,8 @@ export default {
                 ],
             },
             user: {},
-            editBudgetFinish:{
-                finishMoney:""
+            editBudgetFinish: {
+                finishMoney: ""
             },
             budgetYearsPlanMoneyList: [],
         };
@@ -176,31 +176,12 @@ export default {
 
         },
         handleClose(done) {
-            this.$confirm('确定要提交表单吗？')
-                .then(_ => {
-                    this.loading = true;
-                    setTimeout(() => {
-                        this.loading = false;
-                        done();
-                    }, 2000);
-                })
-                .catch(_ => {
-                });
-        },
-        handleCreatedClose: function () {
-            this.$confirm('确定要提交表单吗？')
-                .then(_ => {
-                    this.loading = true;
-                    setTimeout(() => {
-                        this.loading = false;
-                        done();
-                    }, 2000);
-                })
-                .catch(_ => {
-                });
+            done();
         },
         closeForm: function () {
-
+            var self = this;
+            self.$refs.finishProject.closeDrawer();
+            self.showEdit = false;
         },
         //显示新建库详情
         showNewProjectDetails: function (e, data) {
@@ -210,7 +191,7 @@ export default {
             self.showEdit = false;
         },
         //录入决算安排
-        editBudgetFinishTab:function (e,data) {
+        editBudgetFinishTab: function (e, data) {
             var self = this;
             //显示项目详情，并且显示预算信息
             self.drawerDetails = true;
@@ -222,7 +203,7 @@ export default {
 
         },
         //提交决算评审信息
-        commitFinishMoneyForm:function () {
+        commitFinishMoneyForm: function () {
             var self = this;
             self.$refs.editBudgetFinish.validate((valid) => {
                 if (valid) {

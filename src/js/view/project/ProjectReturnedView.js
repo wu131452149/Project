@@ -14,7 +14,7 @@ export default {
     },
     data() {
         return {
-            returned:"returned",
+            returned: "returned",
             drawerDetails: false,
             drawerCreate: false,
             showMoreQuery: false,
@@ -35,7 +35,7 @@ export default {
             showCountNumber: true,
             IsNewMediaSessionLargeData: '',
             projectDetail: {},
-            user:{},
+            user: {},
         }
     },
     mounted: function () {
@@ -60,7 +60,7 @@ export default {
         closeDrawer: function (value) {
             this.$refs.drawer.closeDrawer();
         },
-        showReturnedProjectDetails: function (e,data) {
+        showReturnedProjectDetails: function (e, data) {
             let self = this;
             self.drawerDetails = true;
             self.projectDetail = data;
@@ -94,12 +94,7 @@ export default {
             return;
         },
         handleClose(done) {
-            this.$confirm('确认关闭？')
-                .then(_ => {
-                    done();
-                })
-                .catch(_ => {
-                });
+            done();
         },
         //查询退库项目
         queryReturnProject: function (flag) {
@@ -172,19 +167,10 @@ export default {
         },
         //重新入库，要先显示编辑页面，再提交
         updateNewProject: function (e, data) {
-            //todo 更新新建表的退库状态为false，更新表的step为1
+            //更新新建表的退库状态为false，更新表的step为1
             var self = this;
             self.drawerCreate = true;
             self.projectDetail = data;
-
-        },
-        handleCreateClose(done) {
-            this.$confirm('确认关闭？')
-                .then(_ => {
-                    done();
-                })
-                .catch(_ => {
-                });
         },
     },
     filters: {

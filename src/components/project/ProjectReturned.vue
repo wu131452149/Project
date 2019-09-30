@@ -140,6 +140,7 @@
             title="项目信息详情"
             :visible.sync="drawerDetails"
             :direction="direction"
+            ref = "returnedProject"
             custom-class="demo-drawer"
             size=55%
             :before-close="handleClose">
@@ -154,8 +155,8 @@
             :direction="direction"
             custom-class="demo-drawer"
             size=60%
-            :before-close="handleCreateClose">
-            <project-new @onListen="handleCreateClose" :returnProjectInfo = "projectDetail" :type="returned">
+            :before-close="handleClose">
+            <project-new @onListen="handleClose" :returnProjectInfo = "projectDetail" :type="returned">
 
             </project-new>
         </el-drawer>

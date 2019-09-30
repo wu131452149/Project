@@ -148,28 +148,7 @@ export default {
 
         },
         handleClose(done) {
-            this.$confirm('确定要提交表单吗？')
-                .then(_ => {
-                    this.loading = true;
-                    setTimeout(() => {
-                        this.loading = false;
-                        done();
-                    }, 2000);
-                })
-                .catch(_ => {
-                });
-        },
-        handleCreatedClose:function () {
-            this.$confirm('确定要提交表单吗？')
-                .then(_ => {
-                    this.loading = true;
-                    setTimeout(() => {
-                        this.loading = false;
-                        done();
-                    }, 2000);
-                })
-                .catch(_ => {
-                });
+            done();
         },
         //录入预算安排
         editBudgetPlanTab:function (e,data) {
@@ -181,7 +160,9 @@ export default {
 
         },
         closeForm:function(){
-            this.$refs.drawerBudget.close();
+            var self = this;
+            self.$refs.drawerBudget.closeDrawer();
+            self.showEdit = false;
         },
         //显示新建库详情
         showNewProjectDetails:function(e,data){
