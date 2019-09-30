@@ -38,13 +38,42 @@ router.post('/queryAllProject', function (req, res, next) {
     if (param.projectYears) {
         whereSql = whereSql + " and projectYears= " + param.projectYears;
     }
-    var pageSize = 10;
+    //var pageSize = 10;
     //分页查询
     // select * from [cz].[dbo].[project] where 1=1 and projectYears= 2 order by [id] offset 10*1 rows fetch next 10 rows only
-    var sql = "select * from " + dbName + whereSql + " order by id offset " + ((param.page - 1) * pageSize) + " rows fetch next " + pageSize + " rows only";
-    db.querySql(sql, "", function (err, result) {//查询所有news表的数据
-        res.json(result);
-    });
+    // var sql = "select * from " + dbName + whereSql + " order by id offset " + ((param.page - 1) * pageSize) + " rows fetch next " + pageSize + " rows only";
+    // db.querySql(sql, "", function (err, result) {//查询所有news表的数据
+    //     res.json(result);
+    // });
+    var pageSize = 10;
+    if (param.page == 1) {
+        db.select(dbName, 10, whereSql, "", "order by id", function (err, result) {//查询所有news表的数据
+            res.json(result);
+        });
+    } else {
+        var whereSql = " ";
+        if (param.id) {
+            whereSql = whereSql + " and id= " + param.id;
+        }
+        if (param.projectInstitution) {
+            whereSql = whereSql + " and projectInstitution = '" + param.projectInstitution + "'";
+        }
+        if (param.projectName) {
+            whereSql = whereSql + " and projectName = '" + param.projectName + "'";
+        }
+        if (param.projectType) {
+            whereSql = whereSql + " and projectType= '" + param.projectType + "'";
+        }
+        if (param.projectYears) {
+            whereSql = whereSql + " and projectYears= " + param.projectYears;
+        }
+
+        var sql = "select top " + pageSize + " * from (select row_number() over(order by id asc) as rownumber,* from " + dbName + ") temp_row where rownumber>" + ((param.page - 1) * pageSize) + whereSql;
+
+        db.querySql(sql, "", function (err, result) {//查询所有news表的数据
+            res.json(result);
+        });
+    }
 });
 
 //新建project
@@ -166,37 +195,60 @@ router.post('/queryProject', function (req, res, next) {
         whereSql = whereSql + " and ifReturned= " + param.ifReturned;
     }
 
-    var pageSize = 10;
+    //var pageSize = 10;
     //分页查询
     // select * from [cz].[dbo].[project] where 1=1 and projectYears= 2 order by [id] offset 10*1 rows fetch next 10 rows only
-    var sql = "select * from " + dbName + whereSql + " order by id offset " + ((param.page - 1) * pageSize) + " rows fetch next " + pageSize + " rows only";
-    db.querySql(sql, "", function (err, result) {//查询所有news表的数据
-        res.json(result);
-    });
+    // var sql = "select * from " + dbName + whereSql + " order by id offset " + ((param.page - 1) * pageSize) + " rows fetch next " + pageSize + " rows only";
+    // db.querySql(sql, "", function (err, result) {//查询所有news表的数据
+    //     res.json(result);
+    // });
 
-    // if (param.page == 1) {
-    //     if (step == 7 || step == 6) {
-    //         var whereSql = "where approvalStep = " + step + " and ifReturned=" + ifReturned;
-    //     } else if (step == 3 || step == 4) {
-    //         var whereSql = "where approvalStep>" + mstep + " and approvalStep<7 and ifReturned=" + ifReturned;
-    //     } else {
-    //         var whereSql = "where approvalStep=" + step + " and " + suggestionStep + " not in (" + suggestion + ") and ifReturned=" + ifReturned;
-    //     }
-    //     db.select(dbName, 10, whereSql, "", "order by id", function (err, result) {//查询所有news表的数据
-    //         res.json(result);
-    //     });
-    // } else {
-    //     if (step == 7 || step == 6) {
-    //         var sql = "select top " + pageSize + " * from (select row_number() over(order by id asc) as rownumber,* from " + dbName + ") temp_row where rownumber>" + ((param.page - 1) * pageSize) + " and approvalStep=" + step + " and ifReturned=" + ifReturned;
-    //     } else if (step == 3 || step == 4) {
-    //         var sql = "select top " + pageSize + " * from (select row_number() over(order by id asc) as rownumber,* from " + dbName + ") temp_row where rownumber>" + ((param.page - 1) * pageSize) + " and approvalStep>" + mstep + " and approvalStep<7 and ifReturned=" + ifReturned;
-    //     } else {
-    //         var sql = "select top " + pageSize + " * from (select row_number() over(order by id asc) as rownumber,* from " + dbName + ") temp_row where rownumber>" + ((param.page - 1) * pageSize) + " and approvalStep=" + step + " and " + suggestionStep + " not in (" + suggestion + ") and ifReturned=" + ifReturned;
-    //     }
-    //     db.querySql(sql, "", function (err, result) {//查询所有news表的数据
-    //         res.json(result);
-    //     });
-    // }
+    if (param.page == 1) {
+        db.select(dbName, 10, whereSql, "", "order by id", function (err, result) {//查询所有news表的数据
+            res.json(result);
+        });
+    } else {
+        whereSql = " ";
+        if (param.id) {
+            whereSql = whereSql + " and id= " + param.id;
+        }
+        if (param.projectInstitution) {
+            whereSql = whereSql + " and projectInstitution = '" + param.projectInstitution + "'";
+        }
+        if (param.projectName) {
+            whereSql = whereSql + " and projectName = '" + param.projectName + "'";
+        }
+        if (param.projectType) {
+            whereSql = whereSql + " and projectType= '" + param.projectType + "'";
+        }
+        if (param.projectYears) {
+            whereSql = whereSql + " and projectYears= " + param.projectYears;
+        }
+        //默认查询条件
+        if (param.step) {
+            whereSql = whereSql + " and approvalStep= " + param.step;
+            if(step == 3 || step == 4){
+                var mstep = step - 1;
+                var whereSql = whereSql +"and approvalStep>" + mstep + " and approvalStep<7 "
+            }
+        }
+        if (param.suggestion) {
+            whereSql = whereSql + " and "+suggestionStep+ "= "+ param.suggestion;
+        }
+        if (param.ifReturned) {
+            whereSql = whereSql + " and ifReturned= " + param.ifReturned;
+        }
+        if (step == 7 || step == 6) {
+            var sql = "select top " + pageSize + " * from (select row_number() over(order by id asc) as rownumber,* from " + dbName + ") temp_row where rownumber>" + ((param.page - 1) * pageSize) + whereSql;
+        } else if (step == 3 || step == 4) {
+            var sql = "select top " + pageSize + " * from (select row_number() over(order by id asc) as rownumber,* from " + dbName + ") temp_row where rownumber>" + ((param.page - 1) * pageSize) + whereSql;
+        } else {
+            var sql = "select top " + pageSize + " * from (select row_number() over(order by id asc) as rownumber,* from " + dbName + ") temp_row where rownumber>" + ((param.page - 1) * pageSize) + whereSql;
+        }
+        db.querySql(sql, "", function (err, result) {//查询所有news表的数据
+            res.json(result);
+        });
+    }
 
 
 });
