@@ -24,21 +24,10 @@ export default {
                 appropriateMoneyProjectList: [],
                 formData: {
                     projectInstitution: "",
-                    projectFinance: "",
                     projectName: "",
                     projectType: "",
-                    projectMoney: [],
-                    projectMoneyFrom: "",
-                    projectIndustry: "",
-                    projectCreateTime: "",
                     projectYears: "",
-                    projectContactUserName: "",
-                    projectContactUserPhone: "",
-                    projectSituation: "",
-                    create_begin_time: "",
-                    create_end_time: "",
-                    finish_begin_time: "",
-                    finish_end_time: "",
+                    id: "",
                 },
                 count: 0,
                 currentPage: 1
@@ -61,17 +50,30 @@ export default {
             },
             user: {},
             budgetYearsPlanMoneyList: [],
+            projectInstitutionList:[],
 
         }
     },
     mounted: function () {
         var self = this;
+        self.user = JSON.parse(sessionStorage.getItem('user'));
+        self.projectInstitutionList = JSON.parse(window.sessionStorage.getItem('institution'));
         self.queryAppropriateMoneyProject();
         self.queryAppropriateMoneyProjectCount();
         self.queryAppropriateMoney();
-        self.user = JSON.parse(sessionStorage.getItem('user'));
     },
     methods: {
+        showDefaultQuickQuery: function (flag) {
+            var self = this;
+            self.appropriateMoneyProject.formData.projectInstitution = "";
+            self.appropriateMoneyProject.formData.projectType = "";
+            self.appropriateMoneyProject.formData.projectName = "";
+            self.appropriateMoneyProject.formData.projectYears = "";
+            self.appropriateMoneyProject.formData.id = "";
+            if (flag) {
+                self.queryAppropriateMoneyProject(true);
+            }
+        },
         editOptionYears: function (data) {
             var self = this;
             self.years = data;
@@ -133,7 +135,7 @@ export default {
         queryAppropriateMoney: function () {
             let self = this;
             let data = {};
-            data.userName = self.user.userName;
+            data.userName = self.user.role;
             //data.userName = "root";
             self.$http.post('/api/project/queryAppMoney', data).then(res => {
                 let status = res.status;
@@ -228,9 +230,6 @@ export default {
                 })
                 .catch(_ => {
                 });
-        },
-        showDefaultQuickQuery: function () {
-
         },
         handleSelectionChange: function () {
 
@@ -395,7 +394,7 @@ export default {
                 type: self.editAppropriateMoneyProject.type,
                 money: self.editAppropriateMoneyProject.money,
                 projectId: self.projectDetail.id,
-                userName: self.user.userName,
+                userName: self.user.role,
                 createTime: Utils.formatDate(new Date()) + ".000"
             };
             self.$http.post('/api/project/addAppMoney', editAppMoneyData).then(res => {

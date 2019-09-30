@@ -1,5 +1,83 @@
 <template>
     <div class="budget-years-plan">
+        <!--查询条件 start-->
+        <div class="general-search">
+            <div><i class="el-icon-search cursor-default"></i><h5 class="inline-block">所有项目查询</h5></div>
+            <el-form :inline="true" ref="searchData" v-model="budgetYearsPlanProject.formData" style="padding-left: 30px">
+                <div style="margin-bottom: 12px;">
+                </div>
+                <div class="inline-block">
+                    <el-form-item class="agent-select-label" label="项目单位" prop="projectInstitution">
+                        <el-select v-model="budgetYearsPlanProject.formData.projectInstitution" name="projectInstitution"
+                                   clearable placeholder="项目单位"
+                                   class="width180">
+                            <el-option
+                                v-for="item in projectInstitutionList"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.name">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </div>
+                <div class="inline-block">
+                    <el-form-item label="项目类型" prop="projectType" class="margin-r5">
+                        <el-select v-model="budgetYearsPlanProject.formData.projectType" name="projectType"
+                                   clearable placeholder="项目类型" class="width180">
+                            <el-option :label="'新建'" :value="'新建'"></el-option>
+                            <el-option :label="'存量'" :value="'存量'"></el-option>
+                            <el-option :label="'改扩建'" :value="'改扩建'"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </div>
+                <div class="inline-block">
+                    <el-form-item label="项目名称" prop="" class="agent-select-label">
+                        <el-input placeholder="按项目名称搜索" v-model="budgetYearsPlanProject.formData.projectName"
+                                  required
+                                  prefix-icon="el-icon-search"
+                                  class="input-with-select nick-name-input"></el-input>
+                    </el-form-item>
+                </div>
+                <!--其他条件-->
+                <div class="width100 other-condition">
+                    <el-form-item label="项目周期" prop="projectYears" class="margin-r5">
+                        <el-select v-model="budgetYearsPlanProject.formData.projectYears" clearable
+                                   placeholder="项目周期">
+                            <el-option :label="'3年'" :value="'3'"></el-option>
+                            <el-option :label="'2年'" :value="'2'"></el-option>
+                            <el-option :label="'1年'" :value="'1'"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="项目编号" prop="projectContactUserName" class="margin-r6">
+                        <el-input placeholder="按项目编号搜索" v-model="budgetYearsPlanProject.formData.id"
+                                  required
+                                  prefix-icon="el-icon-search"
+                                  class="input-with-select nick-name-input"></el-input>
+                    </el-form-item>
+                    <!--<el-button plain-->
+                    <!--class="margin-t4 margin-l-5 color-blue border-blue"-->
+                    <!--@click="showMoreQuery =! showMoreQuery">-->
+                    <!--更多条件<i class="margin-l-5"-->
+                    <!--:class="{'el-icon-arrow-down':!showMoreQuery,'el-icon-arrow-up':showMoreQuery}"></i>-->
+                    <!--</el-button>-->
+                </div>
+                <!--更多查询条件-->
+                <!--<div v-show="showMoreQuery" class="more-query">-->
+                <!--<el-form-item label="项目联系人" prop="projectContactUserName" class="margin-r6">-->
+                <!--<el-input placeholder="按项目联系人搜索" v-model="budgetYearsPlanProject.formData.projectContactUserName"-->
+                <!--@change="changeQuickQuery('CusNickName')" required-->
+                <!--prefix-icon="el-icon-search"-->
+                <!--class="input-with-select nick-name-input"></el-input>-->
+                <!--</el-form-item>-->
+                <!--</div>-->
+                <!--按钮-->
+                <div class="text-c medium-btn">
+                    <el-button type="primary" @click="queryBudgetYearsPlanProject(true)">查询</el-button>
+                    <el-button type="primary" @click="showDefaultQuickQuery(false)">重置</el-button>
+                </div>
+            </el-form>
+        </div>
+        <!--查询条件 end-->
         <div class="report-form element-table less-condition">
             <el-table
                 :data="budgetYearsPlanProject.budgetYearsPlanProjectList"

@@ -7,7 +7,7 @@
             <el-form :inline="true" ref="searchData" v-model="newProject.formData" style="padding-left: 30px">
                 <!--快捷查询 start-->
                 <div class="quick-search clearFix" v-if="user.grade==0||user.grade==1">
-                    <div class="f-l color-label">操作 </div>
+                    <div class="f-l color-label">操作</div>
                     <div class="f-l el-tag-list margin-l-5">
                         <el-tag
                             class="margin-b5">
@@ -20,66 +20,60 @@
                 </div>
                 <div class="inline-block">
                     <el-form-item class="agent-select-label" label="项目单位" prop="projectInstitution">
-                        <el-select v-model="newProject.formData.projectInstitution" name="skillGroup"
-                                   @change="changeQuickQuery('projectInstitution')" clearable placeholder="项目单位" class="width180">
+                        <el-select v-model="newProject.formData.projectInstitution" name="projectInstitution"
+                                   clearable placeholder="项目单位"
+                                   class="width180">
                             <el-option
                                 v-for="item in projectInstitutionList"
                                 :key="item.id"
                                 :label="item.name"
-                                :value="item.id">
+                                :value="item.name">
                             </el-option>
                         </el-select>
                     </el-form-item>
                 </div>
                 <div class="inline-block">
                     <el-form-item label="项目类型" prop="projectType" class="margin-r5">
-                        <el-select v-model="newProject.formData.projectType" name="skillGroup"
-                                   @change="changeQuickQuery('projectType')" clearable placeholder="项目类型" class="width180">
-                            <el-option :label="'新建'" :value="'new'"></el-option>
-                            <el-option :label="'存量'" :value="'old'"></el-option>
-                            <el-option :label="'改扩建'" :value="'edit'"></el-option>
+                        <el-select v-model="newProject.formData.projectType" name="projectType"
+                                   clearable placeholder="项目类型" class="width180">
+                            <el-option :label="'新建'" :value="'新建'"></el-option>
+                            <el-option :label="'存量'" :value="'存量'"></el-option>
+                            <el-option :label="'改扩建'" :value="'改扩建'"></el-option>
                         </el-select>
                     </el-form-item>
                 </div>
                 <div class="inline-block">
                     <el-form-item label="项目名称" prop="" class="agent-select-label">
                         <el-input placeholder="按项目名称搜索" v-model="newProject.formData.projectName"
-                                  @change="changeQuickQuery('CusNickName')" required
+                                  required
                                   prefix-icon="el-icon-search"
                                   class="input-with-select nick-name-input"></el-input>
                     </el-form-item>
                 </div>
                 <!--其他条件-->
                 <div class="width100 other-condition">
-                    <el-form-item label="资金来源" prop="" class="margin-r5">
-                        <el-select v-model="newProject.formData.projectMoneyFrom" @change="changeQuickQuery('projectMoneyFrom')" clearable
-                                   placeholder="资金来源">
-                                <el-option :label="'财政资金（上级）'" :value="'highFinance'"></el-option>
-                                <el-option :label="'财政资金（本级）'" :value="'localFinance'"></el-option>
-                                <el-option :label="'自筹'" :value="'independently'"></el-option>
+                    <el-form-item label="项目周期" prop="projectYears" class="margin-r5">
+                        <el-select v-model="newProject.formData.projectYears" clearable
+                                   placeholder="项目周期">
+                            <el-option :label="'3年'" :value="'3'"></el-option>
+                            <el-option :label="'2年'" :value="'2'"></el-option>
+                            <el-option :label="'1年'" :value="'1'"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="项目联系人" prop="projectContactUserName" class="margin-r6">
-                        <el-input placeholder="按项目联系人搜索" v-model="newProject.formData.projectContactUserName"
-                                  @change="changeQuickQuery('CusNickName')" required
+                    <el-form-item label="项目编号" prop="projectContactUserName" class="margin-r6">
+                        <el-input placeholder="按项目编号搜索" v-model="newProject.formData.id"
+                                  required
                                   prefix-icon="el-icon-search"
                                   class="input-with-select nick-name-input"></el-input>
                     </el-form-item>
-                    <el-button plain
-                               class="margin-t4 margin-l-5 color-blue border-blue"
-                               @click="showMoreQuery =! showMoreQuery">
-                        更多条件<i class="margin-l-5" :class="{'el-icon-arrow-down':!showMoreQuery,'el-icon-arrow-up':showMoreQuery}"></i>
-                    </el-button>
+                    <!--<el-button plain-->
+                    <!--class="margin-t4 margin-l-5 color-blue border-blue"-->
+                    <!--@click="showMoreQuery =! showMoreQuery">-->
+                    <!--更多条件<i class="margin-l-5"-->
+                    <!--:class="{'el-icon-arrow-down':!showMoreQuery,'el-icon-arrow-up':showMoreQuery}"></i>-->
+                    <!--</el-button>-->
                 </div>
                 <!--更多查询条件-->
-                <div v-show="showMoreQuery" class="more-query">
-                    <el-form-item label="项目联系人" prop="projectContactUserName" class="margin-r6">
-                        <el-input placeholder="按项目联系人搜索" v-model="newProject.formData.projectContactUserName"
-                                  @change="changeQuickQuery('CusNickName')" required
-                                  prefix-icon="el-icon-search"
-                                  class="input-with-select nick-name-input"></el-input>
-                    </el-form-item>
-                </div>
                 <!--按钮-->
                 <div class="text-c medium-btn">
                     <el-button type="primary" @click="queryNewProject(true)">查询</el-button>
@@ -102,7 +96,8 @@
                     <template slot-scope="scope">{{scope.row.projectInstitution}}</template>
                 </el-table-column>
                 <el-table-column show-overflow-tooltip prop="projectName" label="项目名称">
-                    <template slot-scope="scope"><a @click.stop="showNewProjectDetails($event,scope.row)">{{scope.row.projectName}}</a></template>
+                    <template slot-scope="scope"><a @click.stop="showNewProjectDetails($event,scope.row)">{{scope.row.projectName}}</a>
+                    </template>
                 </el-table-column>
                 <el-table-column show-overflow-tooltip prop="projectType" label="项目类型">
                     <template slot-scope="scope">{{scope.row.projectType}}</template>
@@ -149,14 +144,15 @@
         <div class="text-r margin-t10">
             <div class="f-r clearFix">
                 <div class="f-l pagination-total">
-                    <a class=""v-if="!showCountNumber && IsNewMediaSessionLargeData == '1'"  @click="queryNewProjectCount">查询总数</a>
-                    <span class=""  v-else >共 <span>{{newProject.count}}</span> 条</span>
+                    <a class="" v-if="!showCountNumber && IsNewMediaSessionLargeData == '1'"
+                       @click="queryNewProjectCount">查询总数</a>
+                    <span class="" v-else>共 <span>{{newProject.count}}</span> 条</span>
                 </div>
                 <el-pagination class="f-r"
-                               @current-change ="queryNewProject(false)"
+                               @current-change="queryNewProject(false)"
                                layout="prev, pager, next, jumper"
                                :total="newProject.count"
-                               :current-page.sync ="newProject.currentPage"
+                               :current-page.sync="newProject.currentPage"
                 >
                 </el-pagination>
             </div>
@@ -168,9 +164,10 @@
             :visible.sync="drawerCreate"
             :direction="direction"
             custom-class="demo-drawer"
+            ref="drawerNew"
             size=60%
             :before-close="handleClose">
-            <project-new @onListen="handleClose">
+            <project-new @onListen="closeDrawer" :drawerClick="objDrawer">
 
             </project-new>
         </el-drawer>
@@ -183,7 +180,7 @@
             custom-class="demo-drawer"
             size=55%
             :before-close="handleClose">
-            <show-project-Detail @onListen="handleClose" :projectDetail = "projectDetail" :step="1">
+            <show-project-Detail @onListen="handleClose" :projectDetail="projectDetail" :step="1">
 
             </show-project-Detail>
         </el-drawer>

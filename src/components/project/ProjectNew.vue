@@ -7,7 +7,7 @@
             <el-form-item label="项目单位" prop="projectInstitution">
                 <el-select v-model="createProject.projectInstitution" placeholder="请选择项目单位">
                     <el-option
-                        v-for="(item,index) in projectInstitution"
+                        v-for="item in projectInstitution"
                         :key="item.id"
                         :label="item.name"
                         :value="item.name">

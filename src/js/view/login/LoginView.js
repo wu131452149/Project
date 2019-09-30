@@ -79,10 +79,6 @@ export default {
                         } else {
                             if (res.data.recordset.length != 0) {
                                 let user = res.data.recordset[0];
-                                // self.$message({
-                                //     message: "欢迎您，"+user.userName+"管理员",
-                                //     type: 'success'
-                                // });
                                 window.sessionStorage.setItem('user', JSON.stringify(user));
                                 self.$router.replace({
                                     path: '/main'

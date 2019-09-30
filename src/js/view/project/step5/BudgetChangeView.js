@@ -24,21 +24,10 @@ export default {
                 budgetChangeProjectList: [],
                 formData: {
                     projectInstitution: "",
-                    projectFinance: "",
                     projectName: "",
                     projectType: "",
-                    projectMoney: [],
-                    projectMoneyFrom: "",
-                    projectIndustry: "",
-                    projectCreateTime: "",
                     projectYears: "",
-                    projectContactUserName: "",
-                    projectContactUserPhone: "",
-                    projectSituation: "",
-                    create_begin_time: "",
-                    create_end_time: "",
-                    finish_begin_time: "",
-                    finish_end_time: "",
+                    id: "",
                 },
                 count: 0,
                 currentPage: 1
@@ -61,17 +50,29 @@ export default {
             },
             user: {},
             budgetYearsPlanMoneyList: [],
+            projectInstitutionList:[]
         };
     },
     mounted: function () {
         var self = this;
+        self.user = JSON.parse(sessionStorage.getItem('user'));
+        self.projectInstitutionList = JSON.parse(window.sessionStorage.getItem('institution'));
         self.queryBudgetChangeProject();
         self.queryBudgetChangeProjectCount();
         self.queryAppropriateMoney();
-        self.user = JSON.parse(sessionStorage.getItem('user'));
-
     },
     methods: {
+        showDefaultQuickQuery: function (flag) {
+            var self = this;
+            self.budgetChangeProject.formData.projectInstitution = "";
+            self.budgetChangeProject.formData.projectType = "";
+            self.budgetChangeProject.formData.projectName = "";
+            self.budgetChangeProject.formData.projectYears = "";
+            self.budgetChangeProject.formData.id = "";
+            if (flag) {
+                self.queryBudgetChangeProject(true);
+            }
+        },
         //查询预算变更
         queryBudgetChangeProject: function (flag) {
             let self = this;
@@ -110,7 +111,7 @@ export default {
         queryAppropriateMoney: function () {
             let self = this;
             let data = {};
-            data.userName = self.user.userName;
+            data.userName = self.user.role;
             //data.userName = "root";
             self.$http.post('/api/project/queryAppMoney', data).then(res => {
                 let status = res.status;
@@ -198,9 +199,6 @@ export default {
                 })
                 .catch(_ => {
                 });
-        },
-        showDefaultQuickQuery: function () {
-
         },
         //录入预算拨付
         editBudgetChangeTab: function (e, data) {
@@ -321,7 +319,7 @@ export default {
                 type: self.editBudgetChange.type,
                 money: self.editBudgetChange.money,
                 projectId: self.projectDetail.id,
-                userName: self.user.userName,
+                userName: self.user.role,
                 proChangeNo: self.editBudgetChange.approvalChangeNo,
                 createTime: Utils.formatDate(new Date()) + ".000"
             };

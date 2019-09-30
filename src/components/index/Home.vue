@@ -9,14 +9,11 @@
                         <div class="el-col el-col-4">
                             <el-card class="box-card">
                                 <div slot="header" class="clearfix">
-                                    <span>待审核项目</span>
+                                    <span>总项目</span>
                                 </div>
                                 <div class="text item">
                                     <div><span>个数：</span>
-                                        <el-button>{{ o }}</el-button>
-                                    </div>
-                                    <div><span>金额：</span>
-                                        <el-button>{{ o }}</el-button>
+                                        <span>{{ allProject.count}}</span>
                                     </div>
                                 </div>
                             </el-card>
@@ -24,14 +21,11 @@
                         <div class="el-col el-col-4">
                             <el-card class="box-card">
                                 <div slot="header" class="clearfix">
-                                    <span>审核通过项目</span>
+                                    <span>新建项目</span>
                                 </div>
                                 <div class="text item">
                                     <div><span>个数：</span>
-                                        <el-button>{{ o }}</el-button>
-                                    </div>
-                                    <div><span>金额：</span>
-                                        <el-button>{{ o }}</el-button>
+                                        <span>{{ monitor.newProjectCount }}</span>
                                     </div>
                                 </div>
                             </el-card>
@@ -39,14 +33,11 @@
                         <div class="el-col el-col-4">
                             <el-card class="box-card">
                                 <div slot="header" class="clearfix">
-                                    <span>入库项目（已发布）</span>
+                                    <span>完工项目</span>
                                 </div>
                                 <div class="text item">
                                     <div><span>个数：</span>
-                                        <el-button>{{ o }}</el-button>
-                                    </div>
-                                    <div><span>金额：</span>
-                                        <el-button>{{ o }}</el-button>
+                                        <span>{{monitor.finishedProjectCount}}</span>
                                     </div>
                                 </div>
                             </el-card>
@@ -58,10 +49,7 @@
                                 </div>
                                 <div class="text item">
                                     <div><span>个数：</span>
-                                        <el-button>{{ o }}</el-button>
-                                    </div>
-                                    <div><span>金额：</span>
-                                        <el-button>{{ o }}</el-button>
+                                        <span>{{ monitor.returnedProjectCount}}</span>
                                     </div>
                                 </div>
                             </el-card>
@@ -132,73 +120,71 @@
                         </div>
                         <div class="inline-block">
                             <el-form-item class="agent-select-label" label="项目单位" prop="projectInstitution">
-                                <el-select v-model="allProject.formData.projectInstitution" name="skillGroup"
-                                           @change="changeQuickQuery('projectInstitution')" clearable placeholder="项目单位"
+                                <el-select v-model="allProject.formData.projectInstitution" name="projectInstitution"
+                                           clearable placeholder="项目单位"
                                            class="width180">
                                     <el-option
                                         v-for="item in projectInstitutionList"
                                         :key="item.id"
                                         :label="item.name"
-                                        :value="item.id">
+                                        :value="item.name">
                                     </el-option>
                                 </el-select>
                             </el-form-item>
                         </div>
                         <div class="inline-block">
                             <el-form-item label="项目类型" prop="projectType" class="margin-r5">
-                                <el-select v-model="allProject.formData.projectType" name="skillGroup"
-                                           @change="changeQuickQuery('projectType')" clearable placeholder="项目类型"
-                                           class="width180">
-                                    <el-option :label="'新建'" :value="'new'"></el-option>
-                                    <el-option :label="'存量'" :value="'old'"></el-option>
-                                    <el-option :label="'改扩建'" :value="'edit'"></el-option>
+                                <el-select v-model="allProject.formData.projectType" name="projectType"
+                                           clearable placeholder="项目类型" class="width180">
+                                    <el-option :label="'新建'" :value="'新建'"></el-option>
+                                    <el-option :label="'存量'" :value="'存量'"></el-option>
+                                    <el-option :label="'改扩建'" :value="'改扩建'"></el-option>
                                 </el-select>
                             </el-form-item>
                         </div>
                         <div class="inline-block">
                             <el-form-item label="项目名称" prop="" class="agent-select-label">
                                 <el-input placeholder="按项目名称搜索" v-model="allProject.formData.projectName"
-                                          @change="changeQuickQuery('CusNickName')" required
+                                          required
                                           prefix-icon="el-icon-search"
                                           class="input-with-select nick-name-input"></el-input>
                             </el-form-item>
                         </div>
                         <!--其他条件-->
                         <div class="width100 other-condition">
-                            <el-form-item label="资金来源" prop="" class="margin-r5">
-                                <el-select v-model="allProject.formData.projectMoneyFrom"
-                                           @change="changeQuickQuery('projectMoneyFrom')" clearable
-                                           placeholder="资金来源">
-                                    <el-option :label="'财政资金（上级）'" :value="'highFinance'"></el-option>
-                                    <el-option :label="'财政资金（本级）'" :value="'localFinance'"></el-option>
-                                    <el-option :label="'自筹'" :value="'independently'"></el-option>
+                            <el-form-item label="项目周期" prop="projectYears" class="margin-r5">
+                                <el-select v-model="allProject.formData.projectYears" clearable
+                                           placeholder="项目周期">
+                                    <el-option :label="'3年'" :value="'3'"></el-option>
+                                    <el-option :label="'2年'" :value="'2'"></el-option>
+                                    <el-option :label="'1年'" :value="'1'"></el-option>
                                 </el-select>
                             </el-form-item>
-                            <el-form-item label="项目联系人" prop="projectContactUserName" class="margin-r6">
-                                <el-input placeholder="按项目联系人搜索" v-model="allProject.formData.projectContactUserName"
-                                          @change="changeQuickQuery('CusNickName')" required
+                            <el-form-item label="项目编号" prop="projectContactUserName" class="margin-r6">
+                                <el-input placeholder="按项目编号搜索" v-model="allProject.formData.id"
+                                          required
                                           prefix-icon="el-icon-search"
                                           class="input-with-select nick-name-input"></el-input>
                             </el-form-item>
-                            <el-button plain
-                                       class="margin-t4 margin-l-5 color-blue border-blue"
-                                       @click="showMoreQuery =! showMoreQuery">
-                                更多条件<i class="margin-l-5"
-                                       :class="{'el-icon-arrow-down':!showMoreQuery,'el-icon-arrow-up':showMoreQuery}"></i>
-                            </el-button>
+                            <!--<el-button plain-->
+                                       <!--class="margin-t4 margin-l-5 color-blue border-blue"-->
+                                       <!--@click="showMoreQuery =! showMoreQuery">-->
+                                <!--更多条件<i class="margin-l-5"-->
+                                       <!--:class="{'el-icon-arrow-down':!showMoreQuery,'el-icon-arrow-up':showMoreQuery}"></i>-->
+                            <!--</el-button>-->
                         </div>
                         <!--更多查询条件-->
-                        <div v-show="showMoreQuery" class="more-query">
-                            <el-form-item label="项目联系人" prop="projectContactUserName" class="margin-r6">
-                                <el-input placeholder="按项目联系人搜索" v-model="allProject.formData.projectContactUserName"
-                                          @change="changeQuickQuery('CusNickName')" required
-                                          prefix-icon="el-icon-search"
-                                          class="input-with-select nick-name-input"></el-input>
-                            </el-form-item>
-                        </div>
+                        <!--<div v-show="showMoreQuery" class="more-query">-->
+                            <!--<el-form-item label="项目联系人" prop="projectContactUserName" class="margin-r6">-->
+                                <!--<el-input placeholder="按项目联系人搜索" v-model="allProject.formData.projectContactUserName"-->
+                                          <!--@change="changeQuickQuery('CusNickName')" required-->
+                                          <!--prefix-icon="el-icon-search"-->
+                                          <!--class="input-with-select nick-name-input"></el-input>-->
+                            <!--</el-form-item>-->
+                        <!--</div>-->
                         <!--按钮-->
                         <div class="text-c medium-btn">
-                            <el-button type="primary" @click="queryallProject(true)">查询</el-button>
+                            <el-button type="primary" @click="queryAllProject(true)">查询</el-button>
                             <el-button type="primary" @click="showDefaultQuickQuery(false)">重置</el-button>
                         </div>
                     </el-form>
@@ -212,8 +198,8 @@
                         height="100%"
                         @click.stop.prevent="stopPropagationPreventDef($event)"
                         style="width: 100%;">
-                        <el-table-column show-overflow-tooltip prop="userName" label="主管部门" width="100">
-                            <template slot-scope="scope">{{scope.row.userName}}</template>
+                        <el-table-column show-overflow-tooltip prop="commitName" label="主管部门" width="100">
+                            <template slot-scope="scope">{{scope.row.commitName}}</template>
                         </el-table-column>
                         <el-table-column show-overflow-tooltip prop="projectInstitution" label="项目单位">
                             <template slot-scope="scope">{{scope.row.projectInstitution}}</template>
@@ -235,47 +221,47 @@
                                 <span>{{scope.row.projectYears}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="projectYears" label="预算评审金额（万元）" width="80">
+                        <el-table-column show-overflow-tooltip prop="budgetReviewMoney" label="预算评审金额（万元）" width="80">
                             <template slot-scope="scope">
                                 <span>{{scope.row.budgetReviewMoney}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="projectYears" label="合计安排（万元）" width="80">
+                        <el-table-column show-overflow-tooltip prop="yearsPlanTotalMoneyNo" label="合计安排（万元）" width="80">
                             <template slot-scope="scope">
                                 <span>{{scope.row.yearsPlanTotalMoneyNo}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="projectYears" label="以前年度累计安排（万元）" width="80">
+                        <el-table-column show-overflow-tooltip prop="yearsPlanTotalMoney" label="以前年度累计安排（万元）" width="80">
                             <template slot-scope="scope">
                                 <span>{{scope.row.yearsPlanTotalMoney|renderBeforeYearPlanTotalMoney}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="projectYears" label="当年安排（万元）" width="80">
+                        <el-table-column show-overflow-tooltip prop="yearsPlanTotalMoney" label="当年安排（万元）" width="80">
                             <template slot-scope="scope">
                                 <span>{{scope.row.yearsPlanTotalMoney|renderThisYearPlanTotalMoney}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="projectYears" label="次年安排（万元）" width="80">
+                        <el-table-column show-overflow-tooltip prop="yearsPlanTotalMoney" label="次年安排（万元）" width="80">
                             <template slot-scope="scope">
                                 <span>{{scope.row.yearsPlanTotalMoney|renderNextYearsPlanTotalMoney}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="projectYears" label="第三年安排（万元）" width="80">
+                        <el-table-column show-overflow-tooltip prop="yearsPlanTotalMoney" label="第三年安排（万元）" width="80">
                             <template slot-scope="scope">
                                 <span>{{scope.row.yearsPlanTotalMoney|renderThirdYearsPlanTotalMoney}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="projectYears" label="资金当年拨付（万元）" width="80">
+                        <el-table-column show-overflow-tooltip prop="approTotalMoney" label="资金当年拨付（万元）" width="80">
                             <template slot-scope="scope">
                                 <span>{{scope.row.approTotalMoney|renderAppThisYearMoney}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="projectYears" label="资金累计拨付（万元）" width="80">
+                        <el-table-column show-overflow-tooltip prop="approTotalPlanMoneyNo" label="资金累计拨付（万元）" width="80">
                             <template slot-scope="scope">
                                 <span>{{scope.row.approTotalPlanMoneyNo}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="projectYears" label="欠付金额（万元）" width="80">
+                        <el-table-column show-overflow-tooltip prop="nonPaymentTotalMoneyNo" label="欠付金额（万元）" width="80">
                             <template slot-scope="scope">
                                 <span>{{scope.row.nonPaymentTotalMoneyNo}}</span>
                             </template>

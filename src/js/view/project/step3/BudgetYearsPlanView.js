@@ -58,21 +58,10 @@ export default {
                 budgetYearsPlanProjectList: [],
                 formData: {
                     projectInstitution: "",
-                    projectFinance: "",
                     projectName: "",
                     projectType: "",
-                    projectMoney: [],
-                    projectMoneyFrom: "",
-                    projectIndustry: "",
-                    projectCreateTime: "",
                     projectYears: "",
-                    projectContactUserName: "",
-                    projectContactUserPhone: "",
-                    projectSituation: "",
-                    create_begin_time: "",
-                    create_end_time: "",
-                    finish_begin_time: "",
-                    finish_end_time: "",
+                    id: "",
                 },
                 count: 0,
                 currentPage: 1
@@ -96,18 +85,30 @@ export default {
             },
             user: {},
             budgetYearsPlanMoneyList: [],
+            projectInstitutionList:[]
 
         }
     },
     mounted: function () {
         var self = this;
+        self.user = JSON.parse(sessionStorage.getItem('user'));
+        self.projectInstitutionList = JSON.parse(window.sessionStorage.getItem('institution'));
         self.queryBudgetYearsPlanProject();
         self.queryBudgetYearsPlanProjectCount();
         self.queryBudgetYearsPlanMoney();
-        self.user = JSON.parse(sessionStorage.getItem('user'));
-
     },
     methods: {
+        showDefaultQuickQuery: function (flag) {
+            var self = this;
+            self.budgetYearsPlanProject.formData.projectInstitution = "";
+            self.budgetYearsPlanProject.formData.projectType = "";
+            self.budgetYearsPlanProject.formData.projectName = "";
+            self.budgetYearsPlanProject.formData.projectYears = "";
+            self.budgetYearsPlanProject.formData.id = "";
+            if (flag) {
+                self.queryBudgetYearsPlanProject(true);
+            }
+        },
         editOptionYears: function (data) {
             var self = this;
             self.years = data;
@@ -132,6 +133,7 @@ export default {
             }
         },
         //查询在建项目年度预算评审
+        //可以多次录入，审核通过也可以查询
         queryBudgetYearsPlanProject: function (flag) {
             let self = this;
             let data = {};
@@ -166,11 +168,46 @@ export default {
                     }),
                 );
         },
+        //查询条数
+        queryBudgetYearsPlanProjectCount: function () {
+            let self = this;
+            let data = {};
+            data.page = self.budgetYearsPlanProject.currentPage;
+            data.step = 3;
+            data.stepThreeApp = 1;
+            data.ifReturned = 0;
+            self.$http.post('/api/project/queryProjectCount', data).then(res => {
+                let status = res.status;
+                let statusText = res.statusText;
+                if (status !== 200) {
+                    self.$message({
+                        message: statusText,
+                        type: 'error'
+                    });
+                } else {
+                    if (res.data.length != 0) {
+                        self.budgetYearsPlanProject.count = res.data.recordset[0].num;
+                    } else {
+                        self.$message({
+                            message: "查询失败",
+                            type: 'warning'
+                        });
+                    }
+                }
+            })
+                .catch(error =>
+                    self.$message({
+                        message: error.message,
+                        type: 'error'
+                    }),
+                );
+
+        },
         //查询在建项目年度预算评审
         queryBudgetYearsPlanMoney: function () {
             let self = this;
             let data = {};
-            data.userName = self.user.userName;
+            data.userName = self.user.role;
             //data.userName = "root";
             self.$http.post('/api/project/queryBudgetYearsPlanMoney', data).then(res => {
                 let status = res.status;
@@ -211,41 +248,6 @@ export default {
             }
 
         },
-        //查询条数
-        queryBudgetYearsPlanProjectCount: function () {
-            let self = this;
-            let data = {};
-            data.page = self.budgetYearsPlanProject.currentPage;
-            data.step = 3;
-            data.stepThreeApp = 1;
-            data.ifReturned = 0;
-            self.$http.post('/api/project/queryProjectCount', data).then(res => {
-                let status = res.status;
-                let statusText = res.statusText;
-                if (status !== 200) {
-                    self.$message({
-                        message: statusText,
-                        type: 'error'
-                    });
-                } else {
-                    if (res.data.length != 0) {
-                        self.budgetYearsPlanProject.count = res.data.recordset[0].num;
-                    } else {
-                        self.$message({
-                            message: "查询失败",
-                            type: 'warning'
-                        });
-                    }
-                }
-            })
-                .catch(error =>
-                    self.$message({
-                        message: error.message,
-                        type: 'error'
-                    }),
-                );
-
-        },
         handleClose(done) {
             this.$confirm('确定要提交表单吗？')
                 .then(_ => {
@@ -269,9 +271,6 @@ export default {
                 })
                 .catch(_ => {
                 });
-        },
-        showDefaultQuickQuery: function () {
-
         },
         //录入预算安排
         editBudgetYearsPlanTab: function (e, data) {
@@ -435,7 +434,7 @@ export default {
                 type: self.editBudgetYearsPlan.type,
                 money: self.editBudgetYearsPlan.money,
                 projectId: self.projectDetail.id,
-                userName: self.user.userName,
+                userName: self.user.role,
                 createTime: Utils.formatDate(new Date()) + ".000"
             };
             self.$http.post('/api/project/addBudgetYearsPlan', editBudgetData).then(res => {

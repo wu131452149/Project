@@ -23,11 +23,13 @@ export default {
                 count: 0,
                 currentPage: 1
             },
+            user:{},
             formLabelWidth: '80px'
         };
     },
     mounted: function () {
         var self = this;
+        self.user = JSON.parse(window.sessionStorage.getItem('user'));
         self.queryInstitution();
         self.queryInstitutionCount();
     },
@@ -35,10 +37,9 @@ export default {
         /*新建单位*/
         createInstitution: function () {
             let self = this;
-            let user = window.sessionStorage.getItem('user');
             var dataParam = {};
             dataParam.name = self.newInstitution;
-            dataParam.userName = user.userName;
+            dataParam.userName = self.user.role;
             dataParam.time = Utils.formatDate(new Date()) + ".000";
             self.$http.post('/api/institution/createInstitution', dataParam).then(res => {
                 let status = res.status;
@@ -98,14 +99,10 @@ export default {
                     });
                 } else {
                     if (res.data.length != 0) {
-                        this.institution.institutionList = res.data.recordset;
-                        self.$message({
-                            message: "保存成功",
-                            type: 'success'
-                        });
+                        self.institution.institutionList = res.data.recordset;
                     } else {
                         self.$message({
-                            message: "保存失败",
+                            message: "查询失败",
                             type: 'warning'
                         });
                     }
@@ -148,10 +145,6 @@ export default {
                 } else {
                     if (res.data.length != 0) {
                         self.institution.count = res.data.recordset[0].num;
-                        self.$message({
-                            message: "查询成功",
-                            type: 'success'
-                        });
                     } else {
                         self.$message({
                             message: "查询失败",

@@ -25,7 +25,7 @@ export default {
     },
     mounted: function () {
         // 验证码初始化
-        $('.main-content').height($(window).height() - 200);
+        //$('.main-content').height($(window).height() - 200);
     },
     methods: {
         /**

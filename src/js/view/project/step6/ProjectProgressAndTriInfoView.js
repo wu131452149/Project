@@ -26,21 +26,10 @@ export default {
                 proAndTriProjectList: [],
                 formData: {
                     projectInstitution: "",
-                    projectFinance: "",
                     projectName: "",
                     projectType: "",
-                    projectMoney: [],
-                    projectMoneyFrom: "",
-                    projectIndustry: "",
-                    projectCreateTime: "",
                     projectYears: "",
-                    projectContactUserName: "",
-                    projectContactUserPhone: "",
-                    projectSituation: "",
-                    create_begin_time: "",
-                    create_end_time: "",
-                    finish_begin_time: "",
-                    finish_end_time: "",
+                    id: "",
                 },
                 count: 0,
                 currentPage: 1
@@ -72,16 +61,28 @@ export default {
             },
             user: {},
             budgetYearsPlanMoneyList: [],
+            projectInstitutionList:[],
         };
     },
     mounted: function () {
         var self = this;
+        self.user = JSON.parse(sessionStorage.getItem('user'));
+        self.projectInstitutionList = JSON.parse(window.sessionStorage.getItem('institution'));
         self.queryProAndTriProject();
         self.queryProAndTriProjectCount();
-        self.user = JSON.parse(sessionStorage.getItem('user'));
-
     },
     methods: {
+        showDefaultQuickQuery: function (flag) {
+            var self = this;
+            self.proAndTriProject.formData.projectInstitution = "";
+            self.proAndTriProject.formData.projectType = "";
+            self.proAndTriProject.formData.projectName = "";
+            self.proAndTriProject.formData.projectYears = "";
+            self.proAndTriProject.formData.id = "";
+            if (flag) {
+                self.queryProAndTriProject(true);
+            }
+        },
         //查询预算变更
         queryProAndTriProject: function (flag) {
             let self = this;
@@ -174,9 +175,6 @@ export default {
                 })
                 .catch(_ => {
                 });
-        },
-        showDefaultQuickQuery: function () {
-
         },
         //录入预算拨付
         editProgressTab: function (e, data) {

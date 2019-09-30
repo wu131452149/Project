@@ -7,7 +7,7 @@ import Utils from "../../lib/utils/Utils";
 
 export default {
     name: "ProjectNewView",
-    props:['returnProjectInfo','type'],
+    props: ['returnProjectInfo', 'type','drawerClick'],
     data() {
         return {
             dialog: false,
@@ -47,21 +47,22 @@ export default {
             moneyFrom: Utils.getMoneyFrom(),
             projectType: Utils.getProjectType(),
             getProjectYears: Utils.getProjectYears(),
-            user:{},
+            user: {},
         }
 
     },
     mounted: function () {
         var self = this;
         // 验证码初始化
-        $('.main-content').height($(window).height() - 200);
+        //$('.main-content').height($(window).height() - 200);
         self.projectInstitution = JSON.parse(window.sessionStorage.getItem('institution'));
         self.user = JSON.parse(sessionStorage.getItem('user'));
     }
     ,
     methods: {
         closeForm: function () {
-            this.$emit('onListen', false);
+            //this.$emit('onListen', false);
+            this.drawerClick.drawerNew.hide();
         },
         //新建表单，项目
         commitForm: function () {
@@ -155,11 +156,6 @@ export default {
 
         }
         ,
-        showCreatedProject: function () {
-            let self = this;
-            self.drawerCreated = true;
-        }
-        ,
         handleClose(done) {
             this.$confirm('确认关闭？')
                 .then(_ => {
@@ -222,23 +218,25 @@ export default {
 //     })
 // },
     },
-    watch:{
+    watch: {
         "returnProjectInfo": {
             immediate: true,
-                handler:function (val) {
+            handler: function (val) {
                 var self = this;
-                self.createProject.projectInstitution = val.projectInstitution;
-                self.createProject.projectFinance = val.projectFinance;
-                self.createProject.projectName = val.projectName;
-                self.createProject.projectType = val.projectType;
-                self.createProject.projectMoney = val.projectMoney;
-                self.createProject.projectIndustry = val.projectIndustry;
-                self.createProject.projectMoneyFrom = val.projectMoneyFrom;
-                self.createProject.projectBeginTime = val.projectBeginTime;
-                self.createProject.projectContactUserName = val.projectContactUserName;
-                self.createProject.projectContactUserPhone = val.projectContactUserPhone;
-                self.createProject.projectSituation = val.projectSituation;
-                self.createProject.projectYears = val.projectYears;
+                if(val){
+                    self.createProject.projectInstitution = val.projectInstitution;
+                    self.createProject.projectFinance = val.projectFinance;
+                    self.createProject.projectName = val.projectName;
+                    self.createProject.projectType = val.projectType;
+                    self.createProject.projectMoney = val.projectMoney;
+                    self.createProject.projectIndustry = val.projectIndustry;
+                    self.createProject.projectMoneyFrom = val.projectMoneyFrom;
+                    self.createProject.projectBeginTime = val.projectBeginTime;
+                    self.createProject.projectContactUserName = val.projectContactUserName;
+                    self.createProject.projectContactUserPhone = val.projectContactUserPhone;
+                    self.createProject.projectSituation = val.projectSituation;
+                    self.createProject.projectYears = val.projectYears;
+                }
             }
 
         }

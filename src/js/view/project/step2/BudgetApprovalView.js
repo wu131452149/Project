@@ -24,21 +24,10 @@ export default {
                 budgetPlanProjectList: [],
                 formData: {
                     projectInstitution: "",
-                    projectFinance: "",
                     projectName: "",
                     projectType: "",
-                    projectMoney: [],
-                    projectMoneyFrom: "",
-                    projectIndustry: "",
-                    projectCreateTime: "",
                     projectYears: "",
-                    projectContactUserName: "",
-                    projectContactUserPhone: "",
-                    projectSituation: "",
-                    create_begin_time: "",
-                    create_end_time: "",
-                    finish_begin_time: "",
-                    finish_end_time: "",
+                    id: "",
                 },
                 count: 0,
                 currentPage: 1
@@ -63,6 +52,7 @@ export default {
                 ],
             },
             user:{},
+            projectInstitutionList:[],
             uploadData: {
 
             },
@@ -71,11 +61,23 @@ export default {
     },
     mounted: function () {
         var self = this;
+        self.user = JSON.parse(sessionStorage.getItem('user'));
+        self.projectInstitutionList = JSON.parse(window.sessionStorage.getItem('institution'));
         self.queryBudgetPlanProject();
         self.queryBudgetPlanProjectCount();
-        self.user = JSON.parse(sessionStorage.getItem('user'));
     },
     methods: {
+        showDefaultQuickQuery: function (flag) {
+            var self = this;
+            self.budgetPlanProject.formData.projectInstitution = "";
+            self.budgetPlanProject.formData.projectType = "";
+            self.budgetPlanProject.formData.projectName = "";
+            self.budgetPlanProject.formData.projectYears = "";
+            self.budgetPlanProject.formData.id = "";
+            if (flag) {
+                self.queryBudgetPlanProject(true);
+            }
+        },
         //查询在建项目预算评审
         queryBudgetPlanProject: function (flag) {
             let self = this;
@@ -169,9 +171,6 @@ export default {
                 .catch(_ => {
                 });
         },
-        showDefaultQuickQuery: function () {
-
-        },
         //录入预算安排
         editBudgetPlanTab:function (e,data) {
             var self = this;
@@ -182,7 +181,7 @@ export default {
 
         },
         closeForm:function(){
-
+            this.$refs.drawerBudget.close();
         },
         //显示新建库详情
         showNewProjectDetails:function(e,data){

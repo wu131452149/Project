@@ -8,62 +8,49 @@
                 </div>
                 <div class="inline-block">
                     <el-form-item class="agent-select-label" label="项目单位" prop="projectInstitution">
-                        <el-select v-model="finishedProject.formData.projectInstitution" name="skillGroup"
-                                   @change="changeQuickQuery('projectInstitution')" clearable placeholder="项目单位" class="width180">
+                        <el-select v-model="finishedProject.formData.projectInstitution" name="projectInstitution"
+                                   clearable placeholder="项目单位"
+                                   class="width180">
                             <el-option
                                 v-for="item in projectInstitutionList"
                                 :key="item.id"
                                 :label="item.name"
-                                :value="item.id">
+                                :value="item.name">
                             </el-option>
                         </el-select>
                     </el-form-item>
                 </div>
                 <div class="inline-block">
                     <el-form-item label="项目类型" prop="projectType" class="margin-r5">
-                        <el-select v-model="finishedProject.formData.projectType" name="skillGroup"
-                                   @change="changeQuickQuery('projectType')" clearable placeholder="项目类型" class="width180">
-                            <el-option :label="'新建'" :value="'new'"></el-option>
-                            <el-option :label="'存量'" :value="'old'"></el-option>
-                            <el-option :label="'改扩建'" :value="'edit'"></el-option>
+                        <el-select v-model="finishedProject.formData.projectType" name="projectType"
+                                   clearable placeholder="项目类型" class="width180">
+                            <el-option :label="'新建'" :value="'新建'"></el-option>
+                            <el-option :label="'存量'" :value="'存量'"></el-option>
+                            <el-option :label="'改扩建'" :value="'改扩建'"></el-option>
                         </el-select>
                     </el-form-item>
                 </div>
                 <div class="inline-block">
                     <el-form-item label="项目名称" prop="" class="agent-select-label">
                         <el-input placeholder="按项目名称搜索" v-model="finishedProject.formData.projectName"
-                                  @change="changeQuickQuery('CusNickName')" required
+                                  required
                                   prefix-icon="el-icon-search"
                                   class="input-with-select nick-name-input"></el-input>
                     </el-form-item>
                 </div>
                 <!--其他条件-->
                 <div class="width100 other-condition">
-                    <el-form-item label="资金来源" prop="" class="margin-r5">
-                        <el-select v-model="finishedProject.formData.projectMoneyFrom" @change="changeQuickQuery('projectMoneyFrom')" clearable
-                                   placeholder="资金来源">
-                            <el-option :label="'财政资金（上级）'" :value="'highFinance'"></el-option>
-                            <el-option :label="'财政资金（本级）'" :value="'localFinance'"></el-option>
-                            <el-option :label="'自筹'" :value="'independently'"></el-option>
+                    <el-form-item label="项目周期" prop="projectYears" class="margin-r5">
+                        <el-select v-model="finishedProject.formData.projectYears" clearable
+                                   placeholder="项目周期">
+                            <el-option :label="'3年'" :value="'3'"></el-option>
+                            <el-option :label="'2年'" :value="'2'"></el-option>
+                            <el-option :label="'1年'" :value="'1'"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="项目联系人" prop="projectContactUserName" class="margin-r6">
-                        <el-input placeholder="按项目联系人搜索" v-model="finishedProject.formData.projectContactUserName"
-                                  @change="changeQuickQuery('CusNickName')" required
-                                  prefix-icon="el-icon-search"
-                                  class="input-with-select nick-name-input"></el-input>
-                    </el-form-item>
-                    <el-button plain
-                               class="margin-t4 margin-l-5 color-blue border-blue"
-                               @click="showMoreQuery =! showMoreQuery">
-                        更多条件<i class="margin-l-5" :class="{'el-icon-arrow-down':!showMoreQuery,'el-icon-arrow-up':showMoreQuery}"></i>
-                    </el-button>
-                </div>
-                <!--更多查询条件-->
-                <div v-show="showMoreQuery" class="more-query">
-                    <el-form-item label="项目联系人" prop="projectContactUserName" class="margin-r6">
-                        <el-input placeholder="按项目联系人搜索" v-model="finishedProject.formData.projectContactUserName"
-                                  @change="changeQuickQuery('CusNickName')" required
+                    <el-form-item label="项目编号" prop="projectContactUserName" class="margin-r6">
+                        <el-input placeholder="按项目编号搜索" v-model="finishedProject.formData.id"
+                                  required
                                   prefix-icon="el-icon-search"
                                   class="input-with-select nick-name-input"></el-input>
                     </el-form-item>

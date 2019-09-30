@@ -10,10 +10,11 @@ export default {
     name: "ShowNewProjectView",
     components: {
         "project-new": ProjectNew,
-        "show-project-Detail":ShowProjectDetail
+        "show-project-Detail": ShowProjectDetail
     },
     data() {
         return {
+            objDrawer: this.$refs,
             drawerDetails: false,
             drawerCreate: false,
             showMoreQuery: false,
@@ -23,54 +24,54 @@ export default {
                 newProjectList: [],
                 formData: {
                     projectInstitution: "",
-                    projectFinance: "",
                     projectName: "",
                     projectType: "",
-                    projectMoney: [],
-                    projectMoneyFrom: "",
-                    projectIndustry: "",
-                    projectCreateTime: "",
                     projectYears: "",
-                    projectContactUserName: "",
-                    projectContactUserPhone: "",
-                    projectSituation: "",
-                    create_begin_time: "",
-                    create_end_time: "",
-                    finish_begin_time: "",
-                    finish_end_time: "",
+                    id: "",
                 },
-                count:0,
-                currentPage:1,
+                count: 0,
+                currentPage: 1,
             },
             showCountNumber: true,
             IsNewMediaSessionLargeData: '',
-            projectDetail:{},
-            user:{
-                grade:0,
-                userName:"",
-                password:"",
-                id:""
+            projectDetail: {},
+            user: {
+                grade: 0,
+                userName: "",
+                password: "",
+                id: ""
             }
 
 
         }
     },
-    beforeMount:function(){
+    beforeMount: function () {
         var self = this;
         self.user = JSON.parse(sessionStorage.getItem('user'));
-        console.log( self.user.grade);
+        self.projectInstitutionList = JSON.parse(window.sessionStorage.getItem('institution'));
     },
     mounted: function () {
         var self = this;
-        // 验证码初始化
         //$('.main-content').height($(window).height() - 200);
         self.queryNewProject();
         self.queryNewProjectCount();
 
     },
     methods: {
+        showDefaultQuickQuery: function (flag) {
+            var self = this;
+            self.newProject.formData.projectInstitution = "";
+            self.newProject.formData.projectType = "";
+            self.newProject.formData.projectName = "";
+            self.newProject.formData.projectYears = "";
+            self.newProject.formData.id = "";
+            if (flag) {
+                self.queryNewProject(true);
+            }
+        },
         closeDrawer: function (value) {
-            this.$refs.drawer.closeDrawer();
+            var self = this;
+            self.$refs.drawerNew.close();
         },
 
         /**
@@ -191,7 +192,7 @@ export default {
         },
 
         //退库
-        returnProject:function(e,project){
+        returnProject: function (e, project) {
             let self = this;
             self.$confirm('此操作将退库, 是否继续?', '提示', {
                 confirmButtonText: '确定',
@@ -240,24 +241,18 @@ export default {
 
         },
         //显示新建库详情
-        showNewProjectDetails:function(e,data){
+        showNewProjectDetails: function (e, data) {
             let self = this;
             self.drawerDetails = true;
             self.projectDetail = data;
         },
-        showDefaultQuickQuery: function () {
-
-        },
-        handleSelectionChange: function () {
-
-        }
     },
     filters: {
         renderMoneyFrom: Filters.renderMoneyFrom,
-        renderIndustry:Filters.renderIndustry,
-        renderStatus:Filters.renderStatus,
-        renderStep:Filters.renderStep,
-        renderProjectYears:Filters.renderProjectYears
+        renderIndustry: Filters.renderIndustry,
+        renderStatus: Filters.renderStatus,
+        renderStep: Filters.renderStep,
+        renderProjectYears: Filters.renderProjectYears
 
     }
 }

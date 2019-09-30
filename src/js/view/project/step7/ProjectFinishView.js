@@ -27,21 +27,10 @@ export default {
                 finishedProjectList: [],
                 formData: {
                     projectInstitution: "",
-                    projectFinance: "",
                     projectName: "",
                     projectType: "",
-                    projectMoney: [],
-                    projectMoneyFrom: "",
-                    projectIndustry: "",
-                    projectCreateTime: "",
                     projectYears: "",
-                    projectContactUserName: "",
-                    projectContactUserPhone: "",
-                    projectSituation: "",
-                    create_begin_time: "",
-                    create_end_time: "",
-                    finish_begin_time: "",
-                    finish_end_time: "",
+                    id: "",
                 },
                 count: 0,
                 currentPage: 1
@@ -66,13 +55,24 @@ export default {
     },
     mounted: function () {
         var self = this;
+        self.user = JSON.parse(sessionStorage.getItem('user'));
+        self.projectInstitutionList = JSON.parse(window.sessionStorage.getItem('institution'));
         self.queryFinishedProject();
         self.queryFinishedProjectCount();
         //this.queryAppropriateMoney();
-        self.user = JSON.parse(sessionStorage.getItem('user'));
-
     },
     methods: {
+        showDefaultQuickQuery: function (flag) {
+            var self = this;
+            self.finishedProject.formData.projectInstitution = "";
+            self.finishedProject.formData.projectType = "";
+            self.finishedProject.formData.projectName = "";
+            self.finishedProject.formData.projectYears = "";
+            self.finishedProject.formData.id = "";
+            if (flag) {
+                self.queryFinishedProject(true);
+            }
+        },
         //查询预算变更
         queryFinishedProject: function (flag) {
             let self = this;
@@ -111,7 +111,7 @@ export default {
         queryAppropriateMoney: function () {
             let self = this;
             let data = {};
-            data.userName = self.user.userName;
+            data.userName = self.user.role;
             //data.userName = "root";
             self.$http.post('/api/project/queryAppMoney', data).then(res => {
                 let status = res.status;
@@ -198,9 +198,6 @@ export default {
                 })
                 .catch(_ => {
                 });
-        },
-        showDefaultQuickQuery: function () {
-
         },
         closeForm: function () {
 

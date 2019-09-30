@@ -29,7 +29,7 @@ export default {
     },
     mounted: function () {
         // 验证码初始化
-        $('.main-content').height($(window).height() - 200);
+        //$('.main-content').height($(window).height() - 200);
         var self = this;
         if (self.projectDetail.appropriateBudget) {
             self.appropriateBudget = JSON.parse(self.projectDetail.appropriateBudget);

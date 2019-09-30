@@ -24,21 +24,10 @@ export default {
                 returnedProjectList: [],
                 formData: {
                     projectInstitution: "",
-                    projectFinance: "",
                     projectName: "",
                     projectType: "",
-                    projectMoney: [],
-                    projectMoneyFrom: "",
-                    projectIndustry: "",
-                    projectCreateTime: "",
                     projectYears: "",
-                    projectContactUserName: "",
-                    projectContactUserPhone: "",
-                    projectSituation: "",
-                    create_begin_time: "",
-                    create_end_time: "",
-                    finish_begin_time: "",
-                    finish_end_time: "",
+                    id: "",
                 },
                 count: 0,
                 currentPage: 1
@@ -51,12 +40,23 @@ export default {
     },
     mounted: function () {
         var self = this;
+        self.projectInstitutionList = JSON.parse(window.sessionStorage.getItem('institution'));
+        self.user = JSON.parse(sessionStorage.getItem('user'));
         self.queryReturnProject();
         self.queryReturnProjectCount();
-        self.user = JSON.parse(sessionStorage.getItem('user'));
-
     },
     methods: {
+        showDefaultQuickQuery: function (flag) {
+            var self = this;
+            self.returnedProject.formData.projectInstitution = "";
+            self.returnedProject.formData.projectType = "";
+            self.returnedProject.formData.projectName = "";
+            self.returnedProject.formData.projectYears = "";
+            self.returnedProject.formData.id = "";
+            if (flag) {
+                self.queryReturnProject(true);
+            }
+        },
         closeDrawer: function (value) {
             this.$refs.drawer.closeDrawer();
         },
@@ -185,9 +185,6 @@ export default {
                 })
                 .catch(_ => {
                 });
-        },
-        showDefaultQuickQuery: function () {
-
         },
     },
     filters: {

@@ -2,16 +2,15 @@ import ShowProjectDetail from "../../../components/project/ShowProjectDetail";
 import Filters from "../common/Filters";
 
 
-
 export default {
-    name:"Home",
+    name: "Home",
     components: {
         "show-project-Detail": ShowProjectDetail,
     },
     data() {
         return {
             userInfoActiveName: "pro-monitor",
-            o:2,
+            o: 2,
             drawerDetails: false,
             drawerCreate: false,
             showMoreQuery: false,
@@ -21,21 +20,10 @@ export default {
                 allProjectList: [],
                 formData: {
                     projectInstitution: "",
-                    projectFinance: "",
                     projectName: "",
                     projectType: "",
-                    projectMoney: [],
-                    projectMoneyFrom: "",
-                    projectIndustry: "",
-                    projectCreateTime: "",
                     projectYears: "",
-                    projectContactUserName: "",
-                    projectContactUserPhone: "",
-                    projectSituation: "",
-                    create_begin_time: "",
-                    create_end_time: "",
-                    finish_begin_time: "",
-                    finish_end_time: "",
+                    id: "",
                 },
                 count: 0,
                 currentPage: 1
@@ -43,21 +31,31 @@ export default {
             showCountNumber: true,
             IsNewMediaSessionLargeData: '',
             projectDetail: {},
-            user:{},
+            user: {},
+            monitor:{
+                newProjectCount:0,
+                approvalProject:0,
+                finishedProjectCount:0,
+                returnedProjectCount:0,
+            }
         }
     },
     mounted: function () {
         var self = this;
         //$('.main-content').height($(window).height() - 200);
         self.user = JSON.parse(sessionStorage.getItem('user'));
+        self.projectInstitutionList = JSON.parse(window.sessionStorage.getItem('institution'));
         self.queryAllProject();
         self.queryAllProjectCount();
+        self.queryNewProjectCount();
+        self.queryFinishedProjectCount();
+        self.queryReturnedProjectCount();
     },
     methods: {
         //查询报表,查询所有报表
         queryAllProject: function (flag) {
             let self = this;
-            let data = {};
+            let data = _.cloneDeep(self.allProject.formData);
             data.page = flag ? 1 : self.allProject.currentPage;
             self.$http.post('/api/project/queryAllProject', data).then(res => {
                 let status = res.status;
@@ -70,6 +68,10 @@ export default {
                 } else {
                     if (res.data.length != 0) {
                         self.allProject.allProjectList = res.data.recordset;
+                        self.allProject.currentPage = data.page;
+                        if (flag) {
+                            self.queryAllProjectCount(data);
+                        }
                     } else {
                         self.$message({
                             message: "查询失败",
@@ -89,7 +91,7 @@ export default {
         queryAppropriateMoney: function () {
             let self = this;
             let data = {};
-            data.userName = self.user.userName;
+            data.userName = self.user.role;
             //data.userName = "root";
             self.$http.post('/api/project/queryAppMoney', data).then(res => {
                 let status = res.status;
@@ -119,9 +121,11 @@ export default {
                 );
         },
         //查询条数
-        queryAllProjectCount: function () {
+        queryAllProjectCount: function (data) {
             let self = this;
-            let data = {};
+            if (!data) {
+                var data = {};
+            }
             data.page = self.allProject.currentPage;
             self.$http.post('/api/project/queryAllProjectCount', data).then(res => {
                 let status = res.status;
@@ -150,7 +154,7 @@ export default {
                 );
 
         },
-        showAllProjectDetails: function (e,data) {
+        showAllProjectDetails: function (e, data) {
             let self = this;
             self.drawerDetails = true;
             self.projectDetail = data;
@@ -161,9 +165,86 @@ export default {
         //导出
         ExportFinishedProject: function () {
             var self = this;
-            //todo 查询条件
-            var data = {};
-            self.$http.get('/api/export/exportExcel', data).then(res => {
+            var data = _.cloneDeep(self.allProject.formData);
+            fetch('/api/export/exportExcel',
+                {
+                    method: 'post',
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(data),
+                }).then(function (response) {
+                return response.blob();
+            }).then(function (myBlob) {
+                const blob = new Blob([myBlob], {
+                    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'
+                });
+                var objectURL = URL.createObjectURL(blob);
+                const aLink = document.createElement('a');
+                var now = new Date();
+                aLink.download = '临猗县建设项目库项目汇总表_' + `${now.getFullYear()}${('0' + (now.getMonth() + 1)).slice(-2)}${now.getDate()}`;
+                aLink.href = objectURL;
+                aLink.click();
+                URL.revokeObjectURL(blob);
+            }); // 通过原生 fetch 获取数据，fetch 参考 文档
+
+            // self.$http.post('/api/export/exportExcel', data).then(res => {
+            //     let status = res.status;
+            //     let statusText = res.statusText;
+            //     if (status !== 200) {
+            //         self.$message({
+            //             message: statusText,
+            //             type: 'error'
+            //         });
+            //     } else {
+            //         if (res.data.length != 0) {
+            //             const blob = new Blob([res.data], {
+            //
+            //                 type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'
+            //
+            //             });
+            //             var objectURL = URL.createObjectURL(blob);
+            //             const aLink = document.createElement('a');
+            //             var now = new Date();
+            //             aLink.download = '临猗县建设项目库项目汇总表_'+`${now.getFullYear()}${('0'+(now.getMonth()+1)).slice(-2)}${now.getDate()}`;
+            //             aLink.href = objectURL;
+            //             aLink.click();
+            //             URL.revokeObjectURL(blob);
+            //         } else {
+            //             self.$message({
+            //                 message: "查询失败",
+            //                 type: 'warning'
+            //             });
+            //         }
+            //     }
+            // })
+            //     .catch(error =>
+            //         self.$message({
+            //             message: error.message,
+            //             type: 'error'
+            //         }),
+            //     );
+        },
+        showDefaultQuickQuery: function (flag) {
+            var self = this;
+            self.allProject.formData.projectInstitution = "";
+            self.allProject.formData.projectType = "";
+            self.allProject.formData.projectName = "";
+            self.allProject.formData.projectYears = "";
+            self.allProject.formData.id = "";
+            if (flag) {
+                self.queryAllProject(true);
+            }
+        },
+        //查询新建项目个数
+        queryNewProjectCount: function () {
+            let self = this;
+            let data = {};
+            data.page = 1;
+            data.step = 1;
+            data.stepOneApp = 1;
+            data.ifReturned = 0;
+            self.$http.post('/api/project/queryProjectCount', data).then(res => {
                 let status = res.status;
                 let statusText = res.statusText;
                 if (status !== 200) {
@@ -173,55 +254,80 @@ export default {
                     });
                 } else {
                     if (res.data.length != 0) {
-                        //self.finishedProject.count = res.data.recordset[0].num;
-                        //window.location = '/api/export/exportExcel';
-                        //Utils.downloadUrl(res.data.recordset);
-                        // let type = 'application/octet-stream';
-                        // // let type = result.type
-                        // // const buf = Buffer.from(result, 'binary')
-                        // let blob = new Blob([res.data], {type: type});
-                        // let fileName = res.headers.filename || "fileName.xlsx";
-                        // if (typeof window.navigator.msSaveBlob !== 'undefined') {
-                        //     /*
-                        //      * IE workaround for "HTML7007: One or more blob URLs were revoked by closing
-                        //      * the blob for which they were created. These URLs will no longer resolve as
-                        //      * the data backing the URL has been freed."
-                        //      */
-                        //     window.navigator.msSaveBlob(blob, fileName);
-                        // } else {
-                        //     let URL = window.URL || window.webkitURL
-                        //     let objectUrl = URL.createObjectURL(blob)
-                        //     console.log(objectUrl);
-                        //     if (fileName) {
-                        //         var a = document.createElement('a')
-                        //         // safari doesn't support this yet
-                        //         if (typeof a.download === 'undefined') {
-                        //             window.location = objectUrl
-                        //         } else {
-                        //             a.href = objectUrl
-                        //             a.download = fileName
-                        //             document.body.appendChild(a)
-                        //             a.click()
-                        //             a.remove();
-                        //            // message.success(`${fileName} 已下载`);
-                        //         }
-                        //     } else {
-                        //         window.location = objectUrl
-                        //     }
-                        // }
-                        // let blob = new Blob([res.data], {type: type});
-                        let fileName = res.headers.filename || "fileName.xlsx";
-                        var blob = new Blob([res.data], {type: "application/octet-stream"});
-                        if ('msSaveOrOpenBlob' in navigator) {
+                        self.monitor.newProjectCount = res.data.recordset[0].num;
+                    } else {
+                        self.$message({
+                            message: "查询失败",
+                            type: 'warning'
+                        });
+                    }
+                }
+            })
+                .catch(error =>
+                    self.$message({
+                        message: error.message,
+                        type: 'error'
+                    }),
+                );
 
-                            // Microsoft Edge and Microsoft Internet Explorer 10-11
-                            window.navigator.msSaveOrOpenBlob(blob, fileName);
-                        } else {
-                            var a = document.getElementById("exportCSVlink");
-                            a.download = fileName;
-                            a.href = URL.createObjectURL(blob);
-                            a.click();
-                        }
+        },
+        //审核通过个数
+        queryApprovalProjectCount: function () {
+
+        },
+        //完工库
+        queryFinishedProjectCount: function () {
+            let self = this;
+            let data = {};
+            data.page = 1;
+            data.step = 7;
+            data.stepSevenApp = 1;
+            data.ifReturned = 0;
+            self.$http.post('/api/project/queryProjectCount', data).then(res => {
+                let status = res.status;
+                let statusText = res.statusText;
+                if (status !== 200) {
+                    self.$message({
+                        message: statusText,
+                        type: 'error'
+                    });
+                } else {
+                    if (res.data.length != 0) {
+                        self.monitor.finishedProjectCount = res.data.recordset[0].num;
+                    } else {
+                        self.$message({
+                            message: "查询失败",
+                            type: 'warning'
+                        });
+                    }
+                }
+            })
+                .catch(error =>
+                    self.$message({
+                        message: error.message,
+                        type: 'error'
+                    }),
+                );
+
+        },
+        //退库
+        queryReturnedProjectCount: function () {
+            let self = this;
+            let data = {};
+            data.page = 1;
+            data.step = 0;
+            data.ifReturned = 1;
+            self.$http.post('/api/project/queryReturnProjectCount', data).then(res => {
+                let status = res.status;
+                let statusText = res.statusText;
+                if (status !== 200) {
+                    self.$message({
+                        message: statusText,
+                        type: 'error'
+                    });
+                } else {
+                    if (res.data.length != 0) {
+                        self.monitor.returnedProjectCount = res.data.recordset[0].num;
                     } else {
                         self.$message({
                             message: "查询失败",
@@ -238,17 +344,6 @@ export default {
                 );
         },
 
-        showProjectWareHousing:function () {
-
-        },
-        showProjectDeposit:function () {
-
-        },
-        queryUnreadKnowledgeItem:function () {
-
-        },
-        //todo 查询四个表的数据全部统计出来，显示在页面
-
     },
     filters: {
         renderMoneyFrom: Filters.renderMoneyFrom,
@@ -256,14 +351,14 @@ export default {
         renderStatus: Filters.renderStatus,
         renderStep: Filters.renderStep,
         renderProjectYears: Filters.renderProjectYears,
-        renderThisYearPlanTotalMoney:Filters.renderThisYearPlanTotalMoney,
-        renderNextYearsPlanTotalMoney:Filters.renderNextYearsPlanTotalMoney,
-        renderThirdYearsPlanTotalMoney:Filters.renderThirdYearsPlanTotalMoney,
-        renderBeforeYearPlanTotalMoney:Filters.renderBeforeYearPlanTotalMoney,
-        renderAppThisYearMoney:Filters.renderAppThisYearMoney,
-        renderAppTotalMoney:Filters.renderAppTotalMoney,
-        renderPlanTotalMoney:Filters.renderPlanTotalMoney,
-        renderNonPaymentTotalMoney:Filters.renderNonPaymentTotalMoney
+        renderThisYearPlanTotalMoney: Filters.renderThisYearPlanTotalMoney,
+        renderNextYearsPlanTotalMoney: Filters.renderNextYearsPlanTotalMoney,
+        renderThirdYearsPlanTotalMoney: Filters.renderThirdYearsPlanTotalMoney,
+        renderBeforeYearPlanTotalMoney: Filters.renderBeforeYearPlanTotalMoney,
+        renderAppThisYearMoney: Filters.renderAppThisYearMoney,
+        renderAppTotalMoney: Filters.renderAppTotalMoney,
+        renderPlanTotalMoney: Filters.renderPlanTotalMoney,
+        renderNonPaymentTotalMoney: Filters.renderNonPaymentTotalMoney
 
     }
 }

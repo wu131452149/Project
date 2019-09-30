@@ -11,15 +11,15 @@ export default {
     name: "PreparePeriodView",
     components: {
         "budget-approval": BudgetApproval,
-        "budget-year-plan":BudgetYearsPlan,
-        "show-project-Detail":ShowProjectDetail
+        "budget-year-plan": BudgetYearsPlan,
+        "show-project-Detail": ShowProjectDetail
     },
     data() {
         return {
             activeName: 'budget-approval',
-            curComponents:{
+            curComponents: {
                 "budget-approval": "budget-approval",
-                "budget-year-plan":"",
+                "budget-year-plan": "",
             },
             table: false,
             dialog: false,
@@ -35,9 +35,9 @@ export default {
                 desc: ''
             },
             formLabelWidth: '80px',
-            projectDetail:{},
-            showBudgetPlan:true,
-            showBudgetPlanWithYear:false
+            projectDetail: {},
+            showBudgetPlan: true,
+            showBudgetPlanWithYear: false
         };
     },
     mounted: function () {
@@ -50,23 +50,7 @@ export default {
          */
         showTabPage(tab, event) {
             var self = this;
-            self.curComponents[tab.name]=tab.name;
+            self.curComponents[tab.name] = tab.name;
         },
-        showBudgetPlanTab:function () {
-            var self = this;
-            self.showBudgetPlanWithYear = false;
-            self.showBudgetPlan = true;
-        },
-        showBudgetPlanWithYearTab:function () {
-            var self = this;
-            self.showBudgetPlanWithYear = true;
-            self.showBudgetPlan = false;
-        },
-        showDefaultQuickQuery: function () {
-
-        },
-        handleSelectionChange: function () {
-
-        }
     }
 }
