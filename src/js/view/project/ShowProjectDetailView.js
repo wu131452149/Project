@@ -7,7 +7,7 @@ import Filters from "../common/Filters";
 import Utils from "../../lib/Utils/Utils";
 export default {
     name: "ShowProjectDetailView",
-    props: ["projectDetail", "step"],
+    props: ["projectDetail", "step","activeNames","showEdit"],
     data() {
         return {
             loading: false,
@@ -20,6 +20,7 @@ export default {
             totalCut:0,
             totalAdd:0,
             fileList:[],
+            names:this.activeNames
         }
     },
     beforeMount: function () {
@@ -45,7 +46,23 @@ export default {
         }
         self.computeTotal();
     },
+    watch: {
+        "showEdit": {
+            immediate: true,
+            handler: function (val) {
+                var self = this;
+                if (val) {
+                    self.names = [];
+                }else{
+                    self.names = self.activeNames;
+                }
+            }
+        }
+    },
     methods: {
+        handleChange(val) {
+            console.log(val);
+        },
         computeTotal: function () {
             var self = this;
             if (self.projectDetail.cutBudget || self.projectDetail.addBudget) {

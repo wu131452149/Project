@@ -163,7 +163,7 @@
             size=55%
             :before-close="handleClose">
             <div style="overflow: auto;height: 500px;">
-                <show-project-Detail @onListen="handleClose" :projectDetail="projectDetail" :step="6">
+                <show-project-Detail @onListen="handleClose" :projectDetail="projectDetail" :step="6" :activeNames="activeNames" :showEdit="showEdit">
 
                 </show-project-Detail>
 

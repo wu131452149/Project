@@ -13,6 +13,7 @@ export default {
     },
     data() {
         return {
+            activeNames:[],
             showEdit: false,
             showTri: false,
             showPro: false,
@@ -196,6 +197,7 @@ export default {
             self.drawerDetails = true;
             self.projectDetail = data;
             self.showEdit = false;
+            self.activeNames = ['1','2','3','4','5','6'];
         },
         initCommitMoney: function () {
 

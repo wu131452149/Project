@@ -14,6 +14,7 @@ export default {
     },
     data() {
         return {
+            activeNames:[],
             objDrawer: this.$refs,
             drawerDetails: false,
             drawerCreate: false,
@@ -243,10 +244,10 @@ export default {
                         }),
                     );
             }).catch(() => {
-                self.$message({
-                    type: 'info',
-                    message: '已取消删除'
-                });
+                // self.$message({
+                //     type: 'info',
+                //     message: '已取消'
+                // });
             });
 
         },
@@ -255,6 +256,7 @@ export default {
             let self = this;
             self.drawerDetails = true;
             self.projectDetail = data;
+            self.activeNames = ['1'];
         },
     },
     filters: {

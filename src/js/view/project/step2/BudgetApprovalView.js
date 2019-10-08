@@ -13,6 +13,7 @@ export default {
     },
     data() {
         return {
+            activeNames:[],
             showEdit:false,
             drawerDetails: false,
             drawerCreate: false,
@@ -167,7 +168,6 @@ export default {
             self.drawerDetails = true;
             self.projectDetail = data;
             self.showEdit = true;
-
         },
         closeForm:function(){
             var self = this;
@@ -180,6 +180,7 @@ export default {
             self.drawerDetails = true;
             self.projectDetail = data;
             self.showEdit = false;
+            self.activeNames = ['1','2'];
         },
         //提交预算填写
         commitBudgetPlanForm:function () {

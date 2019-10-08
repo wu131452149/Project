@@ -14,6 +14,7 @@ export default {
     },
     data() {
         return {
+            activeNames:[],
             returned: "returned",
             drawerDetails: false,
             drawerCreate: false,
@@ -64,6 +65,7 @@ export default {
             let self = this;
             self.drawerDetails = true;
             self.projectDetail = data;
+            self.activeNames = ['1'];
         },
 
         /**

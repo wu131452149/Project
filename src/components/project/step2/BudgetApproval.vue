@@ -115,7 +115,7 @@
                 <!--//阶段录入修改-->
                 <el-table-column label="操作" width="200" class="text-c" v-if="user.grade==1">
                     <template slot-scope="scope">
-                        <a @click.stop="editBudgetPlanTab($event,scope.row)">预算安排</a>
+                        <a @click.stop="editBudgetPlanTab($event,scope.row)">预算评审</a>
                     </template>
                 </el-table-column>
             </el-table>
@@ -148,7 +148,7 @@
             size=55%
             :before-close="handleClose">
             <div class="scrollBar-inner" style="height: 430px;">
-                <show-project-Detail @onListen="handleClose" :projectDetail="projectDetail" :step="2">
+                <show-project-Detail @onListen="handleClose" :projectDetail="projectDetail" :step="2" :activeNames="activeNames" :showEdit="showEdit">
 
                 </show-project-Detail>
                 <div v-if="user.grade==1 && showEdit" class="padding-0-20">
