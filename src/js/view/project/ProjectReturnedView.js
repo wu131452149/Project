@@ -103,6 +103,11 @@ export default {
             data.page = flag ? 1 : self.returnedProject.currentPage;
             data.step = 0;
             data.ifReturned = 1;
+            if (self.user.grade == 1) {//如果是1，那么只查自己提交的
+                data.commitName = self.user.role;
+            } else if (self.user.grade == 2) {//如果是2，那么查询提交上来只查自己部门审批的
+                data.projectFinance = self.user.role;
+            }
             self.$http.post('/api/project/queryReturnProject', data).then(res => {
                 let status = res.status;
                 let statusText = res.statusText;
@@ -138,6 +143,11 @@ export default {
             data.page = self.returnedProject.currentPage;
             data.step = 0;
             data.ifReturned = 1;
+            if (self.user.grade == 1) {//如果是1，那么只查自己提交的
+                data.commitName = self.user.role;
+            } else if (self.user.grade == 2) {//如果是2，那么查询提交上来只查自己部门审批的
+                data.projectFinance = self.user.role;
+            }
             self.$http.post('/api/project/queryReturnProjectCount', data).then(res => {
                 let status = res.status;
                 let statusText = res.statusText;

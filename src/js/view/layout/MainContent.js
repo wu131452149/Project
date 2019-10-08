@@ -4,10 +4,6 @@
  *
  */
 const Home = resolve => require(['../../../components/index/Home.vue'], resolve);
-const ArticleContentManage = resolve => require(['../../../components/article/ArticleContentManage.vue'], resolve);
-const ArticleTypeManage = resolve => require(['../../../components/article/ArticleTypeManage.vue'], resolve);
-const BbsManage = resolve => require(['../../../components/bbs/BbsManage.vue'], resolve);
-const CommentsManage = resolve => require(['../../../components/comments/CommentsManage.vue'], resolve);
 const UserManage = resolve => require(['../../../components/user/UserManage.vue'], resolve);
 const ShowNewProject = resolve => require(['../../../components/project/step1/ShowNewProject.vue'], resolve);
 const ProjectDoing = resolve => require(['../../../components/project/ProjectDoing.vue'], resolve);
@@ -23,10 +19,6 @@ export default {
     name: "mainContentView",
     components: {
         "home": Home, // 将动态组件注册进来
-        "article-content-manage": ArticleContentManage,
-        "article-type-manage": ArticleTypeManage,
-        "bbs-manage": BbsManage,
-        "comments-manage": CommentsManage,
         "user-manage": UserManage,
         "show-new-project": ShowNewProject,
         "project-doing":ProjectDoing,

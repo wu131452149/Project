@@ -13,9 +13,9 @@ export default {
     },
     data() {
         return {
-            showEdit:false,
-            showTri:false,
-            showPro:false,
+            showEdit: false,
+            showTri: false,
+            showPro: false,
             drawerDetails: false,
             drawerCreate: false,
             direction: 'rtl',
@@ -41,13 +41,13 @@ export default {
             editPro: {
                 speed: "",
             },
-            TriInfo:{
-                agreementName:"",
-                agreementMoney:"",
-                agreementUserName:"",
-                agreementUserPhone:"",
-                agreementBank:"",
-                agreementCardNo:""
+            TriInfo: {
+                agreementName: "",
+                agreementMoney: "",
+                agreementUserName: "",
+                agreementUserPhone: "",
+                agreementBank: "",
+                agreementCardNo: ""
             },
             options: [],
             changeType: Utils.getChangeType(),
@@ -61,7 +61,7 @@ export default {
             },
             user: {},
             budgetYearsPlanMoneyList: [],
-            projectInstitutionList:[],
+            projectInstitutionList: [],
         };
     },
     mounted: function () {
@@ -91,6 +91,11 @@ export default {
             data.step = 6;
             data.stepSixApp = 1;//后台查的not in
             data.ifReturned = 0;
+            if (self.user.grade == 1) {//如果是1，那么只查自己提交的
+                data.commitName = self.user.role;
+            } else if (self.user.grade == 2) {//如果是2，那么查询提交上来只查自己部门审批的
+                data.projectFinance = self.user.role;
+            }
             self.$http.post('/api/project/queryProject', data).then(res => {
                 let status = res.status;
                 let statusText = res.statusText;
@@ -125,6 +130,11 @@ export default {
             data.step = 6;
             data.stepSixApp = 1;
             data.ifReturned = 0;
+            if (self.user.grade == 1) {//如果是1，那么只查自己提交的
+                data.commitName = self.user.role;
+            } else if (self.user.grade == 2) {//如果是2，那么查询提交上来只查自己部门审批的
+                data.projectFinance = self.user.role;
+            }
             self.$http.post('/api/project/queryProjectCount', data).then(res => {
                 let status = res.status;
                 let statusText = res.statusText;
@@ -166,7 +176,7 @@ export default {
             self.showEdit = true;
             //self.editOptionYears(data.projectYears);
         },
-        editTriTab:function(e, data){
+        editTriTab: function (e, data) {
             var self = this;
             //显示项目详情，并且显示预算信息
             self.drawerDetails = true;
@@ -187,7 +197,7 @@ export default {
             self.projectDetail = data;
             self.showEdit = false;
         },
-        initCommitMoney:function(){
+        initCommitMoney: function () {
 
         },
         //提交进度
@@ -200,7 +210,7 @@ export default {
                     editBudgetData.id = self.projectDetail.id;
                     //存入数据库
                     editBudgetData.speed = self.editPro.speed;//更新工程进度
-                    if(editBudgetData.speed == 100 && self.projectDetail.stepSixApp==1){
+                    if (editBudgetData.speed == 100 && self.projectDetail.stepSixApp == 1) {
                         editBudgetData.step = 7;//审核通过并且工程进度为100%进入完工库，第7步设置为待审核，
                         data.stepSevenApp = 2;
                         //editBudgetData.suggestion = 1;//第6步已经通过审核

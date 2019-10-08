@@ -32,11 +32,11 @@ export default {
             IsNewMediaSessionLargeData: '',
             projectDetail: {},
             user: {},
-            monitor:{
-                newProjectCount:0,
-                approvalProject:0,
-                finishedProjectCount:0,
-                returnedProjectCount:0,
+            monitor: {
+                newProjectCount: 0,
+                approvalProject: 0,
+                finishedProjectCount: 0,
+                returnedProjectCount: 0,
             }
         }
     },
@@ -244,6 +244,11 @@ export default {
             data.step = 1;
             data.stepOneApp = 1;
             data.ifReturned = 0;
+            if (self.user.grade == 1) {//如果是1，那么只查自己提交的
+                data.commitName = self.user.role;
+            } else if (self.user.grade == 2) {//如果是2，那么查询提交上来只查自己部门审批的
+                data.projectFinance = self.user.role;
+            }
             self.$http.post('/api/project/queryProjectCount', data).then(res => {
                 let status = res.status;
                 let statusText = res.statusText;
@@ -283,6 +288,11 @@ export default {
             data.step = 7;
             data.stepSevenApp = 1;
             data.ifReturned = 0;
+            if (self.user.grade == 1) {//如果是1，那么只查自己提交的
+                data.commitName = self.user.role;
+            } else if (self.user.grade == 2) {//如果是2，那么查询提交上来只查自己部门审批的
+                data.projectFinance = self.user.role;
+            }
             self.$http.post('/api/project/queryProjectCount', data).then(res => {
                 let status = res.status;
                 let statusText = res.statusText;

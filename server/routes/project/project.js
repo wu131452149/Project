@@ -194,6 +194,12 @@ router.post('/queryProject', function (req, res, next) {
     if (param.ifReturned) {
         whereSql = whereSql + " and ifReturned= " + param.ifReturned;
     }
+    if (param.commitName) {
+        whereSql = whereSql + " and commitName= '" + param.commitName+ "'";
+    }
+    if (param.projectFinance) {
+        whereSql = whereSql + " and projectFinance= '" + param.projectFinance + "'";
+    }
 
     //var pageSize = 10;
     //分页查询
@@ -238,6 +244,12 @@ router.post('/queryProject', function (req, res, next) {
         if (param.ifReturned) {
             whereSql = whereSql + " and ifReturned= " + param.ifReturned;
         }
+        if (param.commitName) {
+            whereSql = whereSql + " and commitName= '" + param.commitName+ "'";
+        }
+        if (param.projectFinance) {
+            whereSql = whereSql + " and projectFinance= '" + param.projectFinance+ "'";
+        }
         if (step == 7 || step == 6) {
             var sql = "select top " + pageSize + " * from (select row_number() over(order by id asc) as rownumber,* from " + dbName + ") temp_row where rownumber>" + ((param.page - 1) * pageSize) + whereSql;
         } else if (step == 3 || step == 4) {
@@ -260,17 +272,36 @@ router.post('/queryReturnProject', function (req, res, next) {
     var ifReturned = param.ifReturned;
     if (name) {
         var whereSql = "where ifReturned=" + ifReturned;
+        if (param.commitName) {
+            whereSql = whereSql + " and commitName= '" + param.commitName+ "'";
+        }
+        if (param.projectFinance) {
+            whereSql = whereSql + " and projectFinance= '" + param.projectFinance + "'";
+        }
         db.select(dbName, 10, whereSql, "", "order by id", function (err, result) {//查询所有news表的数据
             res.json(result);
         });
     } else {
         if (param.page == 1) {
             var whereSql = "where ifReturned=" + ifReturned;
+            if (param.commitName) {
+                whereSql = whereSql + " and commitName= '" + param.commitName+ "'";
+            }
+            if (param.projectFinance) {
+                whereSql = whereSql + " and projectFinance= '" + param.projectFinance + "'";
+            }
             db.select(dbName, 10, whereSql, "", "order by id", function (err, result) {//查询所有news表的数据
                 res.json(result);
             });
         } else {
-            var sql = "select top " + pageSize + " * from (select row_number() over(order by id asc) as rownumber,* from " + dbName + ") temp_row where rownumber>" + ((param.page - 1) * pageSize) + " and ifReturned=" + ifReturned;
+            var whereSql = " ";
+            if (param.commitName) {
+                whereSql = whereSql + " and commitName= '" + param.commitName+ "'";
+            }
+            if (param.projectFinance) {
+                whereSql = whereSql + " and projectFinance= '" + param.projectFinance + "'";
+            }
+            var sql = "select top " + pageSize + " * from (select row_number() over(order by id asc) as rownumber,* from " + dbName + ") temp_row where rownumber>" + ((param.page - 1) * pageSize) + " and ifReturned=" + ifReturned+whereSql;
             db.querySql(sql, "", function (err, result) {//查询所有news表的数据
                 res.json(result);
             });
@@ -312,7 +343,14 @@ router.post('/queryProjectCount', function (req, res, next) {
         suggestion = param.stepSevenApp;
 
     }
-    var sql = "select count(id) as num from " + dbName + " where approvalStep=" + step + " and " + suggestionStep + " not in (" + suggestion + ") and ifReturned=" + ifReturned;
+    var whereSql = " ";
+    if (param.commitName) {
+        whereSql = whereSql + " and commitName= '" + param.commitName+ "'" ;
+    }
+    if (param.projectFinance) {
+        whereSql = whereSql + " and projectFinance= ' " + param.projectFinance + "'";
+    }
+    var sql = "select count(id) as num from " + dbName + " where approvalStep=" + step + " and " + suggestionStep + " not in (" + suggestion + ") and ifReturned=" + ifReturned+whereSql;
     db.querySql(sql, "", function (err, result) {//查询所有news表的数据
         res.json(result);
     });
@@ -320,7 +358,14 @@ router.post('/queryProjectCount', function (req, res, next) {
 router.post('/queryReturnProjectCount', function (req, res, next) {
     var param = req.body;
     var ifReturned = param.ifReturned;
-    var sql = "select count(id) as num from " + dbName + " where ifReturned=" + ifReturned;
+    var whereSql = " ";
+    if (param.commitName) {
+        whereSql = whereSql + " and commitName= '" + param.commitName+ "'" ;
+    }
+    if (param.projectFinance) {
+        whereSql = whereSql + " and projectFinance= ' " + param.projectFinance + "'";
+    }
+    var sql = "select count(id) as num from " + dbName + " where ifReturned=" + ifReturned+whereSql;
     db.querySql(sql, "", function (err, result) {//查询所有news表的数据
         res.json(result);
     });

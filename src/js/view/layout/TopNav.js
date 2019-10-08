@@ -46,7 +46,17 @@ export default {
 
         },
         exitSystem: function () {
+            var self = this;
+            self.$confirm('是否退出系统?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+               //退出系统
+                window.location = ".";
+            }).catch(() => {
 
+            });
         },
         toggleDialog: function (e, rel) {
             var self = this;
