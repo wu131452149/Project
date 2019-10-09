@@ -178,6 +178,7 @@
             :visible.sync="drawerDetails"
             :direction="direction"
             custom-class="demo-drawer"
+            ref="editProjectNew"
             size=55%
             :before-close="handleClose">
             <show-project-Detail @onListen="handleClose"

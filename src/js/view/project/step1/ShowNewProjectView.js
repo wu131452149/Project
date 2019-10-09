@@ -268,6 +268,11 @@ export default {
             //查询当前页数据
             self.queryNewProject(true);
         },
+        closeForm: function () {
+            var self = this;
+            self.$refs.editProjectNew.closeDrawer();
+            //self.showEdit = false;
+        },
     },
     filters: {
         renderMoneyFrom: Filters.renderMoneyFrom,
