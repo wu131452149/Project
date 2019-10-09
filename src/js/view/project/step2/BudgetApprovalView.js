@@ -243,6 +243,8 @@ export default {
                                 //关闭当前页，并清空表格数据
                                 self.clearFormData();
                                 self.closeForm();
+                                //查询当前页数据
+                                self.queryBudgetPlanProject(true);
                             } else {
                                 self.$message({
                                     message: "提交失败",

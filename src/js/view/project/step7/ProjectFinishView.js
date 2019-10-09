@@ -246,6 +246,10 @@ export default {
                                     message: "提交成功",
                                     type: 'success'
                                 });
+                                //查询当前页数据
+                                self.clearProFormData();
+                                self.closeForm();
+                                self.queryFinishedProject(true);
                             } else {
                                 self.$message({
                                     message: "提交失败",
@@ -259,13 +263,15 @@ export default {
                                     message: error.message,
                                     type: 'error'
                                 }),
-                            self.logining = false
                         );
                 } else {
                     console.log('error submit!!');
                     return false;
                 }
             });
+        },
+        clearProFormData: function () {
+            this.editBudgetFinish.finishMoney = "";
         },
     },
     filters: {

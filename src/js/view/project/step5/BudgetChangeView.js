@@ -265,8 +265,6 @@ export default {
                                 //关闭当前页，并清空表格数据
                                 //存入评审文号数据表
                                 self.saveAPPNo();
-                                self.clearFormData();
-                                self.closeForm();
                             } else {
                                 self.$message({
                                     message: "提交失败",
@@ -338,6 +336,8 @@ export default {
                         //关闭当前页，并清空表格数据
                         self.clearFormData();
                         self.closeForm();
+                        //查询当前页数据
+                        self.queryBudgetChangeProject(true);
                     } else {
                         self.$message({
                             message: "提交失败",

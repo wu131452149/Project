@@ -113,12 +113,7 @@ export default {
 
         },
         handleClose(done) {
-            this.$confirm('确认关闭？')
-                .then(_ => {
-                    done();
-                })
-                .catch(_ => {
-                });
+           done();
         },
         //查询新建项目
         queryNewProject: function (flag) {
@@ -235,6 +230,8 @@ export default {
                                 message: "申请退库成功",
                                 type: 'success'
                             });
+                            //查询当前页数据
+                            self.queryNewProject(true);
                         } else {
                             self.$message({
                                 message: "申请退库失败",
