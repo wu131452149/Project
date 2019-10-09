@@ -115,10 +115,17 @@ router.post('/approvalProject', function (req, res, next) {
 //更新预算准备
 router.post('/updateProject', function (req, res, next) {
     var param = req.body;
-    var whereObj = {id: param.id, approvalStep: param.step};
+    var step = param.step;
+    if(param.oldStep==0){
+        step =  param.oldStep;
+    }
+    var whereObj = {id: param.id, approvalStep: step};
     delete param.id;
     delete param.step;
     delete param.suggestion;
+    if(param.oldStep==0){
+        delete param.oldStep;
+    }
     db.update(param, whereObj, dbName, function (err, result) {//查询所有news表的数据
         res.json(result);
     });

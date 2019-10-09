@@ -180,7 +180,12 @@
             custom-class="demo-drawer"
             size=55%
             :before-close="handleClose">
-            <show-project-Detail @onListen="handleClose" :projectDetail="projectDetail" :step="1" :activeNames="activeNames">
+            <show-project-Detail @onListen="handleClose"
+                                 @appStep1="handleAppStep1"
+                                 @unAppStep1="handleAppStep1"
+                                 :projectDetail="projectDetail"
+                                 :step="1"
+                                 :activeNames="activeNames">
 
             </show-project-Detail>
         </el-drawer>

@@ -477,6 +477,13 @@ export default {
             this.editBudgetYearsPlan.type = "";
             this.editBudgetYearsPlan.money = "";
         },
+        //关闭表格查询当前页数据
+        handleAppStep3:function(){
+            var self = this;
+            self.closeForm();
+            //查询当前页数据
+            self.queryBudgetYearsPlanProject(true);
+        },
     },
     filters: {
         renderMoneyFrom: Filters.renderMoneyFrom,

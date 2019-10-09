@@ -145,7 +145,14 @@
             size=55%
             :before-close="handleClose">
             <div class="scrollBar-inner" style="height: 500px;">
-                <show-project-Detail @onListen="handleClose" :projectDetail="projectDetail" :step="7" :activeNames="activeNames" :showEdit="showEdit" :grade="user.grade">
+                <show-project-Detail @onListen="handleClose"
+                                     @appStep7="handleAppStep7"
+                                     @unAppStep7="handleAppStep7"
+                                     :projectDetail="projectDetail"
+                                     :step="7"
+                                     :activeNames="activeNames"
+                                     :showEdit="showEdit"
+                                     :grade="user.grade">
 
                 </show-project-Detail>
                 <!--录入决算信息-->

@@ -261,6 +261,13 @@ export default {
             self.projectDetail = data;
             self.activeNames = ['1'];
         },
+        //关闭表格查询当前页数据
+        handleAppStep1:function(){
+            var self = this;
+            self.closeForm();
+            //查询当前页数据
+            self.queryNewProject(true);
+        },
     },
     filters: {
         renderMoneyFrom: Filters.renderMoneyFrom,

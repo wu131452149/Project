@@ -164,7 +164,14 @@
             size=55%
             :before-close="handleClose">
             <div style="overflow: auto;height: 500px;">
-                <show-project-Detail @onListen="handleClose" :projectDetail="projectDetail" :step="4" :activeNames="activeNames" :showEdit="showEdit" :grade="user.grade">
+                <show-project-Detail @onListen="handleClose"
+                                     @appStep4="handleAppStep4"
+                                     @unAppStep4="handleAppStep4"
+                                     :projectDetail="projectDetail"
+                                     :step="4"
+                                     :activeNames="activeNames"
+                                     :showEdit="showEdit"
+                                     :grade="user.grade">
 
                 </show-project-Detail>
 

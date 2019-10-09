@@ -144,7 +144,9 @@
             custom-class="demo-drawer"
             size=55%
             :before-close="handleClose">
-            <show-project-Detail @onListen="handleClose" :projectDetail = "projectDetail" :step="1" :activeNames="activeNames">
+            <show-project-Detail @onListen="handleClose"
+                                 :projectDetail = "projectDetail"
+                                 :step="1">
 
             </show-project-Detail>
         </el-drawer>
@@ -153,10 +155,16 @@
             title="项目信息录入"
             :visible.sync="drawerCreate"
             :direction="direction"
+            ref = "editReturnedProject"
             custom-class="demo-drawer"
             size=60%
             :before-close="handleClose">
-            <project-new @onListen="handleClose" :returnProjectInfo = "projectDetail" :type="returned">
+            <project-new @onListen="handleClose"
+                         @updateReturnForm="updateReturnForm"
+                         :returnProjectInfo = "projectDetail"
+                         :type="returned"
+                         :activeNames="activeNames"
+                         :step="1">
 
             </project-new>
         </el-drawer>

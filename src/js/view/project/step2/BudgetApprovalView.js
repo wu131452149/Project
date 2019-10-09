@@ -273,6 +273,13 @@ export default {
             this.editBudgetPlan.approvalNumber = "";
             this.editBudgetPlan.gvBuy = "是";
         },
+        //关闭表格查询当前页数据
+        handleAppStep2:function(){
+            var self = this;
+            self.closeForm();
+            //查询当前页数据
+            self.queryBudgetPlanProject(true);
+        },
         /**
          * 上传附件
          * @param file 当前行数据

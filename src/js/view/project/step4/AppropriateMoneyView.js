@@ -433,6 +433,13 @@ export default {
             this.editAppropriateMoneyProject.type = "";
             this.editAppropriateMoneyProject.money = "";
         },
+        //关闭表格查询当前页数据
+        handleAppStep4:function(){
+            var self = this;
+            self.closeForm();
+            //查询当前页数据
+            self.queryAppropriateMoneyProject(true);
+        },
     },
     filters: {
         renderMoneyFrom: Filters.renderMoneyFrom,

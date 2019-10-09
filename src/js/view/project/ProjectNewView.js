@@ -157,6 +157,7 @@ export default {
             let data = _.cloneDeep(self.createProject);
             data.step = 1;
             data.ifReturned = 0;
+            data.oldStep = 0;
             self.$http.post('/api/project/updateProject', data).then(res => {
                 let status = res.status;
                 let statusText = res.statusText;
@@ -171,6 +172,7 @@ export default {
                             message: "提交成功",
                             type: 'success'
                         });
+                        self.$emit('updateReturnForm');
                     } else {
                         self.$message({
                             message: "提交失败",
@@ -257,6 +259,7 @@ export default {
             handler: function (val) {
                 var self = this;
                 if(val){
+                    self.createProject.id = val.id;
                     self.createProject.projectInstitution = val.projectInstitution;
                     self.createProject.projectFinance = val.projectFinance;
                     self.createProject.projectName = val.projectName;

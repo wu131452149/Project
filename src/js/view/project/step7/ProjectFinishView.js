@@ -273,6 +273,13 @@ export default {
         clearProFormData: function () {
             this.editBudgetFinish.finishMoney = "";
         },
+        //关闭表格查询当前页数据
+        handleAppStep7:function(){
+            var self = this;
+            self.closeForm();
+            //查询当前页数据
+            self.queryFinishedProject(true);
+        },
     },
     filters: {
         renderMoneyFrom: Filters.renderMoneyFrom,

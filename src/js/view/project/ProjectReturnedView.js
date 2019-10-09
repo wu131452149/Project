@@ -190,6 +190,18 @@ export default {
             self.drawerCreate = true;
             self.projectDetail = data;
         },
+        //关闭表格查询当前页数据
+        updateReturnForm:function(){
+            var self = this;
+            self.closeForm();
+            //查询当前页数据
+            self.queryReturnProject(true);
+        },
+        closeForm: function () {
+            var self = this;
+            self.$refs.editReturnedProject.closeDrawer();
+            //self.showEdit = false;
+        },
     },
     filters: {
         renderMoneyFrom: Filters.renderMoneyFrom,

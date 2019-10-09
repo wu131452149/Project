@@ -323,6 +323,13 @@ export default {
             this.TriInfo.agreementBank = "";
             this.TriInfo.agreementCardNo = "";
         },
+        //关闭表格查询当前页数据
+        handleAppStep6:function(){
+            var self = this;
+            self.closeForm();
+            //查询当前页数据
+            self.queryProAndTriProject(true);
+        },
     },
     filters: {
         renderMoneyFrom: Filters.renderMoneyFrom,

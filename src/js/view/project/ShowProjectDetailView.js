@@ -7,7 +7,7 @@ import Utils from "../../lib/Utils/Utils";
 
 export default {
     name: "ShowProjectDetailView",
-    props: ["projectDetail", "step", "activeNames", "showEdit","grade"],
+    props: ["projectDetail", "step", "activeNames", "showEdit", "grade"],
     data() {
         return {
             loading: false,
@@ -59,13 +59,13 @@ export default {
                             self.names = ['2'];
                         } else if (self.step == 3) {
                             self.names = ['3'];
-                        }else if (self.step == 4) {
+                        } else if (self.step == 4) {
                             self.names = ['4'];
-                        }else if (self.step == 5) {
+                        } else if (self.step == 5) {
                             self.names = ['5'];
-                        }else if (self.step == 6) {
+                        } else if (self.step == 6) {
                             self.names = ['6'];
-                        }else if (self.step == 7) {
+                        } else if (self.step == 7) {
                             self.names = ['7'];
                         }
 
@@ -194,6 +194,8 @@ export default {
                             message: "审核成功",
                             type: 'success'
                         });
+                        //关闭当前页，查询当前表格
+                        self.$emit('appStep1');
                     } else {
                         self.$message({
                             message: "审核失败",
@@ -212,7 +214,6 @@ export default {
         //2审核预算评审
         approvalBudgetPlan: function () {
             //审核通过，把第一步状态改为1，并且把项目step改成3
-            //todo 插入一张log表
             let self = this;
             let data = {};
             data.id = self.projectDetail.id;
@@ -235,6 +236,8 @@ export default {
                             message: "审核成功",
                             type: 'success'
                         });
+                        //关闭当前页，查询当前表格
+                        self.$emit('appStep2');
                     } else {
                         self.$message({
                             message: "审核失败",
@@ -253,7 +256,6 @@ export default {
         //3年度安排
         approvalBudgetYearsPlan: function () {
             //审核通过，把第一步状态改为1，并且把项目step改成4
-            //todo 插入一张log表
             let self = this;
             let data = {};
             data.id = self.projectDetail.id;
@@ -276,6 +278,8 @@ export default {
                             message: "审核成功",
                             type: 'success'
                         });
+                        //关闭当前页，查询当前表格
+                        self.$emit('appStep3');
                     } else {
                         self.$message({
                             message: "审核失败",
@@ -317,6 +321,8 @@ export default {
                             message: "审核成功",
                             type: 'success'
                         });
+                        //关闭当前页，查询当前表格
+                        self.$emit('appStep4');
                     } else {
                         self.$message({
                             message: "审核失败",
@@ -358,6 +364,8 @@ export default {
                             message: "审核成功",
                             type: 'success'
                         });
+                        //关闭当前页，查询当前表格
+                        self.$emit('appStep5');
                     } else {
                         self.$message({
                             message: "审核失败",
@@ -408,6 +416,8 @@ export default {
                             message: "审核成功",
                             type: 'success'
                         });
+                        //关闭当前页，查询当前表格
+                        self.$emit('appStep6');
                     } else {
                         self.$message({
                             message: "审核失败",
@@ -448,6 +458,8 @@ export default {
                             message: "审核成功",
                             type: 'success'
                         });
+                        //关闭当前页，查询当前表格
+                        self.$emit('appStep7');
                     } else {
                         self.$message({
                             message: "审核失败",
@@ -512,12 +524,28 @@ export default {
                 } else {
                     if (res.data.length != 0) {
                         self.$message({
-                            message: "审核成功",
+                            message: "操作成功",
                             type: 'success'
                         });
+                        //todo 重新查询一下表格
+                        if (self.step == 1) {
+                            self.$emit('unAppStep1');
+                        } else if (self.step == 2) {
+                            self.$emit('unAppStep2');
+                        } else if (self.step == 3) {
+                            self.$emit('unAppStep3');
+                        } else if (self.step == 4) {
+                            self.$emit('unAppStep4');
+                        } else if (self.step == 5) {
+                            self.$emit('unAppStep5');
+                        } else if (self.step == 6) {
+                            self.$emit('unAppStep6');
+                        } else if (self.step == 7) {
+                            self.$emit('unAppStep7');
+                        }
                     } else {
                         self.$message({
-                            message: "审核失败",
+                            message: "操作失败",
                             type: 'warning'
                         });
                     }

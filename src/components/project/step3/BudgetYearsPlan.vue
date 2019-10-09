@@ -161,7 +161,14 @@
             size=55%
             :before-close="handleClose">
             <div class="scrollBar-inner" style="height: 430px;">
-                <show-project-Detail @onListen="handleClose" :projectDetail="projectDetail" :step="3" :activeNames="activeNames" :showEdit="showEdit" :grade="user.grade">
+                <show-project-Detail @onListen="handleClose"
+                                     @appStep3="handleAppStep3"
+                                     @unAppStep3="handleAppStep3"
+                                     :projectDetail="projectDetail"
+                                     :step="3"
+                                     :activeNames="activeNames"
+                                     :showEdit="showEdit"
+                                     :grade="user.grade">
 
                 </show-project-Detail>
 
