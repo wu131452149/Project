@@ -181,7 +181,6 @@ export default {
             self.showPro = true;
             self.showTri = false;
             self.showEdit = true;
-            //self.editOptionYears(data.projectYears);
         },
         editTriTab: function (e, data) {
             var self = this;

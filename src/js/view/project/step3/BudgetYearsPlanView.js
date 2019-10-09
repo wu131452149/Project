@@ -126,11 +126,11 @@ export default {
                     name: nextYears + "年度",
                     value: nextYears + "年度"
                 }];
-            } else if (self.years == 2) {
+            } else if (self.years == 3) {
                 self.options = [{name: thisYears + "年度", value: thisYears + "年度"}, {
                     name: nextYears + "年度",
                     value: nextYears + "年度"
-                }, {name: nextYearsA, value: nextYearsA}];
+                }, {name: nextYearsA+ "年度", value: nextYearsA+ "年度"}];
             }
         },
         //查询在建项目年度预算评审

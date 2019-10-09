@@ -203,7 +203,6 @@ export default {
             self.drawerDetails = true;
             self.projectDetail = data;
             self.showEdit = true;
-            //self.editOptionYears(data.projectYears);
         },
         closeForm: function () {
             var self = this;
