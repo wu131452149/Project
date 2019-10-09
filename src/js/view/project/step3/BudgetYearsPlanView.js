@@ -301,7 +301,8 @@ export default {
                     let editBudgetData = _.cloneDeep(self.editBudgetYearsPlan);
                     //根据id来改变
                     editBudgetData.id = self.projectDetail.id;
-                    editBudgetData.step = 3;//新建的并且已经通过审核了的才能提交预算
+                    //因为预算填写可以多次录入，所以步骤就不要了，也许已经在其他步骤了，
+                    //editBudgetData.step = 3;//新建的并且已经通过审核了的才能提交预算
                     editBudgetData.suggestion = 1;//第一步已经通过审核
                     editBudgetData.stepThreeApp = 2;//将第二步设置为待审核
                     if (editBudgetData.type == "自筹金额") {
