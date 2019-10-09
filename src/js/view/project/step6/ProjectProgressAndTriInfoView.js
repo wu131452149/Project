@@ -87,7 +87,7 @@ export default {
         //查询预算变更
         queryProAndTriProject: function (flag) {
             let self = this;
-            let data = {};
+            let data =  _.cloneDeep(self.proAndTriProject.formData);
             data.page = flag ? 1 : self.proAndTriProject.currentPage;
             data.step = 6;
             data.stepSixApp = 1;//后台查的not in
@@ -108,6 +108,10 @@ export default {
                 } else {
                     if (res.data.length != 0) {
                         self.proAndTriProject.proAndTriProjectList = res.data.recordset;
+                        self.proAndTriProject.currentPage = data.page;
+                        if (flag) {
+                            self.queryProAndTriProjectCount(data);
+                        }
                     } else {
                         self.$message({
                             message: "查询失败",
@@ -124,9 +128,11 @@ export default {
                 );
         },
         //查询条数
-        queryProAndTriProjectCount: function () {
+        queryProAndTriProjectCount: function (data) {
             let self = this;
-            let data = {};
+            if (!data) {
+                var data = {};
+            }
             data.page = self.proAndTriProject.currentPage;
             data.step = 6;
             data.stepSixApp = 1;

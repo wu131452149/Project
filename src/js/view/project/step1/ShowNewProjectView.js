@@ -123,7 +123,7 @@ export default {
         //查询新建项目
         queryNewProject: function (flag) {
             let self = this;
-            let data = {};
+            let data = _.cloneDeep(self.newProject.formData);
             data.page = flag ? 1 : self.newProject.currentPage;
             data.step = 1;
             data.stepOneApp = 1;
@@ -143,7 +143,11 @@ export default {
                     });
                 } else {
                     if (res.data.length != 0) {
-                        this.newProject.newProjectList = res.data.recordset;
+                        self.newProject.newProjectList = res.data.recordset;
+                        self.newProject.currentPage = data.page;
+                        if (flag) {
+                            self.queryNewProjectCount(data);
+                        }
                     } else {
                         self.$message({
                             message: "查询失败",
@@ -162,9 +166,11 @@ export default {
 
         },
         //查询新建项目条数
-        queryNewProjectCount: function () {
+        queryNewProjectCount: function (data) {
             let self = this;
-            let data = {};
+            if (!data) {
+                var data = {};
+            }
             data.page = self.newProject.currentPage;
             data.step = 1;
             data.stepOneApp = 1;

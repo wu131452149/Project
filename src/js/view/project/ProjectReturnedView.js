@@ -101,7 +101,7 @@ export default {
         //查询退库项目
         queryReturnProject: function (flag) {
             let self = this;
-            let data = {};
+            let data = _.cloneDeep(self.returnedProject.formData);
             data.page = flag ? 1 : self.returnedProject.currentPage;
             data.step = 0;
             data.ifReturned = 1;
@@ -120,7 +120,11 @@ export default {
                     });
                 } else {
                     if (res.data.length != 0) {
-                        this.returnedProject.returnedProjectList = res.data.recordset;
+                        self.returnedProject.returnedProjectList = res.data.recordset;
+                        self.returnedProject.currentPage = data.page;
+                        if (flag) {
+                            self.queryReturnProjectCount(data);
+                        }
                     } else {
                         self.$message({
                             message: "查询失败",
@@ -139,9 +143,11 @@ export default {
 
         },
         //查询退库条数
-        queryReturnProjectCount: function () {
+        queryReturnProjectCount: function (data) {
             let self = this;
-            let data = {};
+            if (!data) {
+                var data = {};
+            }
             data.page = self.returnedProject.currentPage;
             data.step = 0;
             data.ifReturned = 1;

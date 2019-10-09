@@ -1,13 +1,13 @@
-
 /**
  * 这个文件主要是展示所有项目信息
  *  created by LilyLee on 2019/9/22.
  **/
 import Filters from "../common/Filters";
 import Utils from "../../lib/Utils/Utils";
+
 export default {
     name: "ShowProjectDetailView",
-    props: ["projectDetail", "step","activeNames","showEdit"],
+    props: ["projectDetail", "step", "activeNames", "showEdit","grade"],
     data() {
         return {
             loading: false,
@@ -17,10 +17,10 @@ export default {
             appropriateTopBudget: [],
             cutBudget: [],
             addBudget: [],
-            totalCut:0,
-            totalAdd:0,
-            fileList:[],
-            names:this.activeNames
+            totalCut: 0,
+            totalAdd: 0,
+            fileList: [],
+            names: this.activeNames
         }
     },
     beforeMount: function () {
@@ -53,8 +53,25 @@ export default {
                 var self = this;
                 if (val) {
                     self.names = [];
-                }else{
-                    self.names = self.activeNames;
+                } else {
+                    if (self.grade == 2) {
+                        if (self.step == 2) {
+                            self.names = ['2'];
+                        } else if (self.step == 3) {
+                            self.names = ['3'];
+                        }else if (self.step == 4) {
+                            self.names = ['4'];
+                        }else if (self.step == 5) {
+                            self.names = ['5'];
+                        }else if (self.step == 6) {
+                            self.names = ['6'];
+                        }else if (self.step == 7) {
+                            self.names = ['7'];
+                        }
+
+                    } else {
+                        self.names = self.activeNames;
+                    }
                 }
             }
         }
@@ -80,7 +97,7 @@ export default {
                 }
                 self.totalCut = total1;
                 self.totalAdd = total2;
-                self.totalMoney = parseInt(self.projectDetail.budgetReviewMoney)-total1 + total2;
+                self.totalMoney = parseInt(self.projectDetail.budgetReviewMoney) - total1 + total2;
             }
         },
         downloadUrl: function (data) {
@@ -146,7 +163,7 @@ export default {
                 self.approvalBudgetChange();
             } else if (self.step == 6) {
                 self.approvalTri();
-            }else if (self.step == 7) {
+            } else if (self.step == 7) {
                 self.approvalFinish();
             }
 
@@ -363,13 +380,13 @@ export default {
             let self = this;
             let data = {};
             data.id = self.projectDetail.id;
-            if(self.projectDetail.speed==100){//审核之后工程到百分之百才能进入完工库
+            if (self.projectDetail.speed == 100) {//审核之后工程到百分之百才能进入完工库
                 data.approvalStep = 7;
                 data.stepSixApp = 1;
                 data.stepSevenApp = 2;
                 data.oldStep = 6;
                 data.oldSuggestion = 2;
-            }else{
+            } else {
                 data.approvalStep = 6;
                 data.stepSixApp = 1;
                 //data.stepSevenApp = 2;
@@ -447,14 +464,14 @@ export default {
                 );
         },
         //显示文件
-        initFileList:function () {
-            var self =this;
-            if( self.projectDetail.fileList){
+        initFileList: function () {
+            var self = this;
+            if (self.projectDetail.fileList) {
                 self.fileList = JSON.parse(self.projectDetail.fileList);
             }
         },
         //审核不通过
-        disApprovalProject:function () {
+        disApprovalProject: function () {
             let self = this;
             let data = {};
             //步骤等于当前的步骤，把审核状态改为0
@@ -479,7 +496,7 @@ export default {
             } else if (self.step == 6) {
                 data.oldSuggestion = self.projectDetail.stepSixApp;
                 data.stepSixApp = 0;
-            }else if (self.step == 7) {
+            } else if (self.step == 7) {
                 data.oldSuggestion = self.projectDetail.stepSevenApp;
                 data.stepSevenApp = 0;
             }
@@ -522,7 +539,7 @@ export default {
         renderPlanYearsTopMoney: Filters.renderPlanYearsTopMoney,
         renderPlanYearsMoney: Filters.renderPlanYearsMoney,
         renderPlanYearsSelfMoney: Filters.renderPlanYearsSelfMoney,
-        renderBeginTime:Filters.renderBeginTime,
-        renderBoolean:Filters.renderBoolean
+        renderBeginTime: Filters.renderBeginTime,
+        renderBoolean: Filters.renderBoolean
     }
 }

@@ -82,7 +82,7 @@ export default {
         //查询在建项目预算评审
         queryBudgetPlanProject: function (flag) {
             let self = this;
-            let data = {};
+            let data = _.cloneDeep(self.budgetPlanProject.formData);
             data.page = flag ? 1 : self.budgetPlanProject.currentPage;
             data.step = 2;
             data.stepTwoApp = 1;
@@ -102,7 +102,11 @@ export default {
                     });
                 } else {
                     if (res.data.length != 0) {
-                        this.budgetPlanProject.budgetPlanProjectList = res.data.recordset;
+                        self.budgetPlanProject.budgetPlanProjectList = res.data.recordset;
+                        self.budgetPlanProject.currentPage = data.page;
+                        if (flag) {
+                            self.queryBudgetPlanProjectCount(data);
+                        }
                     } else {
                         self.$message({
                             message: "查询失败",
@@ -119,9 +123,11 @@ export default {
                 );
         },
         //查询条数
-        queryBudgetPlanProjectCount: function () {
+        queryBudgetPlanProjectCount: function (data) {
             let self = this;
-            let data = {};
+            if (!data) {
+                var data = {};
+            }
             data.page = self.budgetPlanProject.currentPage;
             data.step = 2;
             data.stepTwoApp = 1;

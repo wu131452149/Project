@@ -77,7 +77,7 @@ export default {
         //查询预算变更
         queryBudgetChangeProject: function (flag) {
             let self = this;
-            let data = {};
+            let data = _.cloneDeep(self.budgetChangeProject.formData);
             data.page = flag ? 1 : self.budgetChangeProject.currentPage;
             data.step = 5;
             data.stepFiveApp = 1;//后台查的not in
@@ -98,6 +98,10 @@ export default {
                 } else {
                     if (res.data.length != 0) {
                         self.budgetChangeProject.budgetChangeProjectList = res.data.recordset;
+                        self.budgetChangeProject.currentPage = data.page;
+                        if (flag) {
+                            self.queryBudgetChangeProjectCount(data);
+                        }
                     } else {
                         self.$message({
                             message: "查询失败",
@@ -148,9 +152,11 @@ export default {
                 );
         },
         //查询条数
-        queryBudgetChangeProjectCount: function () {
+        queryBudgetChangeProjectCount: function (data) {
             let self = this;
-            let data = {};
+            if (!data) {
+                var data = {};
+            }
             data.page = self.budgetChangeProject.currentPage;
             data.step = 5;
             data.stepFiveApp = 1;

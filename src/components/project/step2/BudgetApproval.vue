@@ -148,7 +148,7 @@
             size=55%
             :before-close="handleClose">
             <div class="scrollBar-inner" style="height: 430px;">
-                <show-project-Detail @onListen="handleClose" :projectDetail="projectDetail" :step="2" :activeNames="activeNames" :showEdit="showEdit">
+                <show-project-Detail @onListen="handleClose" :projectDetail="projectDetail" :step="2" :activeNames="activeNames" :showEdit="showEdit" :grade="user.grade">
 
                 </show-project-Detail>
                 <div v-if="user.grade==1 && showEdit" class="padding-0-20">

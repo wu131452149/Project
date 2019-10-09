@@ -101,7 +101,7 @@ export default {
         //查询拨付表
         queryAppropriateMoneyProject: function (flag) {
             let self = this;
-            let data = {};
+            let data = _.cloneDeep(self.appropriateMoneyProject.formData);
             data.page = flag ? 1 : self.appropriateMoneyProject.currentPage;
             data.step = 4;
             data.stepFourApp = 1;
@@ -122,6 +122,10 @@ export default {
                 } else {
                     if (res.data.length != 0) {
                         self.appropriateMoneyProject.appropriateMoneyProjectList = res.data.recordset;
+                        self.appropriateMoneyProject.currentPage = data.page;
+                        if (flag) {
+                            self.queryAppropriateMoneyProjectCount(data);
+                        }
                     } else {
                         self.$message({
                             message: "查询失败",
@@ -179,9 +183,11 @@ export default {
 
         },
         //查询条数
-        queryAppropriateMoneyProjectCount: function () {
+        queryAppropriateMoneyProjectCount: function (data) {
             let self = this;
-            let data = {};
+            if (!data) {
+                var data = {};
+            }
             data.page = self.appropriateMoneyProject.currentPage;
             data.step = 4;
             data.stepFourApp = 1;

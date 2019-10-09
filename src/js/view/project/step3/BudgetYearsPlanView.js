@@ -137,7 +137,7 @@ export default {
         //可以多次录入，审核通过也可以查询
         queryBudgetYearsPlanProject: function (flag) {
             let self = this;
-            let data = {};
+            let data = _.cloneDeep(self.budgetYearsPlanProject.formData);
             data.page = flag ? 1 : self.budgetYearsPlanProject.currentPage;
             data.step = 3;
             //不管是在审核还是没在审核的都要查
@@ -159,6 +159,10 @@ export default {
                 } else {
                     if (res.data.length != 0) {
                         self.budgetYearsPlanProject.budgetYearsPlanProjectList = res.data.recordset;
+                        self.budgetYearsPlanProject.currentPage = data.page;
+                        if (flag) {
+                            self.queryBudgetYearsPlanProjectCount(data);
+                        }
                     } else {
                         self.$message({
                             message: "查询失败",
@@ -175,9 +179,11 @@ export default {
                 );
         },
         //查询条数
-        queryBudgetYearsPlanProjectCount: function () {
+        queryBudgetYearsPlanProjectCount: function (data) {
             let self = this;
-            let data = {};
+            if (!data) {
+                var data = {};
+            }
             data.page = self.budgetYearsPlanProject.currentPage;
             data.step = 3;
             data.stepThreeApp = 1;
