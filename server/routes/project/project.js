@@ -125,7 +125,7 @@ router.post('/updateProject', function (req, res, next) {
         var whereObj = {id: param.id, approvalStep: step};
     }
     delete param.id;
-    //delete param.step;
+    delete param.step;
     delete param.suggestion;
     if(param.oldStep==0||param.oldStep){
         delete param.oldStep;
