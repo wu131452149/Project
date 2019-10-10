@@ -116,10 +116,14 @@ router.post('/approvalProject', function (req, res, next) {
 router.post('/updateProject', function (req, res, next) {
     var param = req.body;
     var step = param.step;
-    if(param.oldStep==0){
+    if(param.oldStep==0 ||param.oldStep){
         step =  param.oldStep;
     }
-    var whereObj = {id: param.id, approvalStep: step};
+    if(param.id){
+        var whereObj = {id: param.id};
+    }else{
+        var whereObj = {id: param.id, approvalStep: step};
+    }
     delete param.id;
     delete param.step;
     delete param.suggestion;
