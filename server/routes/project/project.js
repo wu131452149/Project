@@ -127,7 +127,7 @@ router.post('/updateProject', function (req, res, next) {
     delete param.id;
     delete param.step;
     delete param.suggestion;
-    if(param.oldStep==0){
+    if(param.oldStep==0||param.oldStep){
         delete param.oldStep;
     }
     db.update(param, whereObj, dbName, function (err, result) {//查询所有news表的数据
