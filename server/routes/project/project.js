@@ -163,9 +163,9 @@ router.post('/queryProject', function (req, res, next) {
     } else if (step == 4) {//拨付可以录入多次
         //suggestionStep = "stepFourApp";
         //suggestion = param.stepFourApp;
-    } else if (step == 5) {
-        suggestionStep = "stepFiveApp";
-        suggestion = param.stepFiveApp;
+    } else if (step == 5) {//预算可以变更多次
+        //suggestionStep = "stepFiveApp";
+        //suggestion = param.stepFiveApp;
 
     } else if (step == 6) {//6不用查审核，工程进度可以直接录入多次
         // suggestionStep = "stepSixApp";
@@ -193,9 +193,10 @@ router.post('/queryProject', function (req, res, next) {
     }
     //默认查询条件
     if (param.step) {
-        if(step == 3 || step == 4){
-            var mstep = step - 1;
-            whereSql = whereSql +"and approvalStep>" + mstep + " and approvalStep<7 "
+        if(step == 3){
+            whereSql = whereSql +" and approvalStep>2 and approvalStep<7 "
+        }else if(step == 4||step == 5 ||step == 6 ){
+            whereSql = whereSql +" and approvalStep>3 and approvalStep<7 "
         }else{
             whereSql = whereSql + " and approvalStep= " + param.step;
         }
@@ -244,9 +245,10 @@ router.post('/queryProject', function (req, res, next) {
         }
         //默认查询条件
         if (param.step) {
-            if(step == 3 || step == 4){
-                var mstep = step - 1;
-                whereSql = whereSql +" and approvalStep>" + mstep + " and approvalStep<7 "
+            if(step == 3){
+                whereSql = whereSql +" and approvalStep>2 and approvalStep<7 "
+            }else if(step == 4||step == 5 ||step == 6 ){
+                whereSql = whereSql +" and approvalStep>3 and approvalStep<7 "
             }else{
                 whereSql = whereSql + " and approvalStep= " + param.step;
             }
@@ -263,13 +265,8 @@ router.post('/queryProject', function (req, res, next) {
         if (param.projectFinance) {
             whereSql = whereSql + " and projectFinance= '" + param.projectFinance+ "'";
         }
-        if (step == 7 || step == 6) {
-            var sql = "select top " + pageSize + " * from (select row_number() over(order by id asc) as rownumber,* from " + dbName + ") temp_row where rownumber>" + ((param.page - 1) * pageSize) + whereSql;
-        } else if (step == 3 || step == 4) {
-            var sql = "select top " + pageSize + " * from (select row_number() over(order by id asc) as rownumber,* from " + dbName + ") temp_row where rownumber>" + ((param.page - 1) * pageSize) + whereSql;
-        } else {
-            var sql = "select top " + pageSize + " * from (select row_number() over(order by id asc) as rownumber,* from " + dbName + ") temp_row where rownumber>" + ((param.page - 1) * pageSize) + whereSql;
-        }
+
+        var sql = "select top " + pageSize + " * from (select row_number() over(order by id asc) as rownumber,* from " + dbName + ") temp_row where rownumber>" + ((param.page - 1) * pageSize) + whereSql;
         db.querySql(sql, "", function (err, result) {//查询所有news表的数据
             res.json(result);
         });
@@ -390,8 +387,8 @@ router.post('/queryProjectCount', function (req, res, next) {
         //suggestion = param.stepFourApp;
 
     } else if (step == 5) {
-        suggestionStep = "stepFiveApp";
-        suggestion = param.stepFiveApp;
+        //suggestionStep = "stepFiveApp";
+        //suggestion = param.stepFiveApp;
 
     } else if (step == 6) {
         // suggestionStep = "stepSixApp";
@@ -420,9 +417,10 @@ router.post('/queryProjectCount', function (req, res, next) {
     }
     //默认查询条件
     if (param.step) {
-        if(step == 3 || step == 4){
-            var mstep = step - 1;
-            whereSql = whereSql +" and approvalStep>" + mstep + " and approvalStep<7 "
+        if(step == 3){
+            whereSql = whereSql +" and approvalStep>2 and approvalStep<7 "
+        }else if(step == 4||step == 5 ||step == 6 ){
+            whereSql = whereSql +" and approvalStep>3 and approvalStep<7 "
         }else{
             whereSql = whereSql + " and approvalStep= " + param.step;
         }

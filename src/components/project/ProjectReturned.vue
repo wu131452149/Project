@@ -68,6 +68,7 @@
             <el-table
                 :data="returnedProject.returnedProjectList"
                 tooltip-effect="light"
+                height="100%"
                 @click.stop.prevent="stopPropagationPreventDef($event)"
                 style="width: 100%;">
                 <el-table-column show-overflow-tooltip prop="id" label="项目编号" width="100">
@@ -82,7 +83,7 @@
                 <el-table-column show-overflow-tooltip prop="projectType" label="项目类型">
                     <template slot-scope="scope">{{scope.row.projectType}}</template>
                 </el-table-column>
-                <el-table-column show-overflow-tooltip prop="projectMoney" label="项目估算总额（万元）" width="80">
+                <el-table-column show-overflow-tooltip prop="projectMoney" label="项目估算总额（万元）" >
                     <template slot-scope="scope">
                         <span>{{scope.row.projectMoney}}</span>
                     </template>
@@ -93,7 +94,7 @@
                 <el-table-column show-overflow-tooltip prop="projectIndustry" label="所属行业">
                     <template slot-scope="scope">{{scope.row.projectIndustry|renderIndustry}}</template>
                 </el-table-column>
-                <el-table-column width="70px" prop="projectCreateTime" label="拟开工时间">
+                <el-table-column show-overflow-tooltip prop="projectCreateTime" label="拟开工时间">
                     <template slot-scope="scope">{{scope.row.projectBeginTime}}</template>
                 </el-table-column>
                 <el-table-column show-overflow-tooltip prop="projectYears" label="项目周期" width="80">

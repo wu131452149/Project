@@ -86,7 +86,7 @@
                 :data="appropriateMoneyProject.appropriateMoneyProjectList"
                 tooltip-effect="light"
                 @click.stop.prevent="stopPropagationPreventDef($event)"
-                style="width: 100%;">
+                style="width: 100%;height: 100%;">
                 <el-table-column show-overflow-tooltip prop="id" label="项目编号" width="100">
                     <template slot-scope="scope">{{scope.row.id}}</template>
                 </el-table-column>
