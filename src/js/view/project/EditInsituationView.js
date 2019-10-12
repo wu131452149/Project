@@ -3,6 +3,7 @@
  *  created by LilyLee on 2019/9/19.
  **/
 import Utils from "../../lib/utils/Utils";
+import Filters from "../common/Filters";
 
 export default {
     name: "EditInsituationView",
@@ -12,7 +13,6 @@ export default {
             dialog: false,
             loading: false,
             newInstitution: "",
-            queryInstitutionName:"",
             showCountNumber: true,
             IsNewMediaSessionLargeData: '',
             institution: {
@@ -86,9 +86,9 @@ export default {
         //查询单位
         queryInstitution: function (flag) {
             let self = this;
-            let data = {};
+            let data = _.cloneDeep(self.institution.formData);
             data.page = flag ? 1 : self.institution.currentPage;
-            data.name = self.queryInstitutionName;
+            data.name = data.institutionName;
             self.$http.post('/api/institution/queryInstitution', data).then(res => {
                 let status = res.status;
                 let statusText = res.statusText;
@@ -100,6 +100,10 @@ export default {
                 } else {
                     if (res.data.length != 0) {
                         self.institution.institutionList = res.data.recordset;
+                        self.institution.currentPage = data.page;
+                        if (flag) {
+                            self.queryInstitutionCount(data);
+                        }
                     } else {
                         self.$message({
                             message: "查询失败",
@@ -118,10 +122,13 @@ export default {
 
         }
         ,
-        showDefaultQuickQuery: function () {
-
-        }
-        ,
+        showDefaultQuickQuery: function (flag) {
+            var self = this;
+            self.institution.formData.institutionName = "";
+            if (flag) {
+                self.queryInstitution(true);
+            }
+        },
         stopPropagationPreventDef: function () {
 
         }
@@ -130,10 +137,13 @@ export default {
 
         }
         ,
-        queryInstitutionCount: function () {
+        queryInstitutionCount: function (data) {
             let self = this;
-            let data = {};
+            if (!data) {
+                var data = {};
+            }
             data.page = self.institution.currentPage;
+            data.name = data.institutionName;
             self.$http.post('/api/institution/queryInstitutionCount', data).then(res => {
                 let status = res.status;
                 let statusText = res.statusText;
@@ -161,5 +171,8 @@ export default {
                 );
 
         }
+    },
+    filters: {
+        renderBeginTime: Filters.renderBeginTime,
     }
 }

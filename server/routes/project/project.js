@@ -38,6 +38,12 @@ router.post('/queryAllProject', function (req, res, next) {
     if (param.projectYears) {
         whereSql = whereSql + " and projectYears= " + param.projectYears;
     }
+    if (param.commitName) {
+        whereSql = whereSql + " and commitName= '" + param.commitName+ "'";
+    }
+    if (param.projectFinance) {
+        whereSql = whereSql + " and projectFinance= '" + param.projectFinance+ "'";
+    }
     //var pageSize = 10;
     //分页查询
     // select * from [cz].[dbo].[project] where 1=1 and projectYears= 2 order by [id] offset 10*1 rows fetch next 10 rows only
@@ -66,6 +72,12 @@ router.post('/queryAllProject', function (req, res, next) {
         }
         if (param.projectYears) {
             whereSql = whereSql + " and projectYears= " + param.projectYears;
+        }
+        if (param.commitName) {
+            whereSql = whereSql + " and commitName= '" + param.commitName+ "'";
+        }
+        if (param.projectFinance) {
+            whereSql = whereSql + " and projectFinance= '" + param.projectFinance+ "'";
         }
 
         var sql = "select top " + pageSize + " * from (select row_number() over(order by id asc) as rownumber,* from " + dbName + ") temp_row where rownumber>" + ((param.page - 1) * pageSize) + whereSql;
@@ -490,6 +502,12 @@ router.post('/queryAllProjectCount', function (req, res, next) {
     }
     if (param.projectYears) {
         whereSql = whereSql + " and projectYears= " + param.projectYears;
+    }
+    if (param.commitName) {
+        whereSql = whereSql + " and commitName= '" + param.commitName+ "'";
+    }
+    if (param.projectFinance) {
+        whereSql = whereSql + " and projectFinance= '" + param.projectFinance+ "'";
     }
     var sql = "select count(id) as num from " + dbName + " " + whereSql;
     db.querySql(sql, "", function (err, result) {//查询所有news表的数据

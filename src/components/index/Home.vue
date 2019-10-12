@@ -3,7 +3,7 @@
         <!--监控地方-->
         <el-tabs v-model="userInfoActiveName">
             <el-tab-pane label="项目监控" name="pro-monitor">
-                <div class="home-monitor element-table th-bold" v-if="user.grade==3">
+                <div class="home-monitor element-table th-bold">
                     <div><i class="fa fa-bar-chart"></i><h5 class="inline-block">项目统计</h5></div>
                     <div class="el-row is-justify-space-around el-row--flex">
                         <div class="el-col el-col-4">
@@ -111,7 +111,7 @@
                     </el-container>
                 </div>
             </el-tab-pane>
-            <el-tab-pane label="项目统计详情" name="all-pro-details" v-if="user.grade==3">
+            <el-tab-pane label="项目统计详情" name="all-pro-details">
                 <!--查询条件 start-->
                 <div class="general-search">
                     <div><i class="el-icon-search cursor-default"></i><h5 class="inline-block">所有项目查询</h5></div>
@@ -300,9 +300,14 @@
                     custom-class="demo-drawer"
                     size=55%
                     :before-close="handleClose">
-                    <show-project-Detail @onListen="handleClose" :projectDetail="projectDetail" :step="7">
+                    <div class="scrollBar-inner" style="height: 500px;">
+                    <show-project-Detail @onListen="handleClose"
+                                         :projectDetail="projectDetail"
+                                         :step="7"
+                    :activeNames="activeNames">
 
                     </show-project-Detail>
+                    </div>
                 </el-drawer>
                 <!--新建项目页面 end-->
             </el-tab-pane>

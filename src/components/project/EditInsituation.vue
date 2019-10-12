@@ -6,7 +6,7 @@
             <div><i class="el-icon-search cursor-default"></i><h5 class="inline-block">单位查询</h5></div>
             <el-form :inline="true" ref="searchData" v-model="institution.formData" style="padding-left: 30px">
                 <!--快捷查询 start-->
-                <div class="quick-search clearFix">
+                <div class="quick-search clearFix" v-if="user.grade==1">
                     <div class="f-l color-label">新建单位 </div>
                     <div class="f-l el-tag-list margin-l-12 width188">
                         <el-input v-model="newInstitution"></el-input>
@@ -20,7 +20,7 @@
                 <div style="margin-bottom: 12px;">
                 <div class="inline-block">
                     <el-form-item label="单位名称" prop="" class="agent-select-label">
-                        <el-input placeholder="按单位名称搜索" v-model="queryInstitutionName"
+                        <el-input placeholder="按单位名称搜索" v-model="institution.formData.institutionName"
                                   @change="changeQuickQuery('name')" required
                                   prefix-icon="el-icon-search"
                                   class="input-with-select nick-name-input"></el-input>
@@ -51,7 +51,7 @@
                     <template slot-scope="scope">{{scope.row.userName}}</template>
                 </el-table-column>
                 <el-table-column show-overflow-tooltip prop="time" label="时间">
-                    <template slot-scope="scope">{{scope.row.time}}</template>
+                    <template slot-scope="scope">{{scope.row.time|renderBeginTime}}</template>
                 </el-table-column>
             </el-table>
         </div>

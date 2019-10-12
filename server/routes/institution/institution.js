@@ -66,7 +66,14 @@ router.post('/queryInstitution', function (req, res, next) {
 
 });
 router.post('/queryInstitutionCount', function (req, res, next) {
-    var sql = "select count(id) as num from dbo.institution";
+    var param = req.body;
+    var name = param.name;
+    if(name) {
+        var whereSql = " where name ='" + name + "'";
+    }else{
+        var whereSql = "";
+    }
+    var sql = "select count(id) as num from dbo.institution"+whereSql;
     db.querySql(sql,"",function (err, result) {//查询所有news表的数据
         res.json(result);
     });
