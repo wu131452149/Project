@@ -1,6 +1,6 @@
 <!--用户管理-->
 <template>
-    <div v-if="user.grade==1">
+    <div v-if="user.grade==0">
         <div class="edit-department scrollBar-inner wrap" style="height: 514px;" >
             <!--查询条件 start-->
             <div class="general-search" >
@@ -71,6 +71,12 @@
                     <el-table-column show-overflow-tooltip prop="grade" label="用户级别">
                         <template slot-scope="scope">{{scope.row.grade}}</template>
                     </el-table-column>
+                    <el-table-column label="操作" class="text-c" v-if="user.grade==1">
+                        <template slot-scope="scope">
+                            <a @click.stop="showUpdateUsers($event,scope.row)">修改</a>
+                            <a @click.stop="deleteUsers($event,scope.row)">删除</a>
+                        </template>
+                    </el-table-column>
                 </el-table>
             </div>
             <!--表格end-->
@@ -98,7 +104,7 @@
             :visible.sync="drawerDetails"
             :direction="direction"
             custom-class="demo-drawer"
-            ref = "updateUser"
+            ref = "createUserDraw"
             size=55%
             :before-close="handleClose">
             <div class="wrap wrap-crowded position-r clearfix scrollBar-inner" style="height: 500px;">
@@ -127,6 +133,43 @@
                 </div>
             </div>
         </el-drawer>
+        <el-drawer
+            title="修改用户"
+            :visible.sync="drawer"
+            :direction="direction"
+            custom-class="demo-drawer"
+            ref = "updateUserDrawer"
+            size=55%
+            :before-close="handleClose">
+            <div class="wrap wrap-crowded position-r clearfix scrollBar-inner" style="height: 500px;">
+                <el-form :model="updateUser" :rules="rules" class="width300" ref="updateUser">
+                    <el-form-item label="用户名" prop="userName">
+                        <el-input v-model="updateUser.userName" autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="级别"  prop="grade">
+                        <el-radio-group v-model="updateUser.grade">
+                            <el-radio label="1" value="'1'"></el-radio>
+                            <el-radio label="2" value="'2'"></el-radio>
+                            <el-radio label="3" value="'3'"></el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                    <el-form-item label="密码"  prop="password">
+                        <el-input v-model="updateUser.password" autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="单位"  prop="role">
+                        <el-input  v-model="updateUser.role" autocomplete="off"></el-input>
+                    </el-form-item>
+                </el-form>
+                <div class="demo-drawer__footer margin-t-25" style="text-align: center;">
+                    <el-button @click="closeUpdateForm">取 消</el-button>
+                    <el-button type="primary" @click="updateUsers" :loading="loading">{{ loading ? '更新中 ...' : '更新' }}
+                    </el-button>
+                </div>
+            </div>
+        </el-drawer>
+    </div>
+    <div v-else>
+        暂无查看权限
     </div>
 
 </template>

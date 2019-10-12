@@ -212,6 +212,7 @@ var del = async function (whereSql, params, tableName, callBack) {
             }
         }
         sql += whereSql;
+        console.log(sql);
         ps.prepare(sql, err => {
             if (err)
                 console.log(err);

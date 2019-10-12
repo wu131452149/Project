@@ -12,26 +12,34 @@ export default {
             table: false,
             dialog: false,
             loading: false,
-            drawerDetails:false,
+            drawer:false,
+            drawerDetails: false,
             direction: 'rtl',
             showCountNumber: true,
             IsNewMediaSessionLargeData: '',
             users: {
                 userList: [],
                 formData: {
-                    id:"",
+                    id: "",
                     userName: "",
-                    role:"",
-                    grade:"",
+                    role: "",
+                    grade: "",
                 },
                 count: 0,
                 currentPage: 1
             },
-            createUser:{
-                userName:"",
-                grade:"",
-                password:"",
-                role:"",
+            createUser: {
+                userName: "",
+                grade: "",
+                password: "",
+                role: "",
+            },
+            updateUser: {
+                id:"",
+                userName: "",
+                grade: "",
+                password: "",
+                role: "",
             },
             rules: {
                 userName: [
@@ -47,7 +55,7 @@ export default {
                     {required: true, message: '请输入项目名称', trigger: 'blur'},
                 ],
             },
-            user:{},
+            user: {},
             formLabelWidth: '80px'
         };
     },
@@ -58,51 +66,177 @@ export default {
         self.queryUsersCount();
     },
     methods: {
-        showCreateUsers:function(){
+        showCreateUsers: function () {
             var self = this;
             //显示项目详情，并且显示预算信息
             self.drawerDetails = true;
+        },
+        showUpdateUsers: function (e,data) {
+            var self = this;
+            //显示项目详情，并且显示预算信息
+            self.drawer = true;
+            self.updateUser.userName = data.userName;
+            self.updateUser.grade = data.grade;
+            self.updateUser.password = data.password;
+            self.updateUser.role = data.role;
+            self.updateUser.id = data.id;
         },
         handleClose(done) {
             done();
         },
         closeForm: function () {
             var self = this;
-            self.$refs.updateUser.closeDrawer();
+            self.$refs.createUserDraw.closeDrawer();
+        },
+        closeUpdateForm: function () {
+            var self = this;
+            self.$refs.updateUserDrawer.closeDrawer();
         },
         /*新建用户*/
         createUsers: function () {
             let self = this;
-            var dataParam = _.cloneDeep(self.createUser);
-            self.$http.post('/api/user/createUser', dataParam).then(res => {
-                let status = res.status;
-                let statusText = res.statusText;
-                if (status !== 200) {
-                    self.$message({
-                        message: statusText,
-                        type: 'error'
-                    });
+            self.$refs.createUser.validate((valid) => {
+                if (valid) {
+                    var dataParam = _.cloneDeep(self.createUser);
+                    self.$http.post('/api/user/createUser', dataParam).then(res => {
+                        let status = res.status;
+                        let statusText = res.statusText;
+                        if (status !== 200) {
+                            self.$message({
+                                message: statusText,
+                                type: 'error'
+                            });
+                        } else {
+                            if (res.data.length != 0) {
+                                self.$message({
+                                    message: "保存成功",
+                                    type: 'success'
+                                });
+                                self.closeForm();
+                                self.clearForm();
+                                self.queryUsers(true);
+                            } else {
+                                self.$message({
+                                    message: "保存失败",
+                                    type: 'warning'
+                                });
+                            }
+                        }
+                    })
+                        .catch(error =>
+                            self.$message({
+                                message: error.message,
+                                type: 'error'
+                            }),
+                        );
                 } else {
-                    if (res.data.length != 0) {
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
+
+        },
+        //更改用户
+        updateUsers:function(){
+            let self = this;
+            self.$refs.updateUser.validate((valid) => {
+                if (valid) {
+                    var dataParam = _.cloneDeep(self.updateUser);
+                    self.$http.post('/api/user/updateUser', dataParam).then(res => {
+                        let status = res.status;
+                        let statusText = res.statusText;
+                        if (status !== 200) {
+                            self.$message({
+                                message: statusText,
+                                type: 'error'
+                            });
+                        } else {
+                            if (res.data.length != 0) {
+                                self.$message({
+                                    message: "保存成功",
+                                    type: 'success'
+                                });
+                                self.closeUpdateForm();
+                                self.clearUpdateForm();
+                                self.queryUsers(true);
+                            } else {
+                                self.$message({
+                                    message: "保存失败",
+                                    type: 'warning'
+                                });
+                            }
+                        }
+                    })
+                        .catch(error =>
+                            self.$message({
+                                message: error.message,
+                                type: 'error'
+                            }),
+                        );
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
+        },
+        //删除用户
+        deleteUsers:function(e,data){
+            var self = this;
+            self.$confirm('是否删除用户?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                var deleteData = {};
+                deleteData.id =  data.id;
+                self.$http.post('/api/user/deleteUser', deleteData).then(res => {
+                    let status = res.status;
+                    let statusText = res.statusText;
+                    if (status !== 200) {
                         self.$message({
-                            message: "保存成功",
-                            type: 'success'
+                            message: statusText,
+                            type: 'error'
                         });
                     } else {
-                        self.$message({
-                            message: "保存失败",
-                            type: 'warning'
-                        });
+                        if (res.data.length != 0) {
+                            self.$message({
+                                message: "保存成功",
+                                type: 'success'
+                            });
+                            self.queryUsers(true);
+                        } else {
+                            self.$message({
+                                message: "保存失败",
+                                type: 'warning'
+                            });
+                        }
                     }
-                }
-            })
-                .catch(error =>
-                    self.$message({
-                        message: error.message,
-                        type: 'error'
-                    }),
-                );
+                })
+                    .catch(error =>
+                        self.$message({
+                            message: error.message,
+                            type: 'error'
+                        }),
+                    );
+            }).catch(() => {
 
+            });
+
+        },
+        clearForm:function(){
+            var self = this;
+            self.createUser.userName = "";
+            self.createUser.grade = "";
+            self.createUser.password = "";
+            self.createUser.role = "";
+        },
+        clearUpdateForm:function(){
+            var self = this;
+            self.updateUser.userName = "";
+            self.updateUser.grade = "";
+            self.updateUser.password = "";
+            self.updateUser.role = "";
+            self.updateUser.id = "";
         },
 
         //查询用户

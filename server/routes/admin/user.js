@@ -129,5 +129,19 @@ router.post('/createUser', function (req, res, next) {
         res.json(result);
     });
 });
+router.post('/updateUser', function (req, res, next) {
+    var param = req.body;
+    var whereObj = {id:param.id};
+    delete param.id;
+    db.update(param,whereObj,dbName,function (err, result) {//更新字段
+        res.json(result);
+    });
+});
+router.post('/deleteUser', function (req, res, next) {
+    var param = req.body;
+    db.del("where id = @id", {id:param.id}, dbName, function(err, result){//删除字段
+        res.json(result);
+    });
+});
 
 module.exports = router;
