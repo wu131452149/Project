@@ -4,6 +4,7 @@ const db = require('../../db');
 var fs = require('fs');
 var multer = require('multer');//引入multer
 var upload = multer({dest: 'uploads/'});//设置上传文件存储地址
+var dbName = "dbo.proUser";
 
 router.post('/uploadFile', upload.single('file'), (req, res, next) => {
     let ret = {};
@@ -53,13 +54,80 @@ router.post('/downloadFile', (req, res, next) => {
         res.end();
     })
 })
-
+//更改密码
 router.post('/changePwd', function (req, res, next) {
     var param = req.body;
-    db.update({password:param.password}, {id:param.id}, "dbo.proUser",function (err, result) {//查询所有news表的数据
+    db.update({password:param.password}, {id:param.id}, dbName,function (err, result) {//查询所有news表的数据
         res.json(result);
     });
 });
+//查询用户
+router.post('/queryAllUsers', function (req, res, next) {
+    var param = req.body;
+    var whereSql = " where 1=1";
+    if (param.id) {
+        whereSql = whereSql + " and id= " + param.id;
+    }
+    if (param.userName) {
+        whereSql = whereSql + " and userName = '" + param.userName + "'";
+    }
+    if (param.role) {
+        whereSql = whereSql + " and role = '" + param.role + "'";
+    }
+    if (param.grade) {
+        whereSql = whereSql + " and grade = " + param.grade;
+    }
+    var pageSize = 10;
+    if (param.page == 1) {
+        db.select(dbName, 10, whereSql, "", "order by id", function (err, result) {//查询所有news表的数据
+            res.json(result);
+        });
+    } else {
+        var whereSql = " ";
+        if (param.id) {
+            whereSql = whereSql + " and id= " + param.id;
+        }
+        if (param.userName) {
+            whereSql = whereSql + " and userName = '" + param.userName + "'";
+        }
+        if (param.role) {
+            whereSql = whereSql + " and role = '" + param.role + "'";
+        }
+        if (param.grade) {
+            whereSql = whereSql + " and grade = " + param.grade;
+        }
+        var sql = "select top " + pageSize + " * from (select row_number() over(order by id asc) as rownumber,* from " + dbName + ") temp_row where rownumber>" + ((param.page - 1) * pageSize) + whereSql;
 
+        db.querySql(sql, "", function (err, result) {//查询所有news表的数据
+            res.json(result);
+        });
+    }
+});
+router.post('/queryAllUsersCount', function (req, res, next) {
+    var param = req.body;
+    var whereSql = " where 1=1";
+    if (param.id) {
+        whereSql = whereSql + " and id= " + param.id;
+    }
+    if (param.userName) {
+        whereSql = whereSql + " and userName = '" + param.userName + "'";
+    }
+    if (param.role) {
+        whereSql = whereSql + " and role = '" + param.role + "'";
+    }
+    if (param.grade) {
+        whereSql = whereSql + " and grade = " + param.grade;
+    }
+    var sql = "select count(id) as num from " + dbName +whereSql;
+    db.querySql(sql, "", function (err, result) {//查询所有news表的数据
+        res.json(result);
+    });
+});
+router.post('/createUser', function (req, res, next) {
+    var param = req.body;
+    db.add(param,dbName,function (err, result) {//查询所有news表的数据
+        res.json(result);
+    });
+});
 
 module.exports = router;

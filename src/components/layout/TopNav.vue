@@ -2,7 +2,7 @@
     <div>
         <el-row :gutter="20" style="color:#FFFFFF;">
             <el-col :span="8" :push=14>
-                欢迎您，{{user.role}}管理员{{user.grade}}
+                欢迎您，{{user.role}}管理员
             </el-col>
             <el-col :span="2" :push=13>
                 <i class="fa fa-user" @click="toggleDialog($event,'changePassWord')"></i>
