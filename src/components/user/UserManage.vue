@@ -35,8 +35,8 @@
                             </el-form-item>
                         </div>
                         <div class="inline-block">
-                            <el-form-item label="用户级别" prop="" class="agent-select-label">
-                                <el-input placeholder="按用户级别搜索" v-model="users.formData.grade"
+                            <el-form-item label="用户类别" prop="" class="agent-select-label">
+                                <el-input placeholder="按用户类别搜索" v-model="users.formData.grade"
                                           required
                                           prefix-icon="el-icon-search"
                                           class="input-with-select nick-name-input"></el-input>
@@ -68,10 +68,10 @@
                     <el-table-column show-overflow-tooltip prop="time" label="用户密码">
                         <template slot-scope="scope">{{scope.row.password}}</template>
                     </el-table-column>
-                    <el-table-column show-overflow-tooltip prop="grade" label="用户级别">
+                    <el-table-column show-overflow-tooltip prop="grade" label="用户类别">
                         <template slot-scope="scope">{{scope.row.grade}}</template>
                     </el-table-column>
-                    <el-table-column label="操作" class="text-c" v-if="user.grade==1">
+                    <el-table-column label="操作" class="text-c">
                         <template slot-scope="scope">
                             <a @click.stop="showUpdateUsers($event,scope.row)">修改</a>
                             <a @click.stop="deleteUsers($event,scope.row)">删除</a>

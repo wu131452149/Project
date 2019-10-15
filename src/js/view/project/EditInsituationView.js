@@ -23,7 +23,7 @@ export default {
                 count: 0,
                 currentPage: 1
             },
-            user:{},
+            user: {},
             formLabelWidth: '80px'
         };
     },
@@ -89,6 +89,9 @@ export default {
             let data = _.cloneDeep(self.institution.formData);
             data.page = flag ? 1 : self.institution.currentPage;
             data.name = data.institutionName;
+            if (self.user.grade == 1) {//只有1要查自己建的
+                data.userName = self.user.role;
+            }
             self.$http.post('/api/institution/queryInstitution', data).then(res => {
                 let status = res.status;
                 let statusText = res.statusText;
@@ -144,6 +147,9 @@ export default {
             }
             data.page = self.institution.currentPage;
             data.name = data.institutionName;
+            if (self.user.grade == 1) {//只有1要查自己建的
+                data.userName = self.user.role;
+            }
             self.$http.post('/api/institution/queryInstitutionCount', data).then(res => {
                 let status = res.status;
                 let statusText = res.statusText;
@@ -173,6 +179,6 @@ export default {
         }
     },
     filters: {
-        renderBeginTime: Filters.renderBeginTime,
+        renderTime: Filters.renderTime,
     }
 }

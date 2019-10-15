@@ -207,6 +207,7 @@ export default {
         renderMoneyFrom: Filters.renderMoneyFrom,
         renderIndustry: Filters.renderIndustry,
         renderStatus: Filters.renderStatus,
+        renderBeginTime: Filters.renderBeginTime,
         renderStep: Filters.renderStep
     }
 }

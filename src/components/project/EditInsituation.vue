@@ -38,12 +38,10 @@
         <!--表格start-->
         <div class="report-form element-table less-condition">
             <el-table
-                ref="multipleTable"
                 :data="institution.institutionList"
                 tooltip-effect="light"
                 @click.stop.prevent="stopPropagationPreventDef($event)"
-                @selection-change="handleSelectionChange"
-                style="width: 100%;">
+                style="width: 100%;height: 100%;">
                 <el-table-column show-overflow-tooltip prop="name" label="单位名称">
                     <template slot-scope="scope">{{scope.row.name}}</template>
                 </el-table-column>
@@ -51,7 +49,7 @@
                     <template slot-scope="scope">{{scope.row.userName}}</template>
                 </el-table-column>
                 <el-table-column show-overflow-tooltip prop="time" label="时间">
-                    <template slot-scope="scope">{{scope.row.time|renderBeginTime}}</template>
+                    <template slot-scope="scope">{{scope.row.time|renderTime}}</template>
                 </el-table-column>
             </el-table>
         </div>

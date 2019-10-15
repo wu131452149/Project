@@ -31,7 +31,7 @@
                     </el-form-item>
                 </div>
                 <div class="inline-block">
-                    <el-form-item label="项目名称" prop="" class="agent-select-label">
+                    <el-form-item label="项目名称" prop="projectName" class="agent-select-label">
                         <el-input placeholder="按项目名称搜索" v-model="proAndTriProject.formData.projectName"
                                   required
                                   prefix-icon="el-icon-search"
@@ -48,7 +48,7 @@
                             <el-option :label="'1年'" :value="'1'"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="项目编号" prop="projectContactUserName" class="margin-r6">
+                    <el-form-item label="项目编号" prop="id" class="margin-r6">
                         <el-input placeholder="按项目编号搜索" v-model="proAndTriProject.formData.id"
                                   required
                                   prefix-icon="el-icon-search"
@@ -85,7 +85,7 @@
                 tooltip-effect="light"
                 @click.stop.prevent="stopPropagationPreventDef($event)"
                 style="width: 100%;height: 100%;">
-                <el-table-column show-overflow-tooltip prop="id" label="项目编号" width="100">
+                <el-table-column show-overflow-tooltip prop="id" label="项目编号" width="50">
                     <template slot-scope="scope">{{scope.row.id}}</template>
                 </el-table-column>
                 <el-table-column show-overflow-tooltip prop="projectInstitution" label="项目单位">
@@ -98,10 +98,8 @@
                 <el-table-column show-overflow-tooltip prop="projectType" label="项目类型">
                     <template slot-scope="scope">{{scope.row.projectType}}</template>
                 </el-table-column>
-                <el-table-column show-overflow-tooltip prop="projectMoney" label="项目估算总额（万元）" width="80">
-                    <template slot-scope="scope">
-                        <span>{{scope.row.projectMoney}}</span>
-                    </template>
+                <el-table-column show-overflow-tooltip prop="projectMoney" label="项目估算总额（万元）">
+                    <template slot-scope="scope">{{scope.row.projectMoney}}</template>
                 </el-table-column>
                 <el-table-column show-overflow-tooltip prop="projectMoneyFrom" label="资金来源">
                     <template slot-scope="scope">{{scope.row.projectMoneyFrom|renderMoneyFrom}}</template>
@@ -109,27 +107,25 @@
                 <el-table-column show-overflow-tooltip prop="projectIndustry" label="所属行业">
                     <template slot-scope="scope">{{scope.row.projectIndustry|renderIndustry}}</template>
                 </el-table-column>
-                <el-table-column width="70px" prop="projectCreateTime" label="拟开工时间">
-                    <template slot-scope="scope">{{scope.row.projectBeginTime}}</template>
+                <el-table-column show-overflow-tooltip prop="projectBeginTime" label="拟开工时间" width="100">
+                    <template slot-scope="scope">{{scope.row.projectBeginTime|renderBeginTime}}</template>
                 </el-table-column>
-                <el-table-column show-overflow-tooltip prop="projectYears" label="项目周期" width="80">
-                    <template slot-scope="scope">
-                        <span>{{scope.row.projectYears}}</span>
-                    </template>
+                <el-table-column show-overflow-tooltip prop="projectYears" label="项目周期" width="50">
+                    <template slot-scope="scope">{{scope.row.projectYears}}</template>
                 </el-table-column>
-                <el-table-column width="95px" prop="projectContactUserName" label="项目联系人">
+                <el-table-column show-overflow-tooltip prop="projectContactUserName" label="项目联系人">
                     <template slot-scope="scope">{{scope.row.projectContactUserName}}</template>
                 </el-table-column>
-                <el-table-column width="95px" prop="projectContactUserPhone" label="联系人电话">
+                <el-table-column show-overflow-tooltip prop="projectContactUserPhone" label="联系人电话">
                     <template slot-scope="scope">{{scope.row.projectContactUserPhone}}</template>
                 </el-table-column>
-                <el-table-column width="95px" prop="projectContactUserPhone" label="审核意见">
+                <el-table-column show-overflow-tooltip prop="stepSixApp" label="审核意见">
                     <template slot-scope="scope">{{scope.row.stepSixApp|renderStatus}}</template>
                 </el-table-column>
                 <!--//阶段录入修改-->
                 <el-table-column label="操作" class="text-c" width="200" v-if="user.grade==1">
                     <template slot-scope="scope">
-                        <a @click.stop="editProgressTab($event,scope.row)">更新项目进度</a>
+                        <a @click.stop="editProgressTab($event,scope.row)">更新进度</a>
                         <a @click.stop="editTriTab($event,scope.row)">录入第三方信息</a>
                     </template>
                 </el-table-column>

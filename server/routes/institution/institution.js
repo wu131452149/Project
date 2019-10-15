@@ -7,13 +7,13 @@ const router = express.Router();
 const db = require('../../db');
 
 router.post('/queryAllInstitution', function (req, res, next) {
-    db.selectAll("dbo.institution",function (err, result) {//查询所有news表的数据
+    db.selectAll("dbo.institution", function (err, result) {//查询所有news表的数据
         res.json(result);
     });
 });
 router.post('/createInstitution', function (req, res, next) {
     var param = req.body;
-    db.add(param,"dbo.institution",function (err, result) {//查询所有news表的数据
+    db.add(param, "dbo.institution", function (err, result) {//查询所有news表的数据
         res.json(result);
     });
 });
@@ -26,55 +26,62 @@ router.post('/queryInstitution', function (req, res, next) {
     //     res.json(result);
     // });
     var pageSize = 10;
-    var name = param.name;
-    if(name){
-        var whereSql = "where name ='"+name+"'";
-        db.select('dbo.institution', 10,whereSql,"","order by id",function (err, result) {//查询所有news表的数据
+    var whereSql = "where 1=1 ";
+    if (param.name) {
+        whereSql = whereSql + " and name = '" + param.name + "'";
+    }
+    if (param.userName) {
+        whereSql = whereSql + " and userName = '" + param.userName + "'";
+    }
+    if (param.page == 1) {
+        db.select('dbo.institution', 10, whereSql, "", "order by id", function (err, result) {//查询所有news表的数据
             res.json(result);
         });
-    }else{
-        if(param.page == 1){
-            db.select('dbo.institution', 10,"","","order by id",function (err, result) {//查询所有news表的数据
-                res.json(result);
-            });
-        }else{
-            var sql = "select top "+pageSize+" * from (select row_number() over(order by id asc) as rownumber,* from dbo.institution) temp_row where rownumber>"+((param.page-1)*pageSize)+"";
-            // var sql = "select * \n" +
-            //     "from (select top 10 * \n" +
-            //     "from (select top 20 * \n" +
-            //     "from dbo.institution \n" +
-            //     "order by id asc) \n" +
-            //     "as temp_sum_student \n" +
-            //     "order by id desc ) temp_order\n" +
-            //     "order by id asc"
-            // select top pageSize *
-            // from (select row_number()
-            // over(order by sno asc) as rownumber,*
-            // from student) temp_row
-            // where rownumber>((pageIndex-1)*pageSize);
-            //var count = 10*(param.page-1);
-            //var whereSql = "where id not in (select top "+count+" id from dbo.institution order by id)";
-            // db.select('dbo.institution', 10,whereSql,"","order by id",function (err, result) {//查询所有news表的数据
-            //     res.json(result);
-            // });
-            db.querySql(sql,"",function (err, result) {//查询所有news表的数据
-                res.json(result);
-            });
+    } else {
+        var whereSql = " ";
+        if (param.name) {
+            whereSql = whereSql + " and name = '" + param.name + "'";
         }
+        if (param.userName) {
+            whereSql = whereSql + " and userName = '" + param.userName + "'";
+        }
+        var sql = "select top " + pageSize + " * from (select row_number() over(order by id asc) as rownumber,* from dbo.institution) temp_row where rownumber>" + ((param.page - 1) * pageSize) + "";
+        // var sql = "select * \n" +
+        //     "from (select top 10 * \n" +
+        //     "from (select top 20 * \n" +
+        //     "from dbo.institution \n" +
+        //     "order by id asc) \n" +
+        //     "as temp_sum_student \n" +
+        //     "order by id desc ) temp_order\n" +
+        //     "order by id asc"
+        // select top pageSize *
+        // from (select row_number()
+        // over(order by sno asc) as rownumber,*
+        // from student) temp_row
+        // where rownumber>((pageIndex-1)*pageSize);
+        //var count = 10*(param.page-1);
+        //var whereSql = "where id not in (select top "+count+" id from dbo.institution order by id)";
+        // db.select('dbo.institution', 10,whereSql,"","order by id",function (err, result) {//查询所有news表的数据
+        //     res.json(result);
+        // });
+        db.querySql(sql, "", function (err, result) {//查询所有news表的数据
+            res.json(result);
+        });
     }
 
 
 });
 router.post('/queryInstitutionCount', function (req, res, next) {
     var param = req.body;
-    var name = param.name;
-    if(name) {
-        var whereSql = " where name ='" + name + "'";
-    }else{
-        var whereSql = "";
+    var whereSql = "where 1=1 ";
+    if (param.name) {
+        whereSql = whereSql + " and name = '" + param.name + "'";
     }
-    var sql = "select count(id) as num from dbo.institution"+whereSql;
-    db.querySql(sql,"",function (err, result) {//查询所有news表的数据
+    if (param.userName) {
+        whereSql = whereSql + " and userName = '" + param.userName + "'";
+    }
+    var sql = "select count(id) as num from dbo.institution " + whereSql;
+    db.querySql(sql, "", function (err, result) {//查询所有news表的数据
         res.json(result);
     });
 });

@@ -12,9 +12,6 @@ const ProjectReturned = resolve => require(['../../../components/project/Project
 const EditInsituation = resolve => require(['../../../components/project/EditInsituation.vue'], resolve);
 
 
-
-
-
 export default {
     name: "mainContentView",
     components: {

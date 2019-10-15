@@ -286,6 +286,7 @@ export default {
         renderIndustry: Filters.renderIndustry,
         renderStatus: Filters.renderStatus,
         renderStep: Filters.renderStep,
+        renderBeginTime: Filters.renderBeginTime,
         renderProjectYears: Filters.renderProjectYears
 
     }

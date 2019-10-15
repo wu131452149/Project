@@ -10,18 +10,20 @@ export default {
             isCollapse: false,
             userName: '',
             password: '',
-            menuData: []
+            menuData: [],
+            user:{},
         }
     },
     mounted: function () {
+        var self = this;
         $('.el-aside').height($(window).height());
-        let user = sessionStorage.getItem('user');
-        if (user) {
-            user = JSON.parse(user);
-            this.userName = user.userName || '';
-            this.password = user.avatar || '';
+        self.user = sessionStorage.getItem('user');
+        if (self.user) {
+            self.user = JSON.parse(self.user);
+            self.userName = self.user.userName || '';
+            self.password = self.user.avatar || '';
         }
-        this.queryMenu();
+        self.queryMenu();
     },
     methods: {
         queryMenu() {
@@ -50,6 +52,11 @@ export default {
             for (let y = menu1.length - 1; y >= 0; y--) {
                 if (menu1[y].parentid != "root") {
                     menu1.splice(y, 1);
+                }
+                if(this.user.grade !=0){
+                    if (menu1[y].id == "users") {
+                        menu1.splice(y, 1);
+                    }
                 }
             }
             for (var i = 0; i <menu.length; i++) {

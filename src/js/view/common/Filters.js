@@ -26,6 +26,13 @@ export default {
         }
         return time;
     },
+    renderTime:function(data){
+        let time = "";
+        if (data) {
+            time = data.replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '');
+        }
+        return time;
+    },
     //所属行业
     renderBoolean: function (data) {
         let time = "";
