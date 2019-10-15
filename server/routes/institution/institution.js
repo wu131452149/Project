@@ -5,9 +5,18 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../../db');
+var dbName = "dbo.institution";
 
 router.post('/queryAllInstitution', function (req, res, next) {
-    db.selectAll("dbo.institution", function (err, result) {//查询所有news表的数据
+    // db.selectAll("dbo.institution", function (err, result) {//查询所有news表的数据
+    //     res.json(result);
+    // });
+    var whereSql = "where 1=1 ";
+    var param = req.body;
+    if (param.userName) {
+        whereSql = whereSql + " and userName = '" + param.userName + "'";
+    }
+    db.select(dbName, "", whereSql, "", "order by id", function (err, result) {//查询所有news表的数据
         res.json(result);
     });
 });

@@ -32,7 +32,6 @@ export default {
                 } else {
                     if (res.data.length != 0) {
                         let institution = res.data.recordsets[0];
-
                         window.sessionStorage.setItem('institution', JSON.stringify(institution));
                     } else {
                         console.log("获取单位失败");

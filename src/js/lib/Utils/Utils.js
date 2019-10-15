@@ -17,6 +17,51 @@ export default {
         }
         return data;
     },
+    initLevelOne: function (list) {
+        if (list.length > 0) {
+            var obj = {};
+            var levelOne = [];
+            list = list.reduce(function (a, b) {
+                obj[b.userName] ? '' : obj[b.userName] = true && a.push(b);
+                return a
+            }, []);
+            for (var i in list) {
+                levelOne.push(list[i].userName);
+            }
+            return levelOne;
+        } else {
+            return list;
+        }
+    },
+    initLevelTwo: function (levelOneList, list) {
+        if (levelOneList.length > 0) {
+            var data = [];
+            for (var i in levelOneList) {
+                var obj = {
+                    "value": '',
+                    "name": '',
+                    "childrens": []
+                };
+                obj.value = levelOneList[i];
+                obj.name = levelOneList[i];
+                data.push(obj);
+            }
+            for(var x in data){
+                for (var j in list) {
+                    if (data[x].name == list[j].userName) {
+                        var objTwo = {value: '', name: ""};
+                        objTwo.value=list[j].name;
+                        objTwo.name=list[j].name;
+                        data[x].childrens.push(objTwo);
+                    }
+                }
+            }
+            console.log("单位11:",data);
+            return data;
+        } else {
+            return list;
+        }
+    },
     formatDate: function (dateTime, isTimestamp) {
         var dateFormat = "";
         if (isTimestamp) {
@@ -435,6 +480,6 @@ export default {
 
         }
     },
-        //dowloadUtil(`${process.env.BASE_API}/table/downloadFile?filename=${filename}&oldname=${oldname}`);
+    //dowloadUtil(`${process.env.BASE_API}/table/downloadFile?filename=${filename}&oldname=${oldname}`);
 
-    }
+}

@@ -18,7 +18,7 @@
                 <!--快捷查询 end-->
                 <div style="margin-bottom: 12px;">
                 </div>
-                <div class="inline-block">
+                <div class="inline-block" v-if="user.grade==1">
                     <el-form-item class="agent-select-label" label="项目单位" prop="projectInstitution">
                         <el-select v-model="newProject.formData.projectInstitution" name="projectInstitution"
                                    clearable placeholder="项目单位"
@@ -28,6 +28,21 @@
                                 :key="item.id"
                                 :label="item.name"
                                 :value="item.name">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </div>
+                <div class="inline-block" v-else>
+                    <el-form-item class="agent-select-label" label="项目单位" prop="projectInstitution">
+
+                        <el-select v-model="levelOne" placeholder="请选择项目单位"
+                                   @change="selectLevelOneChange">
+                            <el-option v-for="item in projectInstitutionList" :label="item.name" :value="item.value">
+                            </el-option>
+                        </el-select>
+                        <el-select v-model="newProject.formData.projectInstitution" placeholder="请选择项目单位"
+                                   @change="selectLevelTwoChange">
+                            <el-option v-for="item in newInstituation" :label="item.name" :value="item.value">
                             </el-option>
                         </el-select>
                     </el-form-item>

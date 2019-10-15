@@ -40,6 +40,7 @@ export default {
             var dataParam = {};
             dataParam.name = self.newInstitution;
             dataParam.userName = self.user.role;
+            dataParam.grade = self.user.grade;
             dataParam.time = Utils.formatDate(new Date()) + ".000";
             self.$http.post('/api/institution/createInstitution', dataParam).then(res => {
                 let status = res.status;

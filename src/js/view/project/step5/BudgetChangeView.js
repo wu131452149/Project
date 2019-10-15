@@ -43,6 +43,9 @@ export default {
                 approvalChangeNo: ""
             },
             options: [],
+            levelOneList:[],
+            levelOne:"",
+            newInstituation:[],
             changeType: Utils.getChangeType(),
             rules: {
                 money: [
@@ -57,12 +60,60 @@ export default {
     mounted: function () {
         var self = this;
         self.user = JSON.parse(sessionStorage.getItem('user'));
-        self.projectInstitutionList = JSON.parse(window.sessionStorage.getItem('institution'));
+        //var list = JSON.parse(window.sessionStorage.getItem('institution'));
+        self.queryInstitution(function (list) {
+            if(self.user.grade==1){
+                self.projectInstitutionList = list;
+            }else{
+                self.levelOneList = Utils.initLevelOne(list);
+                self.projectInstitutionList = Utils.initLevelTwo(self.levelOneList,list);
+            }
+        })
         self.queryBudgetChangeProject();
         self.queryBudgetChangeProjectCount();
         self.queryAppropriateMoney();
     },
     methods: {
+        //查询单位
+        queryInstitution: function (callback) {
+            let self = this;
+            let data = {};
+            if (self.user.grade == 1) {//只有1要查自己建的
+                data.userName = self.user.role;
+            }
+            self.$http.post('/api/institution/queryAllInstitution', data).then(res => {
+                let status = res.status;
+                let statusText = res.statusText;
+                if (status !== 200) {
+                    self.$message({
+                        message: statusText,
+                        type: 'error'
+                    });
+                } else {
+                    if (res.data.length != 0) {
+                        //self.dataList = res.data.recordset;
+                        callback(res.data.recordset);
+                    } else {
+                        console.log("查询单位失败");
+                        callback([]);
+                    }
+                }
+            })
+
+        },
+        //选择一级
+        selectLevelOneChange(value) {
+            var self = this;
+            var index = _.findIndex(self.projectInstitutionList, function (o) {
+                return o.value == value;
+            });
+            self.newInstituation = self.projectInstitutionList[index].childrens;
+            self.budgetChangeProject.formData.projectInstitution = self.newInstituation[0].name;
+        },
+        //选择二级
+        selectLevelTwoChange(value) {
+            this.budgetChangeProject.formData.projectInstitution = value;
+        },
         showDefaultQuickQuery: function (flag) {
             var self = this;
             self.budgetChangeProject.formData.projectInstitution = "";

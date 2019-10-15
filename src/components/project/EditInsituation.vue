@@ -6,7 +6,7 @@
             <div><i class="el-icon-search cursor-default"></i><h5 class="inline-block">单位查询</h5></div>
             <el-form :inline="true" ref="searchData" v-model="institution.formData" style="padding-left: 30px">
                 <!--快捷查询 start-->
-                <div class="quick-search clearFix" v-if="user.grade==1">
+                <div class="quick-search clearFix" v-if="user.grade!=2">
                     <div class="f-l color-label">新建单位 </div>
                     <div class="f-l el-tag-list margin-l-12 width188">
                         <el-input v-model="newInstitution"></el-input>
