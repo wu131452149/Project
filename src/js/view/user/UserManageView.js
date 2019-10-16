@@ -49,10 +49,10 @@ export default {
                     {required: true, message: '请选择级别', trigger: 'change'},
                 ],
                 password: [
-                    {required: true, message: '请输入项目名称', trigger: 'blur'},
+                    {required: true, message: '请输入密码', trigger: 'blur'},
                 ],
                 role: [
-                    {required: true, message: '请输入项目名称', trigger: 'blur'},
+                    {required: true, message: '请输入单位名称', trigger: 'blur'},
                 ],
             },
             user: {},

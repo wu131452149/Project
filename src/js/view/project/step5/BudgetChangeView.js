@@ -51,6 +51,9 @@ export default {
                 money: [
                     {required: true, message: '请输入金额', trigger: 'blur'},
                 ],
+                approvalChangeNo:[
+                    {required: true, message: '请输入评审文号', trigger: 'blur'},
+                ]
             },
             user: {},
             budgetYearsPlanMoneyList: [],

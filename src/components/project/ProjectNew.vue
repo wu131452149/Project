@@ -34,7 +34,7 @@
                     <el-radio v-for="(item,index) in projectType" :label="item.name" :value="item.value"></el-radio>
                 </el-radio-group>
             </el-form-item>
-            <el-form-item label="投资估算总额">
+            <el-form-item label="投资估算总额" prop="projectMoney">
                 <el-input placeholder="请输入投资估算总额" v-model="createProject.projectMoney" maxlength="15">
                     <template slot="append">万元</template>
                 </el-input>
@@ -61,7 +61,7 @@
                 <el-date-picker type="date" placeholder="选择拟开工时间" v-model="createProject.projectBeginTime"
                                 style="width: 100%;"></el-date-picker>
             </el-form-item>
-            <el-form-item label="项目建设周期">
+            <el-form-item label="项目建设周期" prop="projectYears">
                 <el-radio-group v-model="createProject.projectYears">
                     <el-radio v-for="item in getProjectYears" :label="item.name" :value="item.value"></el-radio>
                 </el-radio-group>

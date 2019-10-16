@@ -41,6 +41,12 @@ export default {
                 projectName: [
                     {required: true, message: '请输入项目名称', trigger: 'blur'},
                 ],
+                projectMoney:[
+                    {required: true, message: '请输入投资估算总额', trigger: 'blur'},
+                ],
+                projectYears:[
+                    {required: true, message: '请选择项目建设周期', trigger: 'change'},
+                ]
             },
             newIndustry: [],
             selectIndustry: Utils.getIndustryData(),

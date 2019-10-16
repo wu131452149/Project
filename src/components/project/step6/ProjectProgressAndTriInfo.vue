@@ -188,7 +188,7 @@
                 <div v-if="user.grade==1 && showEdit" class="padding-0-20">
                     <div v-if="showPro">
                         <span>项目进度</span>
-                        <el-form :model="editPro" :rules="rules" class="width300" ref="editPro">
+                        <el-form :model="editPro" :rules="rules1" class="width300" ref="editPro">
                             <!--1年显示一次-->
                             <el-form-item label="项目进度" prop="speed">
                                 <el-input placeholder="请输入进度" v-model="editPro.speed" maxlength="3">
@@ -204,7 +204,7 @@
                     </div>
                     <div v-if="showTri">
                         <span>三方信息</span>
-                        <el-form :model="TriInfo" :rules="rules" class="width300" ref="TriInfo">
+                        <el-form :model="TriInfo" :rules="rules2" class="width300" ref="TriInfo">
                             <!--1年显示一次-->
                             <el-form-item label="合同名称" prop="agreementName" class="padding-10">
                                 <el-input placeholder="请输入合同名称" v-model="TriInfo.agreementName" maxlength="15">

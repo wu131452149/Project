@@ -55,10 +55,12 @@ export default {
             levelOne:"",
             newInstituation:[],
             changeType: Utils.getChangeType(),
-            rules: {
+            rules1: {
                 speed: [
                     {required: true, message: '请输入进度', trigger: 'blur'},
                 ],
+            },
+            rules2: {
                 agreementName: [
                     {required: true, message: '请输入合同名称', trigger: 'blur'},
                 ],
