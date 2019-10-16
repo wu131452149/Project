@@ -9,12 +9,12 @@ import Utils from "../../../lib/Utils/Utils";
 export default {
     name: "BudgetApprovalView",
     components: {
-        "show-project-Detail":ShowProjectDetail
+        "show-project-Detail": ShowProjectDetail
     },
     data() {
         return {
-            activeNames:[],
-            showEdit:false,
+            activeNames: [],
+            showEdit: false,
             drawerDetails: false,
             drawerCreate: false,
             direction: 'rtl',
@@ -36,30 +36,31 @@ export default {
             showCountNumber: true,
             IsNewMediaSessionLargeData: '',
             formLabelWidth: '80px',
-            projectDetail:{},
-            editBudgetPlan:{
-                gvApproval:"是",//政府批示
-                budgetReviewMoney:"",
-                approvalNumber:"",
-                stateOwnedRegistration:"是",
-                gvBuy:"是",
-                fileList:[]
+            projectDetail: {},
+            editBudgetPlan: {
+                gvApproval: "是",//政府批示
+                budgetReviewMoney: "",
+                approvalNumber: "",
+                stateOwnedRegistration: "是",
+                gvBuy: "是",
+                fileList: []
             },
-            fileList:[],
-            booleanData:[ {name:"是",value:1},{name:"否",value:0}],
+            fileList: [],
+            booleanData: [{name: "是", value: 1}, {name: "否", value: 0}],
             rules: {
-            approvalNumber: [
+                budgetReviewMoney: [
+                    {required: true, message: '请输入预算评审金额', trigger: 'blur'},
+                ],
+                approvalNumber: [
                     {required: true, message: '请输入评审文号', trigger: 'blur'},
                 ],
             },
-            user:{},
-            projectInstitutionList:[],
-            uploadData: {
-
-            },
-            levelOneList:[],
-            levelOne:"",
-            newInstituation:[],
+            user: {},
+            projectInstitutionList: [],
+            uploadData: {},
+            levelOneList: [],
+            levelOne: "",
+            newInstituation: [],
 
         }
     },
@@ -68,11 +69,11 @@ export default {
         self.user = JSON.parse(sessionStorage.getItem('user'));
         //var list = JSON.parse(window.sessionStorage.getItem('institution'));
         self.queryInstitution(function (list) {
-            if(self.user.grade==1){
+            if (self.user.grade == 1) {
                 self.projectInstitutionList = list;
-            }else{
+            } else {
                 self.levelOneList = Utils.initLevelOne(list);
-                self.projectInstitutionList = Utils.initLevelTwo(self.levelOneList,list);
+                self.projectInstitutionList = Utils.initLevelTwo(self.levelOneList, list);
             }
         })
         self.queryBudgetPlanProject();
@@ -220,28 +221,28 @@ export default {
             done();
         },
         //录入预算安排
-        editBudgetPlanTab:function (e,data) {
+        editBudgetPlanTab: function (e, data) {
             var self = this;
             //显示项目详情，并且显示预算信息
             self.drawerDetails = true;
             self.projectDetail = data;
             self.showEdit = true;
         },
-        closeForm:function(){
+        closeForm: function () {
             var self = this;
             self.$refs.drawerBudget.closeDrawer();
             self.showEdit = false;
         },
         //显示新建库详情
-        showNewProjectDetails:function(e,data){
+        showNewProjectDetails: function (e, data) {
             let self = this;
             self.drawerDetails = true;
             self.projectDetail = data;
             self.showEdit = false;
-            self.activeNames = ['1','2'];
+            self.activeNames = ['1', '2'];
         },
         //提交预算填写
-        commitBudgetPlanForm:function () {
+        commitBudgetPlanForm: function () {
             var self = this;
             self.$refs.editBudgetPlan.validate((valid) => {
                 if (valid) {
@@ -251,19 +252,19 @@ export default {
                     editBudgetData.step = 2;//新建的并且已经通过审核了的才能提交预算
                     editBudgetData.suggestion = 1;//第一步已经通过审核
                     editBudgetData.stepTwoApp = 2;//将第二步设置为待审核
-                    if(editBudgetData.gvApproval =="是"){
+                    if (editBudgetData.gvApproval == "是") {
                         editBudgetData.gvApproval = 1;
-                    }else{
+                    } else {
                         editBudgetData.gvApproval = 0;
                     }
-                    if(editBudgetData.gvBuy =="是"){
+                    if (editBudgetData.gvBuy == "是") {
                         editBudgetData.gvBuy = 1;
-                    }else{
+                    } else {
                         editBudgetData.gvBuy = 0;
                     }
-                    if(editBudgetData.stateOwnedRegistration =="是"){
+                    if (editBudgetData.stateOwnedRegistration == "是") {
                         editBudgetData.stateOwnedRegistration = 1;
-                    }else{
+                    } else {
                         editBudgetData.stateOwnedRegistration = 0;
                     }
                     //封装fileList
@@ -318,7 +319,7 @@ export default {
                 }
             });
         },
-        clearFormData:function(){
+        clearFormData: function () {
             this.editBudgetPlan.gvApproval = "是";
             this.editBudgetPlan.budgetReviewMoney = "";
             this.editBudgetPlan.stateOwnedRegistration = "是";
@@ -326,7 +327,7 @@ export default {
             this.editBudgetPlan.gvBuy = "是";
         },
         //关闭表格查询当前页数据
-        handleAppStep2:function(){
+        handleAppStep2: function () {
             var self = this;
             self.closeForm();
             //查询当前页数据
@@ -338,7 +339,7 @@ export default {
          * @version 2.0
          * @author 李莉红
          */
-        beforeUploadFile:function(file){
+        beforeUploadFile: function (file) {
             var self = this;
             self.showFile = false;
             if (file.size == 0) {
@@ -354,7 +355,7 @@ export default {
             self.uploadData.upload = file;
             return true;
         },
-        beforeRemove:function(){
+        beforeRemove: function () {
 
         },
         /**
@@ -363,7 +364,7 @@ export default {
          * @version 2.0
          * @author 李莉红
          */
-        uploadFileSuccess:function(response, file, fileList){
+        uploadFileSuccess: function (response, file, fileList) {
             var self = this;
             self.showFile = true;
             self.robotImage = [];
@@ -377,21 +378,21 @@ export default {
          * @version 2.0
          * @author 李莉红
          */
-        uploadImageError:function () {
+        uploadImageError: function () {
             var self = this;
             self.$message({type: "warning", message: "上传失败请重试！"});
         },
-        handleRemove:function () {
-            
+        handleRemove: function () {
+
         }
     },
     filters: {
         renderMoneyFrom: Filters.renderMoneyFrom,
-        renderIndustry:Filters.renderIndustry,
-        renderStatus:Filters.renderStatus,
-        renderStep:Filters.renderStep,
+        renderIndustry: Filters.renderIndustry,
+        renderStatus: Filters.renderStatus,
+        renderStep: Filters.renderStep,
         renderBeginTime: Filters.renderBeginTime,
-        renderProjectYears:Filters.renderProjectYears
+        renderProjectYears: Filters.renderProjectYears
 
     }
 }
