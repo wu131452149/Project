@@ -58,6 +58,7 @@ export default {
         self.queryInstitution(function (list) {
             if(self.user.grade==1){
                 self.projectInstitutionList = list;
+                console.log(list);
             }else{
                 self.levelOneList = Utils.initLevelOne(list);
                 self.projectInstitutionList = Utils.initLevelTwo(self.levelOneList,list);
@@ -119,6 +120,7 @@ export default {
             self.newProject.formData.projectName = "";
             self.newProject.formData.projectYears = "";
             self.newProject.formData.id = "";
+            self.levelOne = "";
             if (flag) {
                 self.queryNewProject(true);
             }

@@ -131,6 +131,7 @@ export default {
             self.proAndTriProject.formData.projectName = "";
             self.proAndTriProject.formData.projectYears = "";
             self.proAndTriProject.formData.id = "";
+            self.levelOne = "";
             if (flag) {
                 self.queryProAndTriProject(true);
             }

@@ -296,6 +296,7 @@ export default {
             self.allProject.formData.projectName = "";
             self.allProject.formData.projectYears = "";
             self.allProject.formData.id = "";
+            self.levelOne = "";
             if (flag) {
                 self.queryAllProject(true);
             }

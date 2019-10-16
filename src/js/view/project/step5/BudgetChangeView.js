@@ -121,6 +121,7 @@ export default {
             self.budgetChangeProject.formData.projectName = "";
             self.budgetChangeProject.formData.projectYears = "";
             self.budgetChangeProject.formData.id = "";
+            self.levelOne = "";
             if (flag) {
                 self.queryBudgetChangeProject(true);
             }

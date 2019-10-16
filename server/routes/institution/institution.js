@@ -1,3 +1,4 @@
+
 /**
  * 这个文件主要是
  *  created by LilyLee on 2019/9/20.
@@ -22,8 +23,8 @@ router.post('/queryAllInstitution', function (req, res, next) {
 });
 router.post('/createInstitution', function (req, res, next) {
     var param = req.body;
-    db.add(param, "dbo.institution", function (err, result) {//查询所有news表的数据
-        res.json(result);
+    db.add(param, dbName, function (err, result) {//插入一条数据
+      res.json(result);
     });
 });
 router.post('/queryInstitution', function (req, res, next) {
@@ -43,7 +44,7 @@ router.post('/queryInstitution', function (req, res, next) {
         whereSql = whereSql + " and userName = '" + param.userName + "'";
     }
     if (param.page == 1) {
-        db.select('dbo.institution', 10, whereSql, "", "order by id", function (err, result) {//查询所有news表的数据
+        db.select(dbName, 10, whereSql, "", "order by id", function (err, result) {//查询所有news表的数据
             res.json(result);
         });
     } else {

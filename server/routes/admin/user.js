@@ -1,3 +1,4 @@
+
 const express = require('express');
 const router = express.Router();
 const db = require('../../db');
@@ -123,10 +124,37 @@ router.post('/queryAllUsersCount', function (req, res, next) {
         res.json(result);
     });
 });
+function dateAndTime(dateTime){
+    var year = dateTime.getFullYear();
+    var month = dateTime.getMonth();
+    var day = dateTime.getDate();
+    var hour = dateTime.getHours();
+    var minites = dateTime.getMinutes();
+    var second = dateTime.getSeconds();
+    month = month + 1 > 9 ? month + 1 : '0' + (month + 1);
+    day = day > 9 ? day : '0' + day;
+    hour = hour > 9 ? hour : '0' + hour;
+    minites = minites > 9 ? minites : '0' + minites;
+    second = second > 9 ? second : '0' + second;
+    var data = year + "-" + month + "-" + day + " " + hour + ":" + minites + ":" + second;
+    return data;
+}
 router.post('/createUser', function (req, res, next) {
     var param = req.body;
     db.add(param,dbName,function (err, result) {//查询所有news表的数据
-        res.json(result);
+        if(param.grade==1){
+            var data = {};
+            data.name = param.role;
+            data.userName = param.role;
+            data.grade = param.grade;
+            data.time = dateAndTime(new Date()) + ".000";
+            db.add(data, "dbo.institution", function (err, result) {//插入一条数据
+                res.json(result);
+            })
+        }else{
+            res.json(result);
+        }
+
     });
 });
 router.post('/updateUser', function (req, res, next) {
@@ -134,7 +162,18 @@ router.post('/updateUser', function (req, res, next) {
     var whereObj = {id:param.id};
     delete param.id;
     db.update(param,whereObj,dbName,function (err, result) {//更新字段
-        res.json(result);
+        if(param.grade==1){
+            var data = {};
+            data.name = param.userName;
+            data.userName = param.userName;
+            data.grade = param.grade;
+            data.time = dateAndTime(new Date()) + ".000";
+            db.add(data, "dbo.institution", function (err, result) {//插入一条数据
+                res.json(result);
+            })
+        }else{
+            res.json(result);
+        }
     });
 });
 router.post('/deleteUser', function (req, res, next) {

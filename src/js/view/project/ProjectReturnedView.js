@@ -106,6 +106,7 @@ export default {
             self.returnedProject.formData.projectName = "";
             self.returnedProject.formData.projectYears = "";
             self.returnedProject.formData.id = "";
+            self.levelOne = "";
             if (flag) {
                 self.queryReturnProject(true);
             }

@@ -122,6 +122,7 @@ export default {
             self.appropriateMoneyProject.formData.projectName = "";
             self.appropriateMoneyProject.formData.projectYears = "";
             self.appropriateMoneyProject.formData.id = "";
+            self.levelOne = "";
             if (flag) {
                 self.queryAppropriateMoneyProject(true);
             }

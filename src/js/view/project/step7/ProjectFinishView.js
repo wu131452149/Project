@@ -121,6 +121,7 @@ export default {
             self.finishedProject.formData.projectName = "";
             self.finishedProject.formData.projectYears = "";
             self.finishedProject.formData.id = "";
+            self.levelOne = "";
             if (flag) {
                 self.queryFinishedProject(true);
             }

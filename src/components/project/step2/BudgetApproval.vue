@@ -9,7 +9,7 @@
                 </div>
                 <div class="inline-block" v-if="user.grade==1">
                     <el-form-item class="agent-select-label" label="项目单位" prop="projectInstitution">
-                        <el-select v-model="newProject.formData.projectInstitution" name="projectInstitution"
+                        <el-select v-model="budgetPlanProject.formData.projectInstitution" name="projectInstitution"
                                    clearable placeholder="项目单位"
                                    class="width180">
                             <el-option
