@@ -1,3 +1,5 @@
+import Vue from "vue";
+import EventBus from "../../lib/event/EventBus.js"
 
 export default {
     props: ["menuData"],
@@ -9,19 +11,74 @@ export default {
           return {
               isCollapse: false,
               activeIndex: null,
+              ifNewPro:{},
+              // 有红点的菜单
+              badge: {},
+              user:{},
           };
     },
       watch: {
           "$route": function (to, from) {
               let _this = this;
               // 分割跳转到的url
-              //let pathArr = to.params[0].split("/");
+              let key = to.params.pathMatch;
+              _this.activeIndex = key;
           }
         },
       mounted: function() {
-         
+        var self = this;
+          self.user = JSON.parse(sessionStorage.getItem('user'));
+          if(self.user.grade==2){
+              self.queryIfNewProject();
+          }
+          EventBus.$on("showMenuBadge", function (navMenuID, pageID) {
+              Vue.set(self.badge, pageID, true);
+          });
+          EventBus.$on("hideMenuBadge", function (navMenuID, pageID) {
+              Vue.delete(self.badge, pageID);
+          });
       },
     methods: {
+        queryIfNewProject: function () {
+            let self = this;
+            var data = {};
+            data.role = self.user.role;
+            self.$http.post('/api/project/queryIfNewProject', data).then(res => {
+                let status = res.status;
+                let statusText = res.statusText;
+                if (status !== 200) {
+                    self.$message({
+                        message: statusText,
+                        type: 'error'
+                    });
+                } else {
+                    if (res.data.length != 0) {
+                        self.ifNewPro = res.data.recordset[0];
+                        if(self.ifNewPro.stepOne !=0){
+                            Vue.set(self.badge, "show_new_project", true);
+                        }
+                        if(self.ifNewPro.stepTwo !=0 ||self.ifNewPro.stepThree !=0
+                            ||self.ifNewPro.stepFour !=0||self.ifNewPro.stepFive !=0||self.ifNewPro.stepSix !=0){
+                            Vue.set(self.badge, "project_doing", true);
+                        }
+                        if(self.ifNewPro.stepSeven !=0){
+                            Vue.set(self.badge, "project_finish", true);
+                        }
+                    } else {
+                        self.$message({
+                            message: "查询失败",
+                            type: 'warning'
+                        });
+                    }
+                }
+            })
+                .catch(error =>
+                    self.$message({
+                        message: error.message,
+                        type: 'error'
+                    }),
+                );
+        },
         changeCollapse() { 
             let _this = this;
             if (_this.isCollapse) {

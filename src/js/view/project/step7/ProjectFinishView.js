@@ -126,18 +126,19 @@ export default {
                 self.queryFinishedProject(true);
             }
         },
-        //查询预算变更
+        //查询完成
         queryFinishedProject: function (flag) {
             let self = this;
             let data =  _.cloneDeep(self.finishedProject.formData);
             data.page = flag ? 1 : self.finishedProject.currentPage;
             data.step = 7;
-            data.stepFiveApp = 1;//后台查的not in
+            data.stepSevenApp = 1;//后台查的not in
             data.ifReturned = 0;
             if (self.user.grade == 1) {//如果是1，那么只查自己提交的
                 data.commitName = self.user.role;
             } else if (self.user.grade == 2) {//如果是2，那么查询提交上来只查自己部门审批的
                 data.projectFinance = self.user.role;
+                data.ifEdit = 1;
             }
             self.$http.post('/api/project/queryProject', data).then(res => {
                 let status = res.status;
@@ -216,6 +217,7 @@ export default {
                 data.commitName = self.user.role;
             } else if (self.user.grade == 2) {//如果是2，那么查询提交上来只查自己部门审批的
                 data.projectFinance = self.user.role;
+                data.ifEdit = 1;
             }
             self.$http.post('/api/project/queryProjectCount', data).then(res => {
                 let status = res.status;
@@ -283,7 +285,9 @@ export default {
                     editBudgetData.step = 7;//新建的并且已经通过审核了的才能提交预算
                     editBudgetData.suggestion = 1;//第一步已经通过审核
                     editBudgetData.stepSevenApp = 2;//将第二步设置为待审核
+                    editBudgetData.ifEdit = 1;
                     //存入数据库
+                    editBudgetData.projectFinance = self.projectDetail.projectFinance;//传入后台取newproject表里面+1
                     self.$http.post('/api/project/updateProject', editBudgetData).then(res => {
                         let status = res.status;
                         let statusText = res.statusText;

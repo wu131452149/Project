@@ -15,7 +15,12 @@
                         <i :class="item.icon"></i>
                         <span slot="title" class="font14">{{item.name}}</span>
                         </template>
-                        <el-menu-item class="font14" v-for="(childItem,childIndex) in item.children" :index="'/' + item.id + '/' + childItem.id">{{childItem.name}}</el-menu-item>
+                        <el-menu-item class="font14" v-for="(childItem,childIndex) in item.children" :index="'/' + item.id + '/' + childItem.id">
+                            <el-badge is-dot class="item" v-if="badge[childItem.id]">
+                            {{childItem.name}}
+                            </el-badge>
+                            <span v-else>{{childItem.name}}</span>
+                        </el-menu-item>
                     </el-submenu>
                 </template>
                 <template v-else>

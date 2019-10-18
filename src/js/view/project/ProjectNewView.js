@@ -59,13 +59,40 @@ export default {
     },
     mounted: function () {
         var self = this;
-        // 验证码初始化
-        //$('.main-content').height($(window).height() - 200);
-        self.projectInstitution = JSON.parse(window.sessionStorage.getItem('institution'));
         self.user = JSON.parse(sessionStorage.getItem('user'));
+        //self.projectInstitution = JSON.parse(window.sessionStorage.getItem('institution'));
+        self.queryInstitution(function (list) {
+            self.projectInstitution = list;
+        })
+
     }
     ,
     methods: {
+        //查询单位
+        queryInstitution: function (callback) {
+            let self = this;
+            let data = {};
+            data.userName = self.user.role;
+            self.$http.post('/api/institution/queryAllInstitution', data).then(res => {
+                let status = res.status;
+                let statusText = res.statusText;
+                if (status !== 200) {
+                    self.$message({
+                        message: statusText,
+                        type: 'error'
+                    });
+                } else {
+                    if (res.data.length != 0) {
+                        //self.dataList = res.data.recordset;
+                        callback(res.data.recordset);
+                    } else {
+                        console.log("查询单位失败");
+                        callback([]);
+                    }
+                }
+            })
+
+        },
         closeForm: function () {
             //this.$emit('onListen', false);
             this.drawerClick.drawerNew.hide();
@@ -76,9 +103,17 @@ export default {
             var self = this;
             self.$refs.createProject.validate((valid) => {
                 if (valid) {
-                    let createProject = self.createProject;
-                    createProject.projectIndustry = '{"' + createProject.projectIndustry.first + '","' + createProject.projectIndustry.second + '"}';
-                    createProject.projectMoneyFrom = JSON.stringify(createProject.projectMoneyFrom).replace("[", "{").replace("]", "}");
+                    let createProject = _.cloneDeep(self.createProject);
+                    if(createProject.projectIndustry.first){
+                        createProject.projectIndustry = '{"' + createProject.projectIndustry.first + '","' + createProject.projectIndustry.second + '"}';
+                    }else{
+                        createProject.projectIndustry = "" ;
+                    }
+                    if(createProject.projectMoneyFrom){
+                        createProject.projectMoneyFrom = JSON.stringify(createProject.projectMoneyFrom).replace("[", "{").replace("]", "}");
+                    }else{
+                        createProject.projectMoneyFrom = "";
+                    }
                     createProject.approvalStep = 1;
                     createProject.ifReturned = 0;
                     createProject.stepOneApp = 2;
@@ -106,6 +141,8 @@ export default {
                                 //关闭当前页，并清空表格数据
                                 self.clearFormData();
                                 self.closeForm();
+                                //刷新当前页
+                                self.$emit("refreshPro");
                             } else {
                                 self.$message({
                                     message: "提交失败",
@@ -272,14 +309,24 @@ export default {
                     self.createProject.projectType = val.projectType;
                     self.createProject.projectMoney = val.projectMoney;
                     self.createProject.projectIndustry = val.projectIndustry;
-                    var ins1 = val.projectIndustry.split(",")[0].split(":")[1];
-                    var ins2 = val.projectIndustry.split(",")[1].split(":")[1].replace("}","");
+                    if(val.projectIndustry){
+                        var ins1 = val.projectIndustry.split(",")[0].split(":")[1];
+                        var ins2 = val.projectIndustry.split(",")[1].split(":")[1].replace("}","");
+                    }else{
+                        var ins1 = "";
+                        var ins2 = "";
+                    }
+
                     // console.log(ins1);
                     // console.log(ins2);
                     // self.createProject.projectIndustry.first = ins1;
                     // self.createProject.projectIndustry.second = ins2;
                     self.createProject.projectIndustry = {first:ins1,second:ins2};
-                    self.createProject.projectMoneyFrom = JSON.parse(val.projectMoneyFrom.replace("{", "[").replace("}", "]"));
+                    if(val.projectMoneyFrom){
+                        self.createProject.projectMoneyFrom = JSON.parse(val.projectMoneyFrom.replace("{", "[").replace("}", "]"));
+                    }else{
+                        self.createProject.projectMoneyFrom = "";
+                    }
                     self.createProject.projectBeginTime = val.projectBeginTime;
                     self.createProject.projectContactUserName = val.projectContactUserName;
                     self.createProject.projectContactUserPhone = val.projectContactUserPhone;

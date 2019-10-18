@@ -20,7 +20,8 @@ export default {
             totalCut: 0,
             totalAdd: 0,
             fileList: [],
-            names: this.activeNames
+            names: this.activeNames,
+            ifNewPro:{}
         }
     },
     beforeMount: function () {
@@ -45,6 +46,7 @@ export default {
             self.addBudget = JSON.parse(self.projectDetail.addBudget);
         }
         self.computeTotal();
+        self.queryIfNewProject();
     },
     watch: {
         "showEdit": {
@@ -77,6 +79,35 @@ export default {
         }
     },
     methods: {
+        //查询是否有新的
+        queryIfNewProject: function () {
+            let self = this;
+            self.$http.post('/api/project/queryIfNewProject', data).then(res => {
+                let status = res.status;
+                let statusText = res.statusText;
+                if (status !== 200) {
+                    self.$message({
+                        message: statusText,
+                        type: 'error'
+                    });
+                } else {
+                    if (res.data.length != 0) {
+                        self.ifNewPro = res.data.recordset[0];
+                    } else {
+                        self.$message({
+                            message: "查询失败",
+                            type: 'warning'
+                        });
+                    }
+                }
+            })
+                .catch(error =>
+                    self.$message({
+                        message: error.message,
+                        type: 'error'
+                    }),
+                );
+        },
         handleChange(val) {
             console.log(val);
         },
@@ -170,8 +201,8 @@ export default {
         },
         //审核新建库
         approvalNewProject: function () {
-            //审核通过，把第2步状态改为1，并且把项目step改成3
-            //todo 插入一张log表
+            //审核通过，把第2步状态改为3，并且把项目step改成2
+            //0:审核不通过，1：审核通过并且下一步的也提交了，2：未审核
             let self = this;
             let data = {};
             data.id = self.projectDetail.id;
@@ -180,6 +211,7 @@ export default {
             data.stepTwoApp = 2;
             data.oldStep = 1;
             data.oldSuggestion = 2;
+            data.ifEdit = 0;
             self.$http.post('/api/project/approvalProject', data).then(res => {
                 let status = res.status;
                 let statusText = res.statusText;
@@ -222,6 +254,7 @@ export default {
             data.stepThreeApp = 2;
             data.oldStep = 2;
             data.oldSuggestion = 2;
+            data.ifEdit = 0;
             self.$http.post('/api/project/approvalProject', data).then(res => {
                 let status = res.status;
                 let statusText = res.statusText;
@@ -264,6 +297,7 @@ export default {
             data.stepFourApp = 2;
             data.oldStep = 3;
             data.oldSuggestion = 2;
+            data.ifEdit = 0;
             self.$http.post('/api/project/approvalProject', data).then(res => {
                 let status = res.status;
                 let statusText = res.statusText;
@@ -307,6 +341,7 @@ export default {
             data.stepFiveApp = 2;
             data.oldStep = 4;
             data.oldSuggestion = 2;
+            data.ifEdit = 0;
             self.$http.post('/api/project/approvalProject', data).then(res => {
                 let status = res.status;
                 let statusText = res.statusText;
@@ -350,6 +385,7 @@ export default {
             data.stepSixApp = 2;
             data.oldStep = 5;
             data.oldSuggestion = 2;
+            data.ifEdit = 0;
             self.$http.post('/api/project/approvalProject', data).then(res => {
                 let status = res.status;
                 let statusText = res.statusText;
@@ -401,7 +437,7 @@ export default {
                 data.oldStep = 6;
                 data.oldSuggestion = 2;
             }
-
+            data.ifEdit = 0;
             self.$http.post('/api/project/approvalProject', data).then(res => {
                 let status = res.status;
                 let statusText = res.statusText;
@@ -443,7 +479,8 @@ export default {
             data.approvalStep = 7;
             data.stepSevenApp = 1;
             data.oldStep = 7;
-            data.oldSuggestion = 2;
+            data.oldSuggestion = 1;//第7步审核通过
+            data.ifEdit = 0;
             self.$http.post('/api/project/approvalProject', data).then(res => {
                 let status = res.status;
                 let statusText = res.statusText;

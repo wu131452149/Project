@@ -178,7 +178,7 @@
             ref="drawerNew"
             size=60%
             :before-close="handleClose">
-            <project-new @onListen="closeDrawer" :drawerClick="objDrawer">
+            <project-new @onListen="closeDrawer" :drawerClick="objDrawer" @refreshPro="queryNewProject">
 
             </project-new>
         </el-drawer>
