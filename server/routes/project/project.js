@@ -142,6 +142,7 @@ router.post('/approvalProject', function (req, res, next) {
     delete param.oldStep;
     delete param.oldSuggestion;
     db.update(param, whereObj, dbName, function (err, result) {//查询所有news表的数据
+        //查询newProject的表
         res.json(result);
     });
 });

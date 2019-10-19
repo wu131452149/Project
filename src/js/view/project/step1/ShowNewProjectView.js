@@ -17,6 +17,7 @@ export default {
     data() {
         return {
             activeNames:[],
+            commitType:"recommit",
             objDrawer: this.$refs,
             drawerDetails: false,
             drawerCreate: false,
@@ -169,6 +170,11 @@ export default {
         },
         handleClose(done) {
            done();
+        },
+        commitProjectAgain:function(e,data){
+            let self = this;
+            self.drawerCreate = true;
+            self.projectDetail = data;
         },
         //查询新建项目
         queryNewProject: function (flag) {

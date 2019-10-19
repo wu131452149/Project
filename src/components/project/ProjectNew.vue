@@ -80,7 +80,9 @@
             <el-button @click="closeForm">取 消</el-button>
             <el-button v-if="!type" type="primary" @click="commitForm" :loading="loading">{{ loading ? '提交中 ...' : '提交' }}
             </el-button>
-            <el-button v-if="type" type="primary" @click="updateForm" :loading="loading">{{ loading ? '提交中 ...' : '重新入库' }}
+            <el-button v-if="type=='recommit'" type="primary" @click="updateForm(1)" :loading="loading">{{ loading ? '提交中 ...' : '重新提交' }}
+            </el-button>
+            <el-button v-if="type=='returned'" type="primary" @click="updateForm(0)" :loading="loading">{{ loading ? '提交中 ...' : '重新入库' }}
             </el-button>
         </div>
 

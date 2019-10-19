@@ -267,6 +267,22 @@
                 </div>
             </el-collapse-item>
             <!--工程进度和第三方信息 end-->
+            <!--决算信息 start-->
+            <el-collapse-item name="7" v-if="step>6 &&(projectDetail.finishMoney)">
+                <template slot="title">
+                    <div class="f-l line-height-30 excessEllipsis  width-per100">
+                        <span class="bold">项目决算信息</span></div>
+                </template>
+                <div class="info-content scrollBar-inner width-per100 margin-t10 padding-0-20">
+                    <div class="inline-block font13 width-per45 ver-text-top margin-t-15 margin-r">
+                        <div class="clearFix">
+                            <span class="info-label">决算金额：</span>
+                            <span class="info-val" v-if="projectDetail.finishMoney">{{projectDetail.finishMoney}}</span>
+                        </div>
+                    </div>
+                </div>
+            </el-collapse-item>
+            <!--决算信息 end-->
         </el-collapse>
         <div v-if="user.grade==0||user.grade==2">
             <div class="demo-drawer__footer margin-t-25" style="text-align: center;">

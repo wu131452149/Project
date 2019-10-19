@@ -82,6 +82,7 @@ export default {
         //查询是否有新的
         queryIfNewProject: function () {
             let self = this;
+            var data = {};
             self.$http.post('/api/project/queryIfNewProject', data).then(res => {
                 let status = res.status;
                 let statusText = res.statusText;

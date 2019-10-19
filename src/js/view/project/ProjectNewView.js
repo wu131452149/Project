@@ -7,7 +7,7 @@ import Utils from "../../lib/utils/Utils";
 
 export default {
     name: "ProjectNewView",
-    props: ['returnProjectInfo', 'type','drawerClick'],
+    props: ['returnProjectInfo', 'type','drawerClick','reCommitProjectInfo'],
     data() {
         return {
             dialog: false,
@@ -194,13 +194,16 @@ export default {
             this.createProject.projectIndustry.second = value;
         },
         //重新入库
-        updateForm: function () {
+        updateForm: function (oldStep) {
             let self = this;
             //更新新建表的退库状态为false，更新表的step为1
             let data = _.cloneDeep(self.createProject);
             data.step = 1;
             data.ifReturned = 0;
-            data.oldStep = 0;
+            data.oldStep = oldStep;
+            if (oldStep == 1){
+                data.stepOneApp = 2;
+            }
             self.$http.post('/api/project/updateProject', data).then(res => {
                 let status = res.status;
                 let statusText = res.statusText;
@@ -215,7 +218,11 @@ export default {
                             message: "提交成功",
                             type: 'success'
                         });
-                        self.$emit('updateReturnForm');
+                        if (oldStep == 0) {
+                            self.$emit('updateReturnForm');
+                        }else{
+                            self.$emit('refreshPro');
+                        }
                     } else {
                         self.$message({
                             message: "提交失败",
@@ -310,8 +317,47 @@ export default {
                     self.createProject.projectMoney = val.projectMoney;
                     self.createProject.projectIndustry = val.projectIndustry;
                     if(val.projectIndustry){
-                        var ins1 = val.projectIndustry.split(",")[0].split(":")[1];
-                        var ins2 = val.projectIndustry.split(",")[1].split(":")[1].replace("}","");
+                        var ins1 = val.projectIndustry.split(",")[0].replace("{","");
+                        var ins2 = val.projectIndustry.split(",")[1].replace("}","");
+                    }else{
+                        var ins1 = "";
+                        var ins2 = "";
+                    }
+
+                    // console.log(ins1);
+                    // console.log(ins2);
+                    // self.createProject.projectIndustry.first = ins1;
+                    // self.createProject.projectIndustry.second = ins2;
+                    self.createProject.projectIndustry = {first:ins1,second:ins2};
+                    if(val.projectMoneyFrom){
+                        self.createProject.projectMoneyFrom = JSON.parse(val.projectMoneyFrom.replace("{", "[").replace("}", "]"));
+                    }else{
+                        self.createProject.projectMoneyFrom = "";
+                    }
+                    self.createProject.projectBeginTime = val.projectBeginTime;
+                    self.createProject.projectContactUserName = val.projectContactUserName;
+                    self.createProject.projectContactUserPhone = val.projectContactUserPhone;
+                    self.createProject.projectSituation = val.projectSituation;
+                    self.createProject.projectYears = val.projectYears;
+                }
+            }
+
+        },
+        "reCommitProjectInfo": {
+            immediate: true,
+            handler: function (val) {
+                var self = this;
+                if(val){
+                    self.createProject.id = val.id;
+                    self.createProject.projectInstitution = val.projectInstitution;
+                    self.createProject.projectFinance = val.projectFinance;
+                    self.createProject.projectName = val.projectName;
+                    self.createProject.projectType = val.projectType;
+                    self.createProject.projectMoney = val.projectMoney;
+                    self.createProject.projectIndustry = val.projectIndustry;
+                    if(val.projectIndustry){
+                        var ins1 = val.projectIndustry.split(",")[0].replace("{","");
+                        var ins2 = val.projectIndustry.split(",")[1].replace("}","");
                     }else{
                         var ins1 = "";
                         var ins2 = "";
