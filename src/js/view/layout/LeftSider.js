@@ -39,6 +39,7 @@ export default {
           });
       },
     methods: {
+        //是否要显示小红点
         queryIfNewProject: function () {
             let self = this;
             var data = {};
@@ -54,14 +55,14 @@ export default {
                 } else {
                     if (res.data.length != 0) {
                         self.ifNewPro = res.data.recordset[0];
-                        if(self.ifNewPro.stepOne !=0){
+                        if(self.ifNewPro.stepOne >0){
                             Vue.set(self.badge, "show_new_project", true);
                         }
-                        if(self.ifNewPro.stepTwo !=0 ||self.ifNewPro.stepThree !=0
-                            ||self.ifNewPro.stepFour !=0||self.ifNewPro.stepFive !=0||self.ifNewPro.stepSix !=0){
+                        if(self.ifNewPro.stepTwo >0 ||self.ifNewPro.stepThree >0
+                            ||self.ifNewPro.stepFour >0||self.ifNewPro.stepFive >0||self.ifNewPro.stepSix >0){
                             Vue.set(self.badge, "project_doing", true);
                         }
-                        if(self.ifNewPro.stepSeven !=0){
+                        if(self.ifNewPro.stepSeven >0){
                             Vue.set(self.badge, "project_finish", true);
                         }
                     } else {

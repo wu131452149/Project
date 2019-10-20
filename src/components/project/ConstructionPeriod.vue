@@ -1,13 +1,31 @@
 <template>
     <div>
         <el-tabs v-model="activeName" @tab-click="showTabPage">
-            <el-tab-pane label="预算资金拨付" name="appropriate-money" >
+            <el-tab-pane name="appropriate-money" >
+                <span slot="label">
+                    <el-badge is-dot class="item" v-if="showStepFourRed"> 预算资金拨付</el-badge>
+                    <span v-else>
+                        预算资金拨付
+                    </span>
+                </span>
                 <component  v-bind:is="curComponents['appropriate-money']"></component>
             </el-tab-pane>
-            <el-tab-pane label="项目预算变更评审" name="budget-change" >
+            <el-tab-pane name="budget-change" >
+                <span slot="label">
+                    <el-badge is-dot class="item" v-if="showStepFiveRed"> 项目预算变更评审</el-badge>
+                    <span v-else>
+                        项目预算变更评审
+                    </span>
+                </span>
                 <component  v-bind:is="curComponents['budget-change']"></component>
             </el-tab-pane>
-            <el-tab-pane label="工程进度和第三方信息" name="progress-tri" >
+            <el-tab-pane name="progress-tri" >
+                <span slot="label">
+                    <el-badge is-dot class="item" v-if="showStepSixRed"> 工程进度和第三方信息</el-badge>
+                    <span v-else>
+                        工程进度和第三方信息
+                    </span>
+                </span>
                 <component  v-bind:is="curComponents['progress-tri']"></component>
             </el-tab-pane>
         </el-tabs>

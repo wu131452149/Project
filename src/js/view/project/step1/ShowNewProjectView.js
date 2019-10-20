@@ -17,7 +17,7 @@ export default {
     data() {
         return {
             activeNames:[],
-            commitType:"recommit",
+            commitType:"",
             objDrawer: this.$refs,
             drawerDetails: false,
             drawerCreate: false,
@@ -175,6 +175,7 @@ export default {
             let self = this;
             self.drawerCreate = true;
             self.projectDetail = data;
+            self.commitType = "recommit";
         },
         //查询新建项目
         queryNewProject: function (flag) {
@@ -201,6 +202,7 @@ export default {
                     if (res.data.length != 0) {
                         self.newProject.newProjectList = res.data.recordset;
                         self.newProject.currentPage = data.page;
+                        self.commitType = "";
                         if (flag) {
                             self.queryNewProjectCount(data);
                         }

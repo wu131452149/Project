@@ -117,9 +117,10 @@ router.post('/createProject', function (req, res, next) {
     });
 });
 
-//审核新建project
+//审核project
 router.post('/approvalProject', function (req, res, next) {
     var param = req.body;
+    var step = param.oldStep;
     var whereObj = {id: param.id, approvalStep: param.oldStep};
     if (param.oldStep == 1) {
         //如果是第1步并且是stepOneApp待审核状态也就是等于2，则更新为审核状态
@@ -138,12 +139,48 @@ router.post('/approvalProject', function (req, res, next) {
     } else if (param.oldStep == 7) {
         whereObj.stepSevenApp = param.oldSuggestion;
     }
+    if(param.projectFinance){
+        var projectFinance = param.projectFinance;
+    }
     delete param.id;
     delete param.oldStep;
     delete param.oldSuggestion;
+    delete param.projectFinance;
     db.update(param, whereObj, dbName, function (err, result) {//查询所有news表的数据
-        //查询newProject的表
-        res.json(result);
+        if(result.rowsAffected.length>0) {
+            //查询newProject的表
+            //TODO 把每个步骤的审核的单位去掉
+            var whereSql = "where role = '" + projectFinance + "'";
+            db.select(dbNewPro, 1, whereSql, "", "order by id", function (err, res1) {
+                if (res1.recordset.length > 0) {
+                    var data = res1.recordset[0];
+                    var whereObj = {id: data.id};
+                    delete data.id;
+                    if (step == 1) {
+                        data.stepOne = data.stepOne - 1;
+                    } else if (step == 2) {
+                        data.stepTwo = data.stepTwo - 1;
+                    } else if (step == 3) {
+                        data.stepThree = data.stepThree - 1;
+                    } else if (step == 4) {
+                        data.stepFour = data.stepFour - 1;
+                    } else if (step == 5) {
+                        data.stepFive = data.stepFive - 1;
+                    } else if (step == 6) {
+                        data.stepSix = data.stepSix - 1;
+                    } else if (step == 7) {
+                        data.stepSeven = data.stepSeven - 1;
+                    }
+                    db.update(data, whereObj, dbNewPro, function (err, result2) {//插入一条新的数据
+                        res.json(result);
+                    });
+                } else {
+                    res.json(result);
+                }
+            });
+        }else{
+            res.json(result);
+        }
     });
 });
 //查询数据库有没有新的数据
@@ -157,7 +194,7 @@ router.post('/queryIfNewProject', function (req, res, next) {
 //更新project相关东西
 router.post('/updateProject', function (req, res, next) {
     var param = req.body;
-    var step = param.step;
+    var step = param.trueStep ||param.step ;
     if (param.oldStep == 0 || param.oldStep) {
         step = param.oldStep;
     }
@@ -169,6 +206,7 @@ router.post('/updateProject', function (req, res, next) {
     delete param.id;
     delete param.step;
     delete param.suggestion;
+    delete param.trueStep;
     if (param.oldStep == 0 || param.oldStep) {
         delete param.oldStep;
     }

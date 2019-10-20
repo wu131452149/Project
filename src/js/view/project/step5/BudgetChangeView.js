@@ -285,7 +285,8 @@ export default {
                     let editBudgetData = _.cloneDeep(self.editBudgetChange);
                     //根据id来改变
                     editBudgetData.id = self.projectDetail.id;
-                    editBudgetData.step = 5;//新建的并且已经通过审核了的才能提交预算
+                    //editBudgetData.step = 5;//新建的并且已经通过审核了的才能提交预算
+                    editBudgetData.trueStep = 5;
                     editBudgetData.suggestion = 1;//第一步已经通过审核
                     editBudgetData.stepFiveApp = 2;//将第二步设置为待审核
                     editBudgetData.ifEdit = 1;

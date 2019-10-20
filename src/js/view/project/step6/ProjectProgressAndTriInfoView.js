@@ -280,6 +280,7 @@ export default {
                         editBudgetData.oldStep = 6;//审核通过并且工程进度为100%进入完工库，第7步设置为待审核，
                         //editBudgetData.suggestion = 1;//第6步已经通过审核
                     }
+                    editBudgetData.trueStep = 6;
                     editBudgetData.projectFinance = self.projectDetail.projectFinance;//传入后台取newproject表里面+1
                     self.$http.post('/api/project/updateProject', editBudgetData).then(res => {
                         let status = res.status;

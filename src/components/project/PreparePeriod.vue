@@ -1,10 +1,22 @@
 <template>
     <div>
         <el-tabs v-model="activeName" @tab-click="showTabPage">
-            <el-tab-pane label="项目预算评审" name="budget-approval" >
+            <el-tab-pane name="budget-approval" >
+                <span slot="label">
+                    <el-badge is-dot class="item" v-if="showStepTwoRed"> 项目预算评审</el-badge>
+                    <span v-else>
+                        项目预算评审
+                    </span>
+                </span>
                 <component  v-bind:is="curComponents['budget-approval']"></component>
             </el-tab-pane>
-            <el-tab-pane label="县级预算分年度安排" name="budget-year-plan" >
+            <el-tab-pane name="budget-year-plan" >
+                <span slot="label">
+                    <el-badge is-dot class="item" v-if="showStepThreeRed"> 县级预算分年度安排</el-badge>
+                    <span v-else>
+                        县级预算分年度安排
+                    </span>
+                </span>
                 <component  v-bind:is="curComponents['budget-year-plan']"></component>
             </el-tab-pane>
         </el-tabs>

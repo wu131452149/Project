@@ -28,17 +28,62 @@ export default {
             formLabelWidth: '80px',
             showCountNumber: true,
             IsNewMediaSessionLargeData: '',
-            projectDetail:{},
-            showFundAppropriation:true,
-            showBudgetChange:false,
-            showProgressAndTri:false
+            user:{},
+            ifNewPro:{},
+            showStepFourRed:false,
+            showStepFiveRed:false,
+            showStepSixRed:false,
         };
     },
     mounted: function () {
         //this.queryBudgetPlanProject();
         //this.queryBudgetPlanProjectCount();
+        var self = this;
+        self.user = JSON.parse(sessionStorage.getItem('user'));
+        if(self.user.grade==2){
+            self.queryIfNewProject();
+        }
     },
     methods: {
+        queryIfNewProject: function () {
+            let self = this;
+            var data = {};
+            data.role = self.user.role;
+            self.$http.post('/api/project/queryIfNewProject', data).then(res => {
+                let status = res.status;
+                let statusText = res.statusText;
+                if (status !== 200) {
+                    self.$message({
+                        message: statusText,
+                        type: 'error'
+                    });
+                } else {
+                    if (res.data.length != 0) {
+                        self.ifNewPro = res.data.recordset[0];
+                        if(self.ifNewPro.stepFour >0){
+                            self.showStepFourRed = true;
+                        }
+                        if(self.ifNewPro.stepFive >0){
+                            self.showStepFiveRed = true;
+                        }
+                        if(self.ifNewPro.stepSix >0){
+                            self.showStepSixRed = true;
+                        }
+                    } else {
+                        self.$message({
+                            message: "查询失败",
+                            type: 'warning'
+                        });
+                    }
+                }
+            })
+                .catch(error =>
+                    self.$message({
+                        message: error.message,
+                        type: 'error'
+                    }),
+                );
+        },
         /**
          * 动态加载菜单方法，只会加载一次
          * @param tab，event
