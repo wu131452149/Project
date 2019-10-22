@@ -22,18 +22,18 @@
                             <el-form-item label="密码" prop="password">
                                 <el-input type="password" v-model="loginForm.password" auto-complete="off" placeholder="请输入密码"></el-input>
                             </el-form-item>
-                            <el-form-item  prop="verifycode">
-                                <!-- 注意：prop与input绑定的值一定要一致，否则验证规则中的value会报undefined，因为value即为绑定的input输入值 -->
-                                <el-input v-model="loginForm.verifycode" placeholder="请输入验证码" class="identify-input"></el-input>
-                            </el-form-item>
-                            <el-form-item>
-                                <div class="identify-box">
-                                    <div @click="refreshCode">
-                                        <s-identify :identifyCode="identifyCode"></s-identify>
-                                    </div>
-                                    <el-button @click="refreshCode" type='text' class="textbtn">看不清，换一张</el-button>
-                                </div>
-                            </el-form-item>
+                            <!--<el-form-item  prop="verifycode">-->
+                                <!--&lt;!&ndash; 注意：prop与input绑定的值一定要一致，否则验证规则中的value会报undefined，因为value即为绑定的input输入值 &ndash;&gt;-->
+                                <!--<el-input v-model="loginForm.verifycode" placeholder="请输入验证码" class="identify-input"></el-input>-->
+                            <!--</el-form-item>-->
+                            <!--<el-form-item>-->
+                                <!--<div class="identify-box">-->
+                                    <!--<div @click="refreshCode">-->
+                                        <!--<s-identify :identifyCode="identifyCode"></s-identify>-->
+                                    <!--</div>-->
+                                    <!--<el-button @click="refreshCode" type='text' class="textbtn">看不清，换一张</el-button>-->
+                                <!--</div>-->
+                            <!--</el-form-item>-->
                             <el-form-item>
                                 <el-button type="danger" @click.native.prevent="handleLogin" :loading="logining">登录</el-button>
                             </el-form-item>

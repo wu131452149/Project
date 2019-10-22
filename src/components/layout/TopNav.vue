@@ -5,10 +5,10 @@
                 欢迎您，{{user.role}}管理员
             </el-col>
             <el-col :span="2" :push=13>
-                <i class="fa fa-user" @click="toggleDialog($event,'changePassWord')"></i>
+                <i class="fa fa-user" title="修改密码" @click="toggleDialog($event,'changePassWord')"></i>
             </el-col>
             <el-col :span="2" :push=12>
-                <i class="fa fa-sign-out" @click="exitSystem"></i>
+                <i class="fa fa-sign-out" title="退出系统" @click="exitSystem"></i>
             </el-col>
         </el-row>
         <user-dialog ref="userDialog"

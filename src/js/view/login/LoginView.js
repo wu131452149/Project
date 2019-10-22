@@ -1,30 +1,30 @@
 import BottomNav from "../../../components/layout/BottomNav.vue"
-import SIdentify from '../../../components/login/Captcha.vue'
+//import SIdentify from '../../../components/login/Captcha.vue'
 
 export default {
     name: "loginView",
     components: {
         "bottom-nav": BottomNav,
-        "s-identify": SIdentify,
+        //"s-identify": SIdentify,
     },
     data() {
         // 验证码自定义验证规则
-        const validateVerifycode = (rule, value, callback) => {
-            if (value === '') {
-                callback(new Error('请输入验证码'))
-            } else if (value !== this.identifyCode) {
-                console.log('validateVerifycode:', value)
-                callback(new Error('验证码不正确!'))
-            } else {
-                callback()
-            }
-        }
+        // const validateVerifycode = (rule, value, callback) => {
+        //     if (value === '') {
+        //         callback(new Error('请输入验证码'))
+        //     } else if (value !== this.identifyCode) {
+        //         console.log('validateVerifycode:', value)
+        //         callback(new Error('验证码不正确!'))
+        //     } else {
+        //         callback()
+        //     }
+        // }
         return {
             logining: false,
             loginForm: {
                 userName: '',
                 password: '',
-                verifycode: ''
+                //verifycode: ''
             },
             rules: {
                 userName: [{
@@ -37,13 +37,13 @@ export default {
                     message: '请输入密码',
                     trigger: 'blur'
                 }],
-                verifycode: [
-                    {
-                        required: true,
-                        trigger: 'blur',
-                        validator: validateVerifycode
-                    }
-                ]
+                // verifycode: [
+                //     {
+                //         required: true,
+                //         trigger: 'blur',
+                //         validator: validateVerifycode
+                //     }
+                // ]
 
             },
             identifyCodes: '1234567890',
