@@ -4,7 +4,7 @@
         <el-tabs v-model="userInfoActiveName">
             <el-tab-pane label="项目监控" name="pro-monitor">
                 <div class="home-monitor element-table th-bold">
-                    <div><i class="fa fa-bar-chart"></i><h5 class="inline-block">项目统计</h5></div>
+                    <div><i class="fa fa-bar-chart"></i><h5 class="inline-block">项目数量统计</h5></div>
                     <div class="el-row is-justify-space-around el-row--flex">
                         <div class="el-col el-col-4">
                             <el-card class="box-card">
@@ -54,7 +54,72 @@
                                 </div>
                             </el-card>
                         </div>
+                    </div>
+                    <div class="home-monitor element-table th-bold">
+                        <div><i class="fa fa-bar-chart"></i><h5 class="inline-block">项目金额统计</h5></div>
+                        <div class="el-row is-justify-space-around el-row--flex">
+                            <div class="el-col el-col-4">
+                                <el-card class="box-card">
+                                    <div slot="header" class="clearfix">
+                                        <span>项目估算总额</span>
+                                    </div>
+                                    <div class="text item">
+                                        <div>
+                                            <span>{{ allBudgetReviewMoney.projectMoney}}(万元）</span>
+                                        </div>
+                                    </div>
+                                </el-card>
+                            </div>
+                            <div class="el-col el-col-4">
+                                <el-card class="box-card">
+                                    <div slot="header" class="clearfix">
+                                        <span>预算评审金额</span>
+                                    </div>
+                                    <div class="text item">
+                                        <div>
+                                            <span>{{ allBudgetReviewMoney.budgetReviewMoney}}(万元）</span>
+                                        </div>
+                                    </div>
+                                </el-card>
+                            </div>
+                            <div class="el-col el-col-4">
+                                <el-card class="box-card">
+                                    <div slot="header" class="clearfix">
+                                        <span>预算年度安排统计</span>
+                                    </div>
+                                    <div class="text item">
+                                        <div>
+                                            <span>{{ allBudgetPlanMoney.money}}(万元）</span>
+                                        </div>
+                                    </div>
+                                </el-card>
+                            </div>
+                            <div class="el-col el-col-4">
+                                <el-card class="box-card">
+                                    <div slot="header" class="clearfix">
+                                        <span>资金拨付情况</span>
+                                    </div>
+                                    <div class="text item">
+                                        <div>
+                                            <span>{{ allAppropriateMoney.money}}(万元）</span>
+                                        </div>
+                                    </div>
+                                </el-card>
+                            </div>
+                            <div class="el-col el-col-4">
+                                <el-card class="box-card">
+                                    <div slot="header" class="clearfix">
+                                        <span>欠付金额</span>
+                                    </div>
+                                    <div class="text item">
+                                        <div>
+                                            <span>{{ -allBudgetReviewMoney.nonPaymentTotalMoneyNo}}(万元）</span>
+                                        </div>
+                                    </div>
+                                </el-card>
+                            </div>
 
+                        </div>
                     </div>
                 </div>
                 <div class="home-monitor-hint">
@@ -137,7 +202,8 @@
 
                                 <el-select v-model="levelOne" placeholder="请选择项目单位"
                                            @change="selectLevelOneChange">
-                                    <el-option v-for="item in projectInstitutionList" :label="item.name" :value="item.value">
+                                    <el-option v-for="item in projectInstitutionList" :label="item.name"
+                                               :value="item.value">
                                     </el-option>
                                 </el-select>
                                 <el-select v-model="allProject.formData.projectInstitution" placeholder="请选择项目单位"
@@ -182,20 +248,20 @@
                                           class="input-with-select nick-name-input"></el-input>
                             </el-form-item>
                             <!--<el-button plain-->
-                                       <!--class="margin-t4 margin-l-5 color-blue border-blue"-->
-                                       <!--@click="showMoreQuery =! showMoreQuery">-->
-                                <!--更多条件<i class="margin-l-5"-->
-                                       <!--:class="{'el-icon-arrow-down':!showMoreQuery,'el-icon-arrow-up':showMoreQuery}"></i>-->
+                            <!--class="margin-t4 margin-l-5 color-blue border-blue"-->
+                            <!--@click="showMoreQuery =! showMoreQuery">-->
+                            <!--更多条件<i class="margin-l-5"-->
+                            <!--:class="{'el-icon-arrow-down':!showMoreQuery,'el-icon-arrow-up':showMoreQuery}"></i>-->
                             <!--</el-button>-->
                         </div>
                         <!--更多查询条件-->
                         <!--<div v-show="showMoreQuery" class="more-query">-->
-                            <!--<el-form-item label="项目联系人" prop="projectContactUserName" class="margin-r6">-->
-                                <!--<el-input placeholder="按项目联系人搜索" v-model="allProject.formData.projectContactUserName"-->
-                                          <!--@change="changeQuickQuery('CusNickName')" required-->
-                                          <!--prefix-icon="el-icon-search"-->
-                                          <!--class="input-with-select nick-name-input"></el-input>-->
-                            <!--</el-form-item>-->
+                        <!--<el-form-item label="项目联系人" prop="projectContactUserName" class="margin-r6">-->
+                        <!--<el-input placeholder="按项目联系人搜索" v-model="allProject.formData.projectContactUserName"-->
+                        <!--@change="changeQuickQuery('CusNickName')" required-->
+                        <!--prefix-icon="el-icon-search"-->
+                        <!--class="input-with-select nick-name-input"></el-input>-->
+                        <!--</el-form-item>-->
                         <!--</div>-->
                         <!--按钮-->
                         <div class="text-c medium-btn">
@@ -246,7 +312,8 @@
                                 <span>{{scope.row.yearsPlanTotalMoneyNo}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="yearsPlanTotalMoney" label="以前年度累计安排（万元）" width="80">
+                        <el-table-column show-overflow-tooltip prop="yearsPlanTotalMoney" label="以前年度累计安排（万元）"
+                                         width="80">
                             <template slot-scope="scope">
                                 <span>{{scope.row.yearsPlanTotalMoney|renderBeforeYearPlanTotalMoney}}</span>
                             </template>
@@ -271,12 +338,14 @@
                                 <span>{{scope.row.approTotalMoney|renderAppThisYearMoney}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="approTotalPlanMoneyNo" label="资金累计拨付（万元）" width="80">
+                        <el-table-column show-overflow-tooltip prop="approTotalPlanMoneyNo" label="资金累计拨付（万元）"
+                                         width="80">
                             <template slot-scope="scope">
                                 <span>{{scope.row.approTotalPlanMoneyNo}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="nonPaymentTotalMoneyNo" label="欠付金额（万元）" width="80">
+                        <el-table-column show-overflow-tooltip prop="nonPaymentTotalMoneyNo" label="欠付金额（万元）"
+                                         width="80">
                             <template slot-scope="scope">
                                 <span>{{scope.row.nonPaymentTotalMoneyNo}}</span>
                             </template>
@@ -316,12 +385,12 @@
                     size=55%
                     :before-close="handleClose">
                     <div class="scrollBar-inner" style="height: 500px;">
-                    <show-project-Detail @onListen="handleClose"
-                                         :projectDetail="projectDetail"
-                                         :step="7"
-                    :activeNames="activeNames">
+                        <show-project-Detail @onListen="handleClose"
+                                             :projectDetail="projectDetail"
+                                             :step="7"
+                                             :activeNames="activeNames">
 
-                    </show-project-Detail>
+                        </show-project-Detail>
                     </div>
                 </el-drawer>
                 <!--新建项目页面 end-->

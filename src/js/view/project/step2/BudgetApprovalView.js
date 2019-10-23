@@ -324,11 +324,13 @@ export default {
             });
         },
         clearFormData: function () {
-            this.editBudgetPlan.gvApproval = "是";
-            this.editBudgetPlan.budgetReviewMoney = "";
-            this.editBudgetPlan.stateOwnedRegistration = "是";
-            this.editBudgetPlan.approvalNumber = "";
-            this.editBudgetPlan.gvBuy = "是";
+            var self = this;
+            self.editBudgetPlan.gvApproval = "是";
+            self.editBudgetPlan.budgetReviewMoney = "";
+            self.editBudgetPlan.stateOwnedRegistration = "是";
+            self.editBudgetPlan.approvalNumber = "";
+            self.editBudgetPlan.gvBuy = "是";
+            self.editBudgetPlan.fileList = [];
         },
         //关闭表格查询当前页数据
         handleAppStep2: function () {

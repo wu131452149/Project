@@ -83,7 +83,7 @@
                 </div>
             </el-collapse-item>
             <!--项目预算 start-->
-            <el-collapse-item name="2" v-if="step>1 && projectDetail.approvalNumber">
+            <el-collapse-item name="2" v-if="projectDetail.approvalNumber">
                 <template slot="title">
                     <div class="f-l line-height-30 excessEllipsis  width-per100">
                         <span class="bold">项目预算评审</span></div>
@@ -132,7 +132,7 @@
             </el-collapse-item>
             <!--项目预算 end-->
             <!--项目预算年度安排 start-->
-            <el-collapse-item name="3" v-if="step>2 && (projectDetail.planYearsMoney||projectDetail.planYearsSelfMoney||projectDetail.planYearsTopMoney)">
+            <el-collapse-item name="3" v-if="projectDetail.planYearsMoney||projectDetail.planYearsSelfMoney||projectDetail.planYearsTopMoney">
                 <template slot="title">
                     <div class="f-l line-height-30 excessEllipsis  width-per100">
                         <span class="bold">预算年度安排</span></div>
@@ -153,7 +153,7 @@
             <!--项目预算年度安排 end-->
 
             <!--预算拨付 start-->
-            <el-collapse-item name="4" v-if="step>3 &&(projectDetail.appropriateBudget||projectDetail.appropriateTopBudget)">
+            <el-collapse-item name="4" v-if="projectDetail.appropriateBudget||projectDetail.appropriateTopBudget">
                 <template slot="title">
                     <div class="f-l line-height-30 excessEllipsis  width-per100">
                         <span class="bold">预算拨付</span></div>
@@ -179,7 +179,7 @@
             </el-collapse-item>
             <!--预算拨付 end-->
             <!--预算变更 start-->
-            <el-collapse-item name="5" v-if="step>4 &&(projectDetail.cutBudget||projectDetail.addBudget)">
+            <el-collapse-item name="5" v-if="projectDetail.cutBudget||projectDetail.addBudget">
                 <template slot="title">
                     <div class="f-l line-height-30 excessEllipsis  width-per100">
                         <span class="bold">预算变更</span></div>
@@ -209,7 +209,7 @@
             </el-collapse-item>
             <!--预算变更 end-->
             <!--工程进度和第三方信息 start-->
-            <el-collapse-item name="6" v-if="step>5 &&(projectDetail.speed||projectDetail.agreementName)">
+            <el-collapse-item name="6" v-if="projectDetail.speed||projectDetail.agreementName">
                 <template slot="title">
                     <div class="f-l line-height-30 excessEllipsis  width-per100">
                         <span class="bold">工程进度和第三方信息</span></div>
@@ -268,7 +268,7 @@
             </el-collapse-item>
             <!--工程进度和第三方信息 end-->
             <!--决算信息 start-->
-            <el-collapse-item name="7" v-if="step>6 &&(projectDetail.finishMoney)">
+            <el-collapse-item name="7" v-if="projectDetail.finishMoney">
                 <template slot="title">
                     <div class="f-l line-height-30 excessEllipsis  width-per100">
                         <span class="bold">项目决算信息</span></div>

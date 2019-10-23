@@ -1,4 +1,3 @@
-
 const express = require('express');
 const router = express.Router();
 const db = require('../../db');
@@ -14,18 +13,18 @@ router.post('/uploadFile', upload.single('file'), (req, res, next) => {
     if (file) {
         var fileNameArr = file.originalname.split('.');
         var suffix = fileNameArr[fileNameArr.length - 1];
-        fs.readFile('./uploads/'+file.filename,function(err,data){
+        fs.readFile('./uploads/' + file.filename, function (err, data) {
 //文件上传后默认是一堆字符串的名字并且没有后缀名称的未知格式文件，
 // 这里我们要用req.files查看原始文件的数据并且读取，待读取成功后进行下一步操作
-            fs.writeFile('./uploads/'+file.filename,data,function(err,data){
+            fs.writeFile('./uploads/' + file.filename, data, function (err, data) {
 //写入文件
-                if(!err){
+                if (!err) {
                     //文件重命名
                     fs.renameSync('./uploads/' + file.filename, `./uploads/${file.filename}.${suffix}`);
                     file['newfilename'] = `${file.filename}.${suffix}`;
                     ret['file'] = file;
                     res.send(ret);
-                }else{
+                } else {
                     console.log(err);
                     res.send(err);
                 }
@@ -58,7 +57,7 @@ router.post('/downloadFile', (req, res, next) => {
 //更改密码
 router.post('/changePwd', function (req, res, next) {
     var param = req.body;
-    db.update({password:param.password}, {id:param.id}, dbName,function (err, result) {//查询所有news表的数据
+    db.update({password: param.password}, {id: param.id}, dbName, function (err, result) {//查询所有news表的数据
         res.json(result);
     });
 });
@@ -66,6 +65,8 @@ router.post('/changePwd', function (req, res, next) {
 router.post('/queryAllUsers', function (req, res, next) {
     var param = req.body;
     var whereSql = " where 1=1";
+    var pageSize = 10;
+
     if (param.id) {
         whereSql = whereSql + " and id= " + param.id;
     }
@@ -78,31 +79,10 @@ router.post('/queryAllUsers', function (req, res, next) {
     if (param.grade) {
         whereSql = whereSql + " and grade = " + param.grade;
     }
-    var pageSize = 10;
-    if (param.page == 1) {
-        db.select(dbName, 10, whereSql, "", "order by id", function (err, result) {//查询所有news表的数据
-            res.json(result);
-        });
-    } else {
-        var whereSql = " ";
-        if (param.id) {
-            whereSql = whereSql + " and id= " + param.id;
-        }
-        if (param.userName) {
-            whereSql = whereSql + " and userName = '" + param.userName + "'";
-        }
-        if (param.role) {
-            whereSql = whereSql + " and role = '" + param.role + "'";
-        }
-        if (param.grade) {
-            whereSql = whereSql + " and grade = " + param.grade;
-        }
-        var sql = "select top " + pageSize + " * from (select row_number() over(order by id asc) as rownumber,* from " + dbName + ") temp_row where rownumber>" + ((param.page - 1) * pageSize) + whereSql;
-
-        db.querySql(sql, "", function (err, result) {//查询所有news表的数据
-            res.json(result);
-        });
-    }
+    var sql = "select top " + pageSize + " * from (select row_number() over(order by id asc) as rownumber,* from " + dbName + whereSql + ") temp_row where rownumber>" + ((param.page - 1) * pageSize);
+    db.querySql(sql, "", function (err, result) {//查询所有news表的数据
+        res.json(result);
+    });
 });
 router.post('/queryAllUsersCount', function (req, res, next) {
     var param = req.body;
@@ -119,12 +99,13 @@ router.post('/queryAllUsersCount', function (req, res, next) {
     if (param.grade) {
         whereSql = whereSql + " and grade = " + param.grade;
     }
-    var sql = "select count(id) as num from " + dbName +whereSql;
+    var sql = "select count(id) as num from " + dbName + whereSql;
     db.querySql(sql, "", function (err, result) {//查询所有news表的数据
         res.json(result);
     });
 });
-function dateAndTime(dateTime){
+
+function dateAndTime(dateTime) {
     var year = dateTime.getFullYear();
     var month = dateTime.getMonth();
     var day = dateTime.getDate();
@@ -139,10 +120,11 @@ function dateAndTime(dateTime){
     var data = year + "-" + month + "-" + day + " " + hour + ":" + minites + ":" + second;
     return data;
 }
+
 router.post('/createUser', function (req, res, next) {
     var param = req.body;
-    db.add(param,dbName,function (err, result) {//查询所有news表的数据
-        if(param.grade==1){
+    db.add(param, dbName, function (err, result) {//查询所有news表的数据
+        if (param.grade == 1) {
             var data = {};
             data.name = param.role;
             data.userName = param.role;
@@ -151,7 +133,7 @@ router.post('/createUser', function (req, res, next) {
             db.add(data, "dbo.institution", function (err, result) {//插入一条数据
                 res.json(result);
             })
-        }else{
+        } else {
             res.json(result);
         }
 
@@ -159,10 +141,10 @@ router.post('/createUser', function (req, res, next) {
 });
 router.post('/updateUser', function (req, res, next) {
     var param = req.body;
-    var whereObj = {id:param.id};
+    var whereObj = {id: param.id};
     delete param.id;
-    db.update(param,whereObj,dbName,function (err, result) {//更新字段
-        if(param.grade==1){
+    db.update(param, whereObj, dbName, function (err, result) {//更新字段
+        if (param.grade == 1) {
             var data = {};
             data.name = param.userName;
             data.userName = param.userName;
@@ -171,14 +153,14 @@ router.post('/updateUser', function (req, res, next) {
             db.add(data, "dbo.institution", function (err, result) {//插入一条数据
                 res.json(result);
             })
-        }else{
+        } else {
             res.json(result);
         }
     });
 });
 router.post('/deleteUser', function (req, res, next) {
     var param = req.body;
-    db.del("where id = @id", {id:param.id}, dbName, function(err, result){//删除字段
+    db.del("where id = @id", {id: param.id}, dbName, function (err, result) {//删除字段
         res.json(result);
     });
 });

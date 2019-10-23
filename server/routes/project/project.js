@@ -549,6 +549,54 @@ router.post('/queryAppNo', function (req, res, next) {
         res.json(result);
     });
 });
+/*************************查询总数***************************/
+//预算评审金额和估算总额
+router.post('/queryAllBudgetReviewMoney', function (req, res, next) {
+    var param = req.body;
+    var whereSql = " where 1=1 ";
+    if (param.commitName) {
+        whereSql = whereSql + "and commitName = '" + param.commitName+"'";
+    }
+    if (param.projectFinance) {
+        whereSql = whereSql + "and projectFinance = '" + param.projectFinance+"'";
+    }
+    var sql = "SELECT SUM(projectMoney) as projectMoney,SUM(budgetReviewMoney) as budgetReviewMoney,SUM(nonPaymentTotalMoneyNo) as nonPaymentTotalMoneyNo FROM dbo.project" + whereSql;
+    db.querySql(sql, "", function (err, result) {//查询所有news表的数据
+        res.json(result);
+    });
+});
+
+//查询拨付金额
+router.post('/queryAllAppropriateMoney', function (req, res, next) {
+    var param = req.body;
+    var whereSql = " where 1=1 ";
+    if (param.userName) {
+        whereSql = whereSql + "and userName = '" + param.userName+"'";
+    }
+    if (param.role) {
+        whereSql = whereSql + "and role = '" + param.role+"'";
+    }
+    var sql = "SELECT SUM(money) as money FROM dbo.appropriateMoney" + whereSql;
+    db.querySql(sql, "", function (err, result) {//查询所有news表的数据
+        res.json(result);
+    });
+});
+
+//查询年度安排金额
+router.post('/queryAllBudgetPlanMoney', function (req, res, next) {
+    var param = req.body;
+    var whereSql = " where 1=1 ";
+    if (param.userName) {
+        whereSql = whereSql + "and userName = '" + param.userName+"'";
+    }
+    if (param.role) {
+        whereSql = whereSql + "and role = '" + param.role+"'";
+    }
+    var sql = "SELECT SUM(money) as money FROM dbo.budgetPlanMoney" + whereSql;
+    db.querySql(sql, "", function (err, result) {//查询所有news表的数据
+        res.json(result);
+    });
+});
 
 module.exports = router;
 

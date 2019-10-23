@@ -10,7 +10,7 @@ export default {
     },
     data() {
         return {
-            activeNames:[],
+            activeNames: [],
             userInfoActiveName: "pro-monitor",
             o: 2,
             drawerDetails: false,
@@ -18,9 +18,9 @@ export default {
             showMoreQuery: false,
             direction: 'rtl',
             projectInstitutionList: [],
-            levelOneList:[],
-            levelOne:"",
-            newInstituation:[],
+            levelOneList: [],
+            levelOne: "",
+            newInstituation: [],
             allProject: {
                 allProjectList: [],
                 formData: {
@@ -37,6 +37,9 @@ export default {
             IsNewMediaSessionLargeData: '',
             projectDetail: {},
             user: {},
+            allBudgetReviewMoney:{},
+            allAppropriateMoney:{},//拨付
+            allBudgetPlanMoney:{},//安排
             monitor: {
                 newProjectCount: 0,
                 approvalProject: 0,
@@ -51,11 +54,11 @@ export default {
         self.user = JSON.parse(sessionStorage.getItem('user'));
         //var list = JSON.parse(window.sessionStorage.getItem('institution'));
         self.queryInstitution(function (list) {
-            if(self.user.grade==1){
+            if (self.user.grade == 1) {
                 self.projectInstitutionList = list;
-            }else{
+            } else {
                 self.levelOneList = Utils.initLevelOne(list);
-                self.projectInstitutionList = Utils.initLevelTwo(self.levelOneList,list);
+                self.projectInstitutionList = Utils.initLevelTwo(self.levelOneList, list);
             }
         })
         self.queryAllProject();
@@ -63,8 +66,117 @@ export default {
         self.queryNewProjectCount();
         self.queryFinishedProjectCount();
         self.queryReturnedProjectCount();
+        self.queryAllBudgetReviewMoney();//预算评审金额和估算总额
+        self.queryAllAppropriateMoney();//查询拨付金额
+        self.queryAllBudgetPlanMoney();//查询年度安排金额
+
     },
     methods: {
+        //预算评审金额和估算总额
+        queryAllBudgetReviewMoney: function () {
+            let self = this;
+            let data = {};
+            if (self.user.grade == 1) {//第一个项目查自己的加上条件
+                data.commitName = self.user.role;
+            } else if (self.user.grade == 2) {
+                data.projectFinance = self.user.role;
+            }
+            self.$http.post('/api/project/queryAllBudgetReviewMoney', data).then(res => {
+                let status = res.status;
+                let statusText = res.statusText;
+                if (status !== 200) {
+                    self.$message({
+                        message: statusText,
+                        type: 'error'
+                    });
+                } else {
+                    if (res.data.length != 0) {
+                        self.allBudgetReviewMoney = res.data.recordset[0];
+                    } else {
+                        self.$message({
+                            message: "查询失败",
+                            type: 'warning'
+                        });
+                    }
+                }
+            })
+                .catch(error =>
+                    self.$message({
+                        message: error.message,
+                        type: 'error'
+                    }),
+                );
+        },
+        //查询拨付金额
+        queryAllAppropriateMoney: function () {
+            let self = this;
+            let data = {};
+            if (self.user.grade == 1) {//第一个项目查自己的加上条件
+                data.userName = self.user.role;
+            } else if (self.user.grade == 2) {
+                data.role = self.user.role;
+            }
+            self.$http.post('/api/project/queryAllAppropriateMoney', data).then(res => {
+                let status = res.status;
+                let statusText = res.statusText;
+                if (status !== 200) {
+                    self.$message({
+                        message: statusText,
+                        type: 'error'
+                    });
+                } else {
+                    if (res.data.length != 0) {
+                        self.allAppropriateMoney = res.data.recordset[0];
+                    } else {
+                        self.$message({
+                            message: "查询失败",
+                            type: 'warning'
+                        });
+                    }
+                }
+            })
+                .catch(error =>
+                    self.$message({
+                        message: error.message,
+                        type: 'error'
+                    }),
+                );
+        },
+        //查询年度安排金额
+        queryAllBudgetPlanMoney: function () {
+            let self = this;
+            let data = {};
+            if (self.user.grade == 1) {//第一个项目查自己的加上条件
+                data.userName = self.user.role;
+            } else if (self.user.grade == 2) {
+                data.role = self.user.role;
+            }
+            self.$http.post('/api/project/queryAllBudgetPlanMoney', data).then(res => {
+                let status = res.status;
+                let statusText = res.statusText;
+                if (status !== 200) {
+                    self.$message({
+                        message: statusText,
+                        type: 'error'
+                    });
+                } else {
+                    if (res.data.length != 0) {
+                        self.allBudgetPlanMoney = res.data.recordset[0];
+                    } else {
+                        self.$message({
+                            message: "查询失败",
+                            type: 'warning'
+                        });
+                    }
+                }
+            })
+                .catch(error =>
+                    self.$message({
+                        message: error.message,
+                        type: 'error'
+                    }),
+                );
+        },
         //查询单位
         queryInstitution: function (callback) {
             let self = this;
@@ -110,9 +222,9 @@ export default {
             let self = this;
             let data = _.cloneDeep(self.allProject.formData);
             data.page = flag ? 1 : self.allProject.currentPage;
-            if(self.user.grade==1){//第一个项目查自己的加上条件
+            if (self.user.grade == 1) {//第一个项目查自己的加上条件
                 data.commitName = self.user.role;
-            }else  if(self.user.grade==2){
+            } else if (self.user.grade == 2) {
                 data.projectFinance = self.user.role;
             }
             self.$http.post('/api/project/queryAllProject', data).then(res => {
@@ -185,9 +297,9 @@ export default {
                 var data = {};
             }
             data.page = self.allProject.currentPage;
-            if(self.user.grade==1){//第一个项目查自己的加上条件
+            if (self.user.grade == 1) {//第一个项目查自己的加上条件
                 data.commitName = self.user.role;
-            }else  if(self.user.grade==2){
+            } else if (self.user.grade == 2) {
                 data.projectFinance = self.user.role;
             }
             self.$http.post('/api/project/queryAllProjectCount', data).then(res => {
@@ -221,7 +333,7 @@ export default {
             let self = this;
             self.drawerDetails = true;
             self.projectDetail = data;
-            self.activeNames = ['1','2','3','4','5','6','7'];
+            self.activeNames = ['1', '2', '3', '4', '5', '6', '7'];
         },
         handleClose(done) {
             done();
@@ -251,43 +363,6 @@ export default {
                 aLink.click();
                 URL.revokeObjectURL(blob);
             }); // 通过原生 fetch 获取数据，fetch 参考 文档
-
-            // self.$http.post('/api/export/exportExcel', data).then(res => {
-            //     let status = res.status;
-            //     let statusText = res.statusText;
-            //     if (status !== 200) {
-            //         self.$message({
-            //             message: statusText,
-            //             type: 'error'
-            //         });
-            //     } else {
-            //         if (res.data.length != 0) {
-            //             const blob = new Blob([res.data], {
-            //
-            //                 type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'
-            //
-            //             });
-            //             var objectURL = URL.createObjectURL(blob);
-            //             const aLink = document.createElement('a');
-            //             var now = new Date();
-            //             aLink.download = '临猗县建设项目库项目汇总表_'+`${now.getFullYear()}${('0'+(now.getMonth()+1)).slice(-2)}${now.getDate()}`;
-            //             aLink.href = objectURL;
-            //             aLink.click();
-            //             URL.revokeObjectURL(blob);
-            //         } else {
-            //             self.$message({
-            //                 message: "查询失败",
-            //                 type: 'warning'
-            //             });
-            //         }
-            //     }
-            // })
-            //     .catch(error =>
-            //         self.$message({
-            //             message: error.message,
-            //             type: 'error'
-            //         }),
-            //     );
         },
         showDefaultQuickQuery: function (flag) {
             var self = this;
@@ -392,9 +467,9 @@ export default {
             data.page = 1;
             data.step = 0;
             data.ifReturned = 1;
-            if(self.user.grade==1){//第一个项目查自己的加上条件
+            if (self.user.grade == 1) {//第一个项目查自己的加上条件
                 data.commitName = self.user.role;
-            }else  if(self.user.grade==2){
+            } else if (self.user.grade == 2) {
                 data.projectFinance = self.user.role;
             }
             self.$http.post('/api/project/queryReturnProjectCount', data).then(res => {
