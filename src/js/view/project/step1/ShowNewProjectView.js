@@ -317,6 +317,49 @@ export default {
             });
 
         },
+        //删除项目
+        deleteProject:function(e, project){
+            let self = this;
+            self.$confirm('确定删除该项目吗?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                let data = {};
+                data.id = project.id;
+                self.$http.post('/api/project/deleteProject', data).then(res => {
+                    let status = res.status;
+                    let statusText = res.statusText;
+                    if (status !== 200) {
+                        self.$message({
+                            message: statusText,
+                            type: 'error'
+                        });
+                    } else {
+                        if (res.data.length != 0) {
+                            //横线那里改成退库中
+                            self.$message({
+                                message: "申请退库成功",
+                                type: 'success'
+                            });
+                            //查询当前页数据
+                            self.queryNewProject(true);
+                        } else {
+                            self.$message({
+                                message: "申请退库失败",
+                                type: 'warning'
+                            });
+                        }
+                    }
+                })
+                    .catch(error =>
+                        self.$message({
+                            message: error.message,
+                            type: 'error'
+                        }),
+                    );
+            })
+        },
         //显示新建库详情
         showNewProjectDetails: function (e, data) {
             let self = this;

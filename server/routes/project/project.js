@@ -53,51 +53,21 @@ router.post('/queryAllProject', function (req, res, next) {
     //     res.json(result);
     // });
     var pageSize = 10;
-    if (param.page == 1) {
-        db.select(dbName, 10, whereSql, "", "order by id", function (err, result) {//查询所有news表的数据
-            res.json(result);
-        });
-    } else {
-        var whereSql = " ";
-        if (param.id) {
-            whereSql = whereSql + " and id= " + param.id;
-        }
-        if (param.projectInstitution) {
-            whereSql = whereSql + " and projectInstitution = '" + param.projectInstitution + "'";
-        }
-        if (param.projectName) {
-            whereSql = whereSql + " and projectName = '" + param.projectName + "'";
-        }
-        if (param.projectType) {
-            whereSql = whereSql + " and projectType= '" + param.projectType + "'";
-        }
-        if (param.projectYears) {
-            whereSql = whereSql + " and projectYears= " + param.projectYears;
-        }
-        if (param.commitName) {
-            whereSql = whereSql + " and commitName= '" + param.commitName + "'";
-        }
-        if (param.projectFinance) {
-            whereSql = whereSql + " and projectFinance= '" + param.projectFinance + "'";
-        }
-
-        var sql = "select top " + pageSize + " * from (select row_number() over(order by id asc) as rownumber,* from " + dbName + ") temp_row where rownumber>" + ((param.page - 1) * pageSize) + whereSql;
-
-        db.querySql(sql, "", function (err, result) {//查询所有news表的数据
-            res.json(result);
-        });
-    }
+    var sql = "select top " + pageSize + " * from (select row_number() over(order by id asc) as rownumber,* from " + dbName + " " + whereSql + ") temp_row where rownumber>" + ((param.page - 1) * pageSize);
+    db.querySql(sql, "", function (err, result) {//查询所有news表的数据
+        res.json(result);
+    });
 });
 
 //新建project
 router.post('/createProject', function (req, res, next) {
     var param = req.body;
     db.add(param, dbName, function (err, result) {//插入一条project
-        if(result.rowsAffected.length>0){
+        if (result.rowsAffected.length > 0) {
             //插入一条表在newProject
-            var whereSql = "where role = '"+param.projectFinance+"'";
-            db.select(dbNewPro,1,whereSql,"","order by id", function (err, res1) {
-                if(res1.recordset.length>0){
+            var whereSql = "where role = '" + param.projectFinance + "'";
+            db.select(dbNewPro, 1, whereSql, "", "order by id", function (err, res1) {
+                if (res1.recordset.length > 0) {
                     var data = res1.recordset[0];
                     data.stepOne = data.stepOne + 1;
                     var whereObj = {id: data.id};
@@ -105,11 +75,11 @@ router.post('/createProject', function (req, res, next) {
                     db.update(data, whereObj, dbNewPro, function (err, res2) {//插入一条新的数据
                         res.json(result);
                     });
-                }else{
+                } else {
                     res.json(result);
                 }
             });
-        }else{
+        } else {
             res.json(result);
         }
 
@@ -139,7 +109,7 @@ router.post('/approvalProject', function (req, res, next) {
     } else if (param.oldStep == 7) {
         whereObj.stepSevenApp = param.oldSuggestion;
     }
-    if(param.projectFinance){
+    if (param.projectFinance) {
         var projectFinance = param.projectFinance;
     }
     delete param.id;
@@ -147,7 +117,7 @@ router.post('/approvalProject', function (req, res, next) {
     delete param.oldSuggestion;
     delete param.projectFinance;
     db.update(param, whereObj, dbName, function (err, result) {//查询所有news表的数据
-        if(result.rowsAffected.length>0) {
+        if (result.rowsAffected.length > 0) {
             //查询newProject的表
             //TODO 把每个步骤的审核的单位去掉
             var whereSql = "where role = '" + projectFinance + "'";
@@ -178,7 +148,7 @@ router.post('/approvalProject', function (req, res, next) {
                     res.json(result);
                 }
             });
-        }else{
+        } else {
             res.json(result);
         }
     });
@@ -186,15 +156,15 @@ router.post('/approvalProject', function (req, res, next) {
 //查询数据库有没有新的数据
 router.post('/queryIfNewProject', function (req, res, next) {
     var param = req.body;
-    var whereSql = "where role = '"+param.role+"'";
-    db.select(dbNewPro,"",whereSql,"","order by id", function (err, result) {
+    var whereSql = "where role = '" + param.role + "'";
+    db.select(dbNewPro, "", whereSql, "", "order by id", function (err, result) {
         res.json(result);
     })
 });
 //更新project相关东西
 router.post('/updateProject', function (req, res, next) {
     var param = req.body;
-    var step = param.trueStep ||param.step ;
+    var step = param.trueStep || param.step;
     if (param.oldStep == 0 || param.oldStep) {
         step = param.oldStep;
     }
@@ -210,16 +180,16 @@ router.post('/updateProject', function (req, res, next) {
     if (param.oldStep == 0 || param.oldStep) {
         delete param.oldStep;
     }
-    if(param.projectFinance){
+    if (param.projectFinance) {
         var projectFinance = param.projectFinance;
         delete param.projectFinance;
     }
     db.update(param, whereObj, dbName, function (err, result) {//查询所有news表的数据
-        if(result.rowsAffected.length>0){
+        if (result.rowsAffected.length > 0) {
             //传入审批项目的人（插入一条表在newProject）
-            var whereSql = "where role = '"+projectFinance+"'";
-            db.select(dbNewPro,1,whereSql,"","order by id", function (err, res1) {
-                if(res1.recordset.length>0){
+            var whereSql = "where role = '" + projectFinance + "'";
+            db.select(dbNewPro, 1, whereSql, "", "order by id", function (err, res1) {
+                if (res1.recordset.length > 0) {
                     var data = res1.recordset[0];
                     var whereObj = {id: data.id};
                     delete data.id;
@@ -241,11 +211,11 @@ router.post('/updateProject', function (req, res, next) {
                     db.update(data, whereObj, dbNewPro, function (err, result2) {//插入一条新的数据
                         res.json(result);
                     });
-                }else{
+                } else {
                     res.json(result);
                 }
             });
-        }else{
+        } else {
             res.json(result);
         }
     });
@@ -256,6 +226,13 @@ router.post('/returnProject', function (req, res, next) {
     var whereObj = {id: param.id};
     delete param.id;
     db.update(param, whereObj, dbName, function (err, result) {//查询所有news表的数据
+        res.json(result);
+    });
+});
+//退库申请
+router.post('/deleteProject', function (req, res, next) {
+    var param = req.body;
+    db.del("where id = @id", {id: param.id}, dbName, function (err, result) {//删除字段
         res.json(result);
     });
 });
@@ -340,58 +317,10 @@ router.post('/queryProject', function (req, res, next) {
     // db.querySql(sql, "", function (err, result) {//查询所有news表的数据
     //     res.json(result);
     // });
-
-    if (param.page == 1) {
-        db.select(dbName, 10, whereSql, "", "order by id", function (err, result) {//查询所有news表的数据
-            res.json(result);
-        });
-    } else {
-        whereSql = " ";
-        if (param.id) {
-            whereSql = whereSql + " and id= " + param.id;
-        }
-        if (param.projectInstitution) {
-            whereSql = whereSql + " and projectInstitution = '" + param.projectInstitution + "'";
-        }
-        if (param.projectName) {
-            whereSql = whereSql + " and projectName = '" + param.projectName + "'";
-        }
-        if (param.projectType) {
-            whereSql = whereSql + " and projectType= '" + param.projectType + "'";
-        }
-        if (param.projectYears) {
-            whereSql = whereSql + " and projectYears= " + param.projectYears;
-        }
-        //默认查询条件
-        if (param.step) {
-            if (step == 3) {
-                whereSql = whereSql + " and approvalStep>2 and approvalStep<7 "
-            } else if (step == 4 || step == 5 || step == 6) {
-                whereSql = whereSql + " and approvalStep>3 and approvalStep<7 "
-            } else {
-                whereSql = whereSql + " and approvalStep= " + param.step;
-            }
-        }
-        if (suggestion) {
-            whereSql = whereSql + " and " + suggestionStep + " not in ( " + suggestion + ")";
-        }
-        if (param.ifReturned) {
-            whereSql = whereSql + " and ifReturned= " + param.ifReturned;
-        }
-        if (param.commitName) {
-            whereSql = whereSql + " and commitName= '" + param.commitName + "'";
-        }
-        if (param.projectFinance) {
-            whereSql = whereSql + " and projectFinance= '" + param.projectFinance + "'";
-        }
-        if (param.ifEdit) {
-            whereSql = whereSql + " and ifEdit= " + param.ifEdit;
-        }
-        var sql = "select top " + pageSize + " * from (select row_number() over(order by id asc) as rownumber,* from " + dbName + ") temp_row where rownumber>" + ((param.page - 1) * pageSize) + whereSql;
-        db.querySql(sql, "", function (err, result) {//查询所有news表的数据
-            res.json(result);
-        });
-    }
+    var sql = "select top " + pageSize + " * from (select row_number() over(order by id asc) as rownumber,* from " + dbName + " " + whereSql + ") temp_row where rownumber>" + ((param.page - 1) * pageSize);
+    db.querySql(sql, "", function (err, result) {//查询所有news表的数据
+        res.json(result);
+    });
 
 
 });
@@ -399,91 +328,33 @@ router.post('/queryProject', function (req, res, next) {
 router.post('/queryReturnProject', function (req, res, next) {
     var param = req.body;
     var pageSize = 10;
-    var name = param.name;
     var ifReturned = param.ifReturned;
-    if (name) {
-        var whereSql = "where ifReturned=" + ifReturned;
-        if (param.commitName) {
-            whereSql = whereSql + " and commitName= '" + param.commitName + "'";
-        }
-        if (param.projectFinance) {
-            whereSql = whereSql + " and projectFinance= '" + param.projectFinance + "'";
-        }
-        if (param.id) {
-            whereSql = whereSql + " and id= " + param.id;
-        }
-        if (param.projectInstitution) {
-            whereSql = whereSql + " and projectInstitution = '" + param.projectInstitution + "'";
-        }
-        if (param.projectName) {
-            whereSql = whereSql + " and projectName = '" + param.projectName + "'";
-        }
-        if (param.projectType) {
-            whereSql = whereSql + " and projectType= '" + param.projectType + "'";
-        }
-        if (param.projectYears) {
-            whereSql = whereSql + " and projectYears= " + param.projectYears;
-        }
-        db.select(dbName, 10, whereSql, "", "order by id", function (err, result) {//查询所有news表的数据
-            res.json(result);
-        });
-    } else {
-        if (param.page == 1) {
-            var whereSql = "where ifReturned=" + ifReturned;
-            if (param.commitName) {
-                whereSql = whereSql + " and commitName= '" + param.commitName + "'";
-            }
-            if (param.projectFinance) {
-                whereSql = whereSql + " and projectFinance= '" + param.projectFinance + "'";
-            }
-            if (param.id) {
-                whereSql = whereSql + " and id= " + param.id;
-            }
-            if (param.projectInstitution) {
-                whereSql = whereSql + " and projectInstitution = '" + param.projectInstitution + "'";
-            }
-            if (param.projectName) {
-                whereSql = whereSql + " and projectName = '" + param.projectName + "'";
-            }
-            if (param.projectType) {
-                whereSql = whereSql + " and projectType= '" + param.projectType + "'";
-            }
-            if (param.projectYears) {
-                whereSql = whereSql + " and projectYears= " + param.projectYears;
-            }
-            db.select(dbName, 10, whereSql, "", "order by id", function (err, result) {//查询所有news表的数据
-                res.json(result);
-            });
-        } else {
-            var whereSql = " ";
-            if (param.commitName) {
-                whereSql = whereSql + " and commitName= '" + param.commitName + "'";
-            }
-            if (param.projectFinance) {
-                whereSql = whereSql + " and projectFinance= '" + param.projectFinance + "'";
-            }
-            if (param.id) {
-                whereSql = whereSql + " and id= " + param.id;
-            }
-            if (param.projectInstitution) {
-                whereSql = whereSql + " and projectInstitution = '" + param.projectInstitution + "'";
-            }
-            if (param.projectName) {
-                whereSql = whereSql + " and projectName = '" + param.projectName + "'";
-            }
-            if (param.projectType) {
-                whereSql = whereSql + " and projectType= '" + param.projectType + "'";
-            }
-            if (param.projectYears) {
-                whereSql = whereSql + " and projectYears= " + param.projectYears;
-            }
-            var sql = "select top " + pageSize + " * from (select row_number() over(order by id asc) as rownumber,* from " + dbName + ") temp_row where rownumber>" + ((param.page - 1) * pageSize) + " and ifReturned=" + ifReturned + whereSql;
-            db.querySql(sql, "", function (err, result) {//查询所有news表的数据
-                res.json(result);
-            });
-        }
+    var whereSql = "where ifReturned=" + ifReturned;
+    if (param.commitName) {
+        whereSql = whereSql + " and commitName= '" + param.commitName + "'";
     }
-
+    if (param.projectFinance) {
+        whereSql = whereSql + " and projectFinance= '" + param.projectFinance + "'";
+    }
+    if (param.id) {
+        whereSql = whereSql + " and id= " + param.id;
+    }
+    if (param.projectInstitution) {
+        whereSql = whereSql + " and projectInstitution = '" + param.projectInstitution + "'";
+    }
+    if (param.projectName) {
+        whereSql = whereSql + " and projectName = '" + param.projectName + "'";
+    }
+    if (param.projectType) {
+        whereSql = whereSql + " and projectType= '" + param.projectType + "'";
+    }
+    if (param.projectYears) {
+        whereSql = whereSql + " and projectYears= " + param.projectYears;
+    }
+    var sql = "select top " + pageSize + " * from (select row_number() over(order by id asc) as rownumber,* from " + dbName + " " + whereSql + ") temp_row where rownumber>" + ((param.page - 1) * pageSize);
+    db.querySql(sql, "", function (err, result) {//查询退库表的数据
+        res.json(result);
+    });
 
 });
 //查询project表数量
@@ -570,7 +441,7 @@ router.post('/queryProjectCount', function (req, res, next) {
 router.post('/queryReturnProjectCount', function (req, res, next) {
     var param = req.body;
     var ifReturned = param.ifReturned;
-    var whereSql = " ";
+    var whereSql = "  where ifReturned=" + ifReturned;
     if (param.commitName) {
         whereSql = whereSql + " and commitName= '" + param.commitName + "'";
     }
@@ -592,7 +463,7 @@ router.post('/queryReturnProjectCount', function (req, res, next) {
     if (param.projectYears) {
         whereSql = whereSql + " and projectYears= " + param.projectYears;
     }
-    var sql = "select count(id) as num from " + dbName + " where ifReturned=" + ifReturned + whereSql;
+    var sql = "select count(id) as num from " + dbName + whereSql;
     db.querySql(sql, "", function (err, result) {//查询所有news表的数据
         res.json(result);
     });

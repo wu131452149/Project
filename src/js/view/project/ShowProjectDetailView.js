@@ -33,18 +33,7 @@ export default {
         // 验证码初始化
         //$('.main-content').height($(window).height() - 200);
         var self = this;
-        if (self.projectDetail.appropriateBudget) {
-            self.appropriateBudget = JSON.parse(self.projectDetail.appropriateBudget);
-        }
-        if (self.projectDetail.appropriateTopBudget) {
-            self.appropriateTopBudget = JSON.parse(self.projectDetail.appropriateTopBudget);
-        }
-        if (self.projectDetail.cutBudget) {
-            self.cutBudget = JSON.parse(self.projectDetail.cutBudget);
-        }
-        if (self.projectDetail.addBudget) {
-            self.addBudget = JSON.parse(self.projectDetail.addBudget);
-        }
+        self.initMoney();
         self.computeTotal();
         self.queryIfNewProject();
     },
@@ -76,9 +65,31 @@ export default {
                     }
                 }
             }
-        }
+        },
+        "projectDetail": {
+            immediate: true,
+            handler: function (val) {
+                var self = this;
+                self.initMoney();
+            }
+        },
     },
     methods: {
+        initMoney:function(){
+            var self = this;
+            if (self.projectDetail.appropriateBudget) {
+                self.appropriateBudget = JSON.parse(self.projectDetail.appropriateBudget);
+            }
+            if (self.projectDetail.appropriateTopBudget) {
+                self.appropriateTopBudget = JSON.parse(self.projectDetail.appropriateTopBudget);
+            }
+            if (self.projectDetail.cutBudget) {
+                self.cutBudget = JSON.parse(self.projectDetail.cutBudget);
+            }
+            if (self.projectDetail.addBudget) {
+                self.addBudget = JSON.parse(self.projectDetail.addBudget);
+            }
+        },
         //查询是否有新的
         queryIfNewProject: function () {
             let self = this;

@@ -142,11 +142,12 @@
                     <template slot-scope="scope">{{scope.row.stepOneApp|renderStatus}}</template>
                 </el-table-column>
                 <!--//阶段录入修改-->
-                <el-table-column label="操作" class="text-c" v-if="user.grade==0||user.grade==1">
+                <el-table-column label="操作" class="text-c" v-if="user.grade==0||user.grade==1" width="150">
                     <template slot-scope="scope">
                         <a v-if="scope.row.stepOneApp==0" @click.stop="commitProjectAgain($event,scope.row)">重新录入</a>
                         <!--如果是未审核阶段才可以退库-->
                         <a v-if="scope.row.stepOneApp==2" @click.stop="returnProject($event,scope.row)">申请退库</a>
+                        <a v-if="scope.row.stepOneApp==2 || scope.row.stepOneApp==0" @click.stop="deleteProject($event,scope.row)">删除</a>
                     </template>
                 </el-table-column>
             </el-table>

@@ -112,7 +112,7 @@ export default {
                     if(createProject.projectMoneyFrom){
                         createProject.projectMoneyFrom = JSON.stringify(createProject.projectMoneyFrom).replace("[", "{").replace("]", "}");
                     }else{
-                        createProject.projectMoneyFrom = "";
+                        createProject.projectMoneyFrom = [];
                     }
                     createProject.approvalStep = 1;
                     createProject.ifReturned = 0;
@@ -332,7 +332,7 @@ export default {
                     if(val.projectMoneyFrom){
                         self.createProject.projectMoneyFrom = JSON.parse(val.projectMoneyFrom.replace("{", "[").replace("}", "]"));
                     }else{
-                        self.createProject.projectMoneyFrom = "";
+                        self.createProject.projectMoneyFrom = [];
                     }
                     self.createProject.projectBeginTime = val.projectBeginTime;
                     self.createProject.projectContactUserName = val.projectContactUserName;
@@ -371,7 +371,7 @@ export default {
                     if(val.projectMoneyFrom){
                         self.createProject.projectMoneyFrom = JSON.parse(val.projectMoneyFrom.replace("{", "[").replace("}", "]"));
                     }else{
-                        self.createProject.projectMoneyFrom = "";
+                        self.createProject.projectMoneyFrom = [];
                     }
                     self.createProject.projectBeginTime = val.projectBeginTime;
                     self.createProject.projectContactUserName = val.projectContactUserName;
