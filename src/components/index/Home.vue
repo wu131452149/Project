@@ -395,6 +395,9 @@
                 </el-drawer>
                 <!--新建项目页面 end-->
             </el-tab-pane>
+            <el-tab-pane label="金额统计详情" name="all-money-details">
+               <budget-statistics></budget-statistics>
+            </el-tab-pane>
         </el-tabs>
     </div>
 </template>

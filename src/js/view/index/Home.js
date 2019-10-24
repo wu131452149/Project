@@ -1,4 +1,5 @@
 import ShowProjectDetail from "../../../components/project/ShowProjectDetail";
+import budgetStatistics from "../../../components/index/budgetStatistics";
 import Filters from "../common/Filters";
 import Utils from "../../lib/Utils/Utils";
 
@@ -7,6 +8,7 @@ export default {
     name: "Home",
     components: {
         "show-project-Detail": ShowProjectDetail,
+        "budget-statistics":budgetStatistics
     },
     data() {
         return {

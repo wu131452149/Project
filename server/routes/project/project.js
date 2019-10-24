@@ -638,6 +638,49 @@ router.post('/deleteAppropriateMoney', function (req, res, next) {
     });
 });
 
+
+
+/*************统计************/
+//查询拨付金额
+router.post('/queryAllAppropriateMoneyList', function (req, res, next) {
+    var param = req.body;
+    //SELECT userName,type,years,SUM(money) as money FROM dbo.appropriateMoney GROUP BY userName,type,years
+    var data = "years";
+    if(param.userName){
+        data = data+","+"userName";
+    }
+    if(param.type){
+        data = data+","+"type";
+    }
+    if(param.role){
+        data = data+","+"role";
+    }
+    var sql = "SELECT "+data+", SUM(money) as money FROM dbo.appropriateMoney GROUP BY "+data;
+    db.querySql(sql, "", function (err, result) {//查询所有news表的数据
+        res.json(result);
+    });
+});
+
+//查询年度安排金额
+router.post('/queryAllBudgetPlanMoneyList', function (req, res, next) {
+    var param = req.body;
+    //SELECT userName,type,years,SUM(money) as money FROM dbo.appropriateMoney GROUP BY userName,type,years
+    var data = "years";
+    if(param.userName){
+        data = data+","+"userName";
+    }
+    if(param.type){
+        data = data+","+"type";
+    }
+    if(param.role){
+        data = data+","+"role";
+    }
+    var sql = "SELECT "+data+", SUM(money) as money FROM dbo.budgetPlanMoney GROUP BY "+data;
+    db.querySql(sql, "", function (err, result) {//查询所有news表的数据
+        res.json(result);
+    });
+});
+
 module.exports = router;
 
 
