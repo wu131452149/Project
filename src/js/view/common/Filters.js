@@ -2,6 +2,8 @@
  * 这个文件主要是
  *  created by LilyLee on 2019/9/22.
  **/
+import Utils from "../../lib/Utils/Utils";
+
 export default {
     /**
      * @author shuaijg
@@ -26,7 +28,7 @@ export default {
         }
         return time;
     },
-    renderTime:function(data){
+    renderTime: function (data) {
         let time = "";
         if (data) {
             time = data.replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '');
@@ -42,6 +44,15 @@ export default {
             time = "否";
         }
         return time;
+    },
+    //县级年度安排明细
+    renderPlanYearsMoneyList: function (data) {
+        let list = [];
+        if(data){
+            list = JSON.parse(data);
+        }
+        return list;
+
     },
     //审核状态
     renderStatus: function (data) {
@@ -118,20 +129,24 @@ export default {
         }
     },
     renderPlanYearsMoney: function (data) {
-        if (data) {
-            let obj = JSON.parse(data);
-            let money = "";
-            for (var i in obj) {
-                if (obj[i]) {
-                    var string = "";
-                    string = obj[i].years + ", 本级累计安排" + parseInt(obj[i].money) + "万元，";
-                    money = money + string;
-                }
-            }
-            return money;
-        } else {
-            return "";
-        }
+        // if (data) {
+        //     let obj = JSON.parse(data);
+        //     let money = "";
+        //     for (var i in obj) {
+        //         if (obj[i]) {
+        //             var string = "";
+        //             string = obj[i].years + ", 本级累计安排" + parseInt(obj[i].money) + "万元，";
+        //             money = money + string;
+        //         }
+        //     }
+        //     return money;
+        // } else {
+        //     return "";
+        // }
+        let dataA = JSON.parse(data);
+        var list = _.cloneDeep(dataA);
+        var obj = Utils.mergeArr(list);
+       return obj;
     },
     //累计以前年度安排
     renderBeforeYearPlanTotalMoney: function (data) {
@@ -213,7 +228,7 @@ export default {
         }
     },
     //累计合计安排
-    renderPlanTotalMoney:function(data){
+    renderPlanTotalMoney: function (data) {
         let money = "";
         //var thisYears = 2020;
         if (data) {
@@ -232,10 +247,10 @@ export default {
         }
     },
     //欠付金额
-    renderNonPaymentTotalMoney:function(data){
+    renderNonPaymentTotalMoney: function (data) {
         let money = "";
         //var thisYears = 2020;
-        console.log("qianfu",data);
+        console.log("qianfu", data);
         if (data) {
             money = JSON.parse(data);
             var totalMoney = 0;

@@ -143,8 +143,22 @@
                             <span class="info-label">县级预算年度安排：</span>
                             <div>
                                 <span class="info-val plan-years" v-if="projectDetail.planYearsSelfMoney">{{projectDetail.planYearsSelfMoney|renderPlanYearsSelfMoney}}</span>
-                                <span class="info-val plan-years" v-if="projectDetail.planYearsMoney">{{projectDetail.planYearsMoney|renderPlanYearsMoney}}</span>
-                                <span class="info-val plan-years" v-if="projectDetail.planYearsTopMoney">{{projectDetail.planYearsTopMoney|renderPlanYearsTopMoney}}</span>
+                                <span class="info-val plan-years" v-for="item in projectDetail.planYearsMoneyList">
+                                    <font color="red" v-if="item.status==2">{{item.years}},本级年度安排{{item.money}}(万元)</font>
+                                    <font v-else>{{item.years}},本级年度安排{{item.money}}(万元)</font>
+                                </span>
+                                <span class="info-val plan-years" v-for="item in projectDetail.planYearsTopMoneyList">
+                                    <font color="red" v-if="item.status==2">{{item.years}},上级年度安排{{item.money}}(万元)</font>
+                                    <font v-else>{{item.years}},上级年度安排{{item.money}}(万元)</font>
+                                </span>
+                                <!--总计-->
+                                <span class="info-label">累计：</span>
+                                <span class="info-val plan-years" v-for="item in projectDetail.yearsPlanTotalMoneyList">
+                                    <font>{{item.years}},本级累计年度安排{{item.money}}(万元)</font>
+                                </span>
+                                <span class="info-val plan-years" v-for="item in projectDetail.yearsPlanTotalTopMoneyList">
+                                    <font>{{item.years}},上级累计年度安排{{item.money}}(万元)</font>
+                                </span>
                             </div>
                         </div>
                     </div>

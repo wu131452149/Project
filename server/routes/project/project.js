@@ -91,7 +91,7 @@ router.post('/createProject', function (req, res, next) {
 router.post('/approvalProject', function (req, res, next) {
     var param = req.body;
     var step = param.oldStep;
-    var whereObj = {id: param.id, approvalStep: param.oldStep};
+    var whereObj = {id: param.id};
     if (param.oldStep == 1) {
         //如果是第1步并且是stepOneApp待审核状态也就是等于2，则更新为审核状态
         whereObj.stepOneApp = param.oldSuggestion;
@@ -100,12 +100,16 @@ router.post('/approvalProject', function (req, res, next) {
         whereObj.stepTwoApp = param.oldSuggestion;
     } else if (param.oldStep == 3) {
         whereObj.stepThreeApp = param.oldSuggestion;
+        delete param.stepThreeApp;
     } else if (param.oldStep == 4) {
         whereObj.stepFourApp = param.oldSuggestion;
+        delete param.stepFourApp;
     } else if (param.oldStep == 5) {
         whereObj.stepFiveApp = param.oldSuggestion;
+        delete param.stepFiveApp;
     } else if (param.oldStep == 6) {
         whereObj.stepSixApp = param.oldSuggestion;
+        delete param.stepSixApp;
     } else if (param.oldStep == 7) {
         whereObj.stepSevenApp = param.oldSuggestion;
     }
@@ -594,6 +598,23 @@ router.post('/queryAllBudgetPlanMoney', function (req, res, next) {
     }
     var sql = "SELECT SUM(money) as money FROM dbo.budgetPlanMoney" + whereSql;
     db.querySql(sql, "", function (err, result) {//查询所有news表的数据
+        res.json(result);
+    });
+});
+//更新预算安排表
+router.post('/updateBudgetPlanMoney', function (req, res, next) {
+    var param = req.body;
+    var whereObj = {projectId: param.projectId};
+    delete param.projectId;
+    db.update(param, whereObj, "dbo.budgetPlanMoney", function (err, result) {//查询所有news表的数据
+        res.json(result);
+    });
+});
+//删除状态为2的
+router.post('/deleteBudgetPlanMoney', function (req, res, next) {
+    var param = req.body;
+    var whereObj = {projectId: param.projectId,appStatus:param.appStatus};
+    db.del("where projectId = @projectId and appStatus = @appStatus", whereObj, "dbo.budgetPlanMoney", function (err, result) {//删除字段
         res.json(result);
     });
 });

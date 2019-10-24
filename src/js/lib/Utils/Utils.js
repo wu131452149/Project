@@ -445,28 +445,14 @@ export default {
         }
     },
     mergeArr: function (arr) {
-        var newArr = [];
-        arr.forEach(item => {
-            var dataItem = item
-            if (newArr.length > 0) {
-                var filterValue = newArr.filter(v => {
-                    return v.years == dataItem.years
-                })
-                if (filterValue.length > 0) {
-                    newArr.forEach(n => {
-                        if (n.years == filterValue[0].years) {
-                            n.money = parseInt(filterValue[0].money) + parseInt(dataItem.money)
-                        }
-                    })
-                } else {
-                    newArr.push(dataItem)
-                }
-            } else {
-                newArr.push(dataItem)
+        const result = arr.reduce((obj, item) => {
+            if (!obj[item.years]) {
+                obj[item.years] = 0
             }
-
-        })
-        return newArr
+            obj[item.years] += parseInt(item.money)
+            return obj
+        }, {})
+        return Object.keys(result).map(key => ({years: key, money: result[key]}))
     },
     //计算年度累计安排
     countTotalPlanMoney: function (arr) {

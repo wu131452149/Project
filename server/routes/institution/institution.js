@@ -8,7 +8,7 @@ const db = require('../../db');
 var dbName = "dbo.institution";
 
 router.post('/queryAllInstitution', function (req, res, next) {
-    var whereSql = "where 1=1 ";
+    var whereSql = " where 1=1 ";
     var param = req.body;
     if (param.userName) {
         whereSql = whereSql + " and userName = '" + param.userName + "'";
@@ -26,7 +26,7 @@ router.post('/createInstitution', function (req, res, next) {
 router.post('/queryInstitution', function (req, res, next) {
     var param = req.body;
     var pageSize = 10;
-    var whereSql = "where 1=1 ";
+    var whereSql = " where 1=1 ";
     if (param.name) {
         whereSql = whereSql + " and name = '" + param.name + "'";
     }
@@ -41,7 +41,7 @@ router.post('/queryInstitution', function (req, res, next) {
 });
 router.post('/queryInstitutionCount', function (req, res, next) {
     var param = req.body;
-    var whereSql = "where 1=1 ";
+    var whereSql = " where 1=1 ";
     if (param.name) {
         whereSql = whereSql + " and name = '" + param.name + "'";
     }

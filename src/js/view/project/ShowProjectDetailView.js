@@ -21,7 +21,7 @@ export default {
             totalAdd: 0,
             fileList: [],
             names: this.activeNames,
-            ifNewPro:{}
+            ifNewPro: {}
         }
     },
     beforeMount: function () {
@@ -71,11 +71,25 @@ export default {
             handler: function (val) {
                 var self = this;
                 self.initMoney();
+                if (self.projectDetail.planYearsMoney) {
+                    self.projectDetail.planYearsMoneyList = JSON.parse(self.projectDetail.planYearsMoney);
+                    self.projectDetail.yearsPlanTotalMoneyList = Utils.mergeArr(self.projectDetail.planYearsMoneyList);//累计本级
+                } else {
+                    self.projectDetail.planYearsMoneyList = [];
+                    self.projectDetail.yearsPlanTotalMoneyList = [];
+                }
+                if (self.projectDetail.planYearsTopMoney) {
+                    self.projectDetail.planYearsTopMoneyList = JSON.parse(self.projectDetail.planYearsTopMoney);
+                    self.projectDetail.yearsPlanTotalTopMoneyList = Utils.mergeArr(self.projectDetail.planYearsTopMoneyList);//累计上级
+                } else {
+                    self.projectDetail.planYearsTopMoneyList = [];
+                    self.projectDetail.yearsPlanTotalTopMoneyList = [];
+                }
             }
         },
     },
     methods: {
-        initMoney:function(){
+        initMoney: function () {
             var self = this;
             if (self.projectDetail.appropriateBudget) {
                 self.appropriateBudget = JSON.parse(self.projectDetail.appropriateBudget);
@@ -183,13 +197,6 @@ export default {
                         type: 'error'
                     }),
                 );
-            //var url = `${process.env.BASE_API}/table/downloadFile?filename=${data.name}&oldname=${data.oname}`;
-            // if (frameObj) {
-            //     frameObj.src = url;
-            //     frameObj.onload = function () {
-            //         frameObj.src = "";
-            //     };
-            // }
         },
         //审核通过
         approvalProject: function () {
@@ -306,13 +313,37 @@ export default {
             let self = this;
             let data = {};
             data.id = self.projectDetail.id;
-            data.approvalStep = 4;
+            if (self.projectDetail.approvalStep < 3) {
+                data.approvalStep = 4;
+                data.oldStep = 3;
+            }
             data.stepThreeApp = 1;
             data.stepFourApp = 2;
-            data.oldStep = 3;
             data.oldSuggestion = 2;
             data.ifEdit = 0;
             data.projectFinance = self.user.role;
+            //存入总字段
+            var list1 = _.cloneDeep(self.projectDetail.planYearsMoneyList);
+            var list2 = _.cloneDeep(self.projectDetail.planYearsTopMoneyList);
+            var list = list1.concat(list2);
+            var obj = self.mergeArr(list);
+            //把所有的审核的status变成1
+            for (var i = 0; i < self.projectDetail.planYearsMoneyList.length; i++) {
+                self.projectDetail.planYearsMoneyList[i].status = 1;
+            }
+            for (var i = 0; i < self.projectDetail.planYearsTopMoneyList.length; i++) {
+                self.projectDetail.planYearsTopMoneyList[i].status = 1;
+            }
+            if (self.projectDetail.planYearsMoneyList.length > 0) {
+                data.planYearsMoney = JSON.stringify(self.projectDetail.planYearsMoneyList);
+            }
+            if (self.projectDetail.planYearsTopMoneyList.length > 0) {
+                data.planYearsTopMoney = JSON.stringify(self.projectDetail.planYearsTopMoneyList);
+            }
+            //计算合计累计安排
+            data.yearsPlanTotalMoneyNo = Utils.countTotalPlanMoney(obj);
+            //对象
+            data.yearsPlanTotalMoney = JSON.stringify(obj);
             self.$http.post('/api/project/approvalProject', data).then(res => {
                 let status = res.status;
                 let statusText = res.statusText;
@@ -323,6 +354,8 @@ export default {
                     });
                 } else {
                     if (res.data.length != 0) {
+                        //将预算安排表里面的表的状态改成1，通过传入proid
+                        self.updateBudgetPlanMoneyList(self.projectDetail);
                         self.$message({
                             message: "审核成功",
                             type: 'success'
@@ -344,16 +377,58 @@ export default {
                     }),
                 );
         },
+        //初始化总钱数，因为在刚录入的时候还没有审核，所以先不放进去，等审核完成的时候再放进去
+        mergeArr: function (arr) {
+            const result = arr.reduce((obj, item) => {
+                if (!obj[item.years]) {
+                    obj[item.years] = 0
+                }
+                obj[item.years] += parseInt(item.money)
+                return obj
+            }, {})
+            return Object.keys(result).map(key => ({years: key, money: result[key]}))
+        },
+        //县级年度预算安排更新为通过
+        updateBudgetPlanMoneyList: function ( detail) {
+            var self = this;
+            var data = {};
+            data.projectId = detail.id;
+            data.appStatus = 1;//变成审核通过
+            self.$http.post('/api/project/updateBudgetPlanMoney', data).then(res => {
+                let status = res.status;
+                let statusText = res.statusText;
+                if (status !== 200) {
+                    self.$message({
+                        message: statusText,
+                        type: 'error'
+                    });
+                } else {
+                    if (res.data.length != 0) {
+
+                    } else {
+
+                    }
+                }
+            })
+                .catch(error =>
+                    self.$message({
+                        message: error.message,
+                        type: 'error'
+                    }),
+                );
+        },
         //4拨付审核
         approvalAppMoney: function () {
             //审核通过，把第一步状态改为1，并且把项目step改成5
             let self = this;
             let data = {};
             data.id = self.projectDetail.id;
-            data.approvalStep = 5;
+            if (self.projectDetail.approvalStep < 4) {
+                data.approvalStep = 5;
+                data.oldStep = 4;
+            }
             data.stepFourApp = 1;
             data.stepFiveApp = 2;
-            data.oldStep = 4;
             data.oldSuggestion = 2;
             data.ifEdit = 0;
             data.projectFinance = self.user.role;
@@ -391,14 +466,15 @@ export default {
         //5项目变更
         approvalBudgetChange: function () {
             //审核通过，把第一步状态改为1，并且把项目step改成5
-            //todo 插入一张log表
             let self = this;
             let data = {};
             data.id = self.projectDetail.id;
-            data.approvalStep = 6;
+            if (self.projectDetail.approvalStep < 5) {
+                data.approvalStep = 6;
+                data.oldStep = 5;
+            }
             data.stepFiveApp = 1;
             data.stepSixApp = 2;
-            data.oldStep = 5;
             data.oldSuggestion = 2;
             data.ifEdit = 0;
             data.projectFinance = self.user.role;
@@ -554,6 +630,35 @@ export default {
             } else if (self.step == 3) {
                 data.oldSuggestion = self.projectDetail.stepThreeApp;
                 data.stepThreeApp = 0;
+                //删除未审核的数据
+                for (var i = 0; i < self.projectDetail.planYearsMoneyList.length; i++) {
+                    if( self.projectDetail.planYearsMoneyList[i].status == 2){
+                        self.projectDetail.planYearsMoneyList.splice(i,1);
+                    }
+                }
+                for (var i = 0; i < self.projectDetail.planYearsTopMoneyList.length; i++) {
+                    if(self.projectDetail.planYearsTopMoneyList[i].status == 2){
+                        self.projectDetail.planYearsTopMoneyList.splice(i,1);
+                    }
+                }
+                var list1 = _.cloneDeep(self.projectDetail.planYearsMoneyList);
+                var list2 = _.cloneDeep(self.projectDetail.planYearsTopMoneyList);
+                var list = list1.concat(list2);
+                var obj = self.mergeArr(list);
+                if (self.projectDetail.planYearsMoneyList.length > 0) {
+                    data.planYearsMoney = JSON.stringify(self.projectDetail.planYearsMoneyList);
+                }else{
+                    data.planYearsMoney = "";
+                }
+                if (self.projectDetail.planYearsTopMoneyList.length > 0) {
+                    data.planYearsTopMoney = JSON.stringify(self.projectDetail.planYearsTopMoneyList);
+                }else{
+                    data.planYearsTopMoney = "";
+                }
+                //计算合计累计安排
+                data.yearsPlanTotalMoneyNo = Utils.countTotalPlanMoney(obj);
+                //对象
+                data.yearsPlanTotalMoney = JSON.stringify(obj);
             } else if (self.step == 4) {
                 data.oldSuggestion = self.projectDetail.stepFourApp;
                 data.stepFourApp = 0;
@@ -582,12 +687,14 @@ export default {
                             message: "操作成功",
                             type: 'success'
                         });
-                        //todo 重新查询一下表格
+                        //重新查询一下表格
                         if (self.step == 1) {
                             self.$emit('unAppStep1');
                         } else if (self.step == 2) {
                             self.$emit('unAppStep2');
                         } else if (self.step == 3) {
+                            //更新
+                            self.deleteBudgetPlanMoneyList(self.projectDetail);
                             self.$emit('unAppStep3');
                         } else if (self.step == 4) {
                             self.$emit('unAppStep4');
@@ -613,6 +720,34 @@ export default {
                     }),
                 );
         },
+        deleteBudgetPlanMoneyList:function (detail) {
+            var self = this;
+            var data = {};
+            data.projectId = detail.id;
+            data.appStatus = 2;//删除状态为2
+            self.$http.post('/api/project/deleteBudgetPlanMoney', data).then(res => {
+                let status = res.status;
+                let statusText = res.statusText;
+                if (status !== 200) {
+                    self.$message({
+                        message: statusText,
+                        type: 'error'
+                    });
+                } else {
+                    if (res.data.length != 0) {
+
+                    } else {
+
+                    }
+                }
+            })
+                .catch(error =>
+                    self.$message({
+                        message: error.message,
+                        type: 'error'
+                    }),
+                );
+        }
 
     },
     filters: {
@@ -623,6 +758,7 @@ export default {
         renderPlanYearsMoney: Filters.renderPlanYearsMoney,
         renderPlanYearsSelfMoney: Filters.renderPlanYearsSelfMoney,
         renderBeginTime: Filters.renderBeginTime,
-        renderBoolean: Filters.renderBoolean
+        renderBoolean: Filters.renderBoolean,
+        renderPlanYearsMoneyList: Filters.renderPlanYearsMoneyList,
     }
 }
