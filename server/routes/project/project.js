@@ -619,6 +619,25 @@ router.post('/deleteBudgetPlanMoney', function (req, res, next) {
     });
 });
 
+//更新预算拨付表
+router.post('/updateAppropriateBudgetMoney', function (req, res, next) {
+    var param = req.body;
+    var whereObj = {projectId: param.projectId};
+    delete param.projectId;
+    db.update(param, whereObj, "dbo.appropriateMoney", function (err, result) {//查询所有news表的数据
+        res.json(result);
+    });
+});
+
+//删除状态为2的
+router.post('/deleteAppropriateMoney', function (req, res, next) {
+    var param = req.body;
+    var whereObj = {projectId: param.projectId,appStatus:param.appStatus};
+    db.del("where projectId = @projectId and appStatus = @appStatus", whereObj, "dbo.appropriateMoney", function (err, result) {//删除字段
+        res.json(result);
+    });
+});
+
 module.exports = router;
 
 

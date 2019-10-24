@@ -454,6 +454,16 @@ export default {
         }, {})
         return Object.keys(result).map(key => ({years: key, money: result[key]}))
     },
+    mergeArr1: function (arr) {
+        const result = arr.reduce((obj, item) => {
+            if (!obj[item.years]) {
+                obj[item.years] = 0
+            }
+            obj[item.years] += parseInt(item.money)
+            return obj
+        }, {})
+        return Object.keys(result).map(key => ({years: key, money: result[key]}))
+    },
     //计算年度累计安排
     countTotalPlanMoney: function (arr) {
         var self = this;

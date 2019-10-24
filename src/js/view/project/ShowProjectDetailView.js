@@ -85,6 +85,28 @@ export default {
                     self.projectDetail.planYearsTopMoneyList = [];
                     self.projectDetail.yearsPlanTotalTopMoneyList = [];
                 }
+                if (self.projectDetail.appropriateBudget) {//本级拨付
+                    self.projectDetail.appropriateBudgetList = JSON.parse(self.projectDetail.appropriateBudget);
+                    var list = JSON.parse(self.projectDetail.appropriateBudget);
+                    for (var y = 0; y < list.length; y++) {
+                        list[y].years = list[y].date.substring(0, 4);
+                    }
+                    self.projectDetail.appropriateTotalBudgetList = Utils.mergeArr(list);//累计上级
+                } else {
+                    self.projectDetail.appropriateBudgetList = [];
+                    self.projectDetail.appropriateTotalBudgetList = [];
+                }
+                if (self.projectDetail.appropriateTopBudget) {//上级拨付
+                    self.projectDetail.appropriateTopBudgetList = JSON.parse(self.projectDetail.appropriateTopBudget);
+                    var list = JSON.parse(self.projectDetail.appropriateTopBudget);
+                    for (var y = 0; y < list.length; y++) {
+                        list[y].years = list[y].date.substring(0, 4);
+                    }
+                    self.projectDetail.appropriateTopTotalBudgetList = Utils.mergeArr(list);//累计上级
+                } else {
+                    self.projectDetail.appropriateTopBudgetList = [];
+                    self.projectDetail.appropriateTopTotalBudgetList = [];
+                }
             }
         },
     },
@@ -313,7 +335,7 @@ export default {
             let self = this;
             let data = {};
             data.id = self.projectDetail.id;
-            if (self.projectDetail.approvalStep < 3) {
+            if (self.projectDetail.approvalStep <= 3) {
                 data.approvalStep = 4;
                 data.oldStep = 3;
             }
@@ -389,12 +411,41 @@ export default {
             return Object.keys(result).map(key => ({years: key, money: result[key]}))
         },
         //县级年度预算安排更新为通过
-        updateBudgetPlanMoneyList: function ( detail) {
+        updateBudgetPlanMoneyList: function (detail) {
             var self = this;
             var data = {};
             data.projectId = detail.id;
             data.appStatus = 1;//变成审核通过
             self.$http.post('/api/project/updateBudgetPlanMoney', data).then(res => {
+                let status = res.status;
+                let statusText = res.statusText;
+                if (status !== 200) {
+                    self.$message({
+                        message: statusText,
+                        type: 'error'
+                    });
+                } else {
+                    if (res.data.length != 0) {
+
+                    } else {
+
+                    }
+                }
+            })
+                .catch(error =>
+                    self.$message({
+                        message: error.message,
+                        type: 'error'
+                    }),
+                );
+        },
+        //预算拨付更新为通过
+        updateAppropriateBudgetMoneyList: function (detail) {
+            var self = this;
+            var data = {};
+            data.projectId = detail.id;
+            data.appStatus = 1;//变成审核通过
+            self.$http.post('/api/project/updateAppropriateBudgetMoney', data).then(res => {
                 let status = res.status;
                 let statusText = res.statusText;
                 if (status !== 200) {
@@ -423,7 +474,7 @@ export default {
             let self = this;
             let data = {};
             data.id = self.projectDetail.id;
-            if (self.projectDetail.approvalStep < 4) {
+            if (self.projectDetail.approvalStep <= 4) {
                 data.approvalStep = 5;
                 data.oldStep = 4;
             }
@@ -432,6 +483,32 @@ export default {
             data.oldSuggestion = 2;
             data.ifEdit = 0;
             data.projectFinance = self.user.role;
+            //存入总字段
+            var list1 = _.cloneDeep(self.projectDetail.appropriateBudgetList);
+            var list2 = _.cloneDeep(self.projectDetail.appropriateTopBudgetList);
+            var list = list1.concat(list2);
+            for (var y = 0; y < list.length; y++) {
+                list[y].years = list[y].date.substring(0, 4);
+            }
+            var obj = Utils.mergeArr(list);
+            //把所有的审核的status变成1
+            for (var i = 0; i < self.projectDetail.appropriateBudgetList.length; i++) {
+                self.projectDetail.appropriateBudgetList[i].status = 1;
+            }
+            for (var j = 0; j < self.projectDetail.appropriateTopBudgetList.length; j++) {
+                self.projectDetail.appropriateTopBudgetList[j].status = 1;
+            }
+            if (self.projectDetail.appropriateBudgetList.length > 0) {
+                data.appropriateBudget = JSON.stringify(self.projectDetail.appropriateBudgetList);
+            }
+            if (self.projectDetail.appropriateTopBudgetList.length > 0) {
+                data.appropriateTopBudget = JSON.stringify(self.projectDetail.appropriateTopBudgetList);
+            }
+            //计算合计累计拨付
+            data.approTotalPlanMoneyNo = Utils.countTotalPlanMoney(obj);
+            //对象
+            data.approTotalMoney = JSON.stringify(obj);
+            data.nonPaymentTotalMoneyNo = -parseInt(data.approTotalPlanMoneyNo - self.projectDetail.yearsPlanTotalMoneyNo);
             self.$http.post('/api/project/approvalProject', data).then(res => {
                 let status = res.status;
                 let statusText = res.statusText;
@@ -442,6 +519,8 @@ export default {
                     });
                 } else {
                     if (res.data.length != 0) {
+                        //将预算安排表里面的表的状态改成1，通过传入proid
+                        self.updateAppropriateBudgetMoneyList(self.projectDetail);
                         self.$message({
                             message: "审核成功",
                             type: 'success'
@@ -469,7 +548,7 @@ export default {
             let self = this;
             let data = {};
             data.id = self.projectDetail.id;
-            if (self.projectDetail.approvalStep < 5) {
+            if (self.projectDetail.approvalStep <= 5) {
                 data.approvalStep = 6;
                 data.oldStep = 5;
             }
@@ -632,13 +711,13 @@ export default {
                 data.stepThreeApp = 0;
                 //删除未审核的数据
                 for (var i = 0; i < self.projectDetail.planYearsMoneyList.length; i++) {
-                    if( self.projectDetail.planYearsMoneyList[i].status == 2){
-                        self.projectDetail.planYearsMoneyList.splice(i,1);
+                    if (self.projectDetail.planYearsMoneyList[i].status == 2) {
+                        self.projectDetail.planYearsMoneyList.splice(i, 1);
                     }
                 }
                 for (var i = 0; i < self.projectDetail.planYearsTopMoneyList.length; i++) {
-                    if(self.projectDetail.planYearsTopMoneyList[i].status == 2){
-                        self.projectDetail.planYearsTopMoneyList.splice(i,1);
+                    if (self.projectDetail.planYearsTopMoneyList[i].status == 2) {
+                        self.projectDetail.planYearsTopMoneyList.splice(i, 1);
                     }
                 }
                 var list1 = _.cloneDeep(self.projectDetail.planYearsMoneyList);
@@ -647,12 +726,12 @@ export default {
                 var obj = self.mergeArr(list);
                 if (self.projectDetail.planYearsMoneyList.length > 0) {
                     data.planYearsMoney = JSON.stringify(self.projectDetail.planYearsMoneyList);
-                }else{
+                } else {
                     data.planYearsMoney = "";
                 }
                 if (self.projectDetail.planYearsTopMoneyList.length > 0) {
                     data.planYearsTopMoney = JSON.stringify(self.projectDetail.planYearsTopMoneyList);
-                }else{
+                } else {
                     data.planYearsTopMoney = "";
                 }
                 //计算合计累计安排
@@ -662,6 +741,39 @@ export default {
             } else if (self.step == 4) {
                 data.oldSuggestion = self.projectDetail.stepFourApp;
                 data.stepFourApp = 0;
+                //删除未审核的数据
+                for (var i = 0; i < self.projectDetail.appropriateBudgetList.length; i++) {
+                    if (self.projectDetail.appropriateBudgetList[i].status == 2) {
+                        self.projectDetail.appropriateBudgetList.splice(i, 1);
+                    }
+                }
+                for (var j = 0; j < self.projectDetail.appropriateTopBudgetList.length; j++) {
+                    if (self.projectDetail.appropriateTopBudgetList[j].status == 2) {
+                        self.projectDetail.appropriateTopBudgetList.splice(j, 1);
+                    }
+                }
+                var list1 = _.cloneDeep(self.projectDetail.appropriateBudgetList);
+                var list2 = _.cloneDeep(self.projectDetail.appropriateTopBudgetList);
+                var list = list1.concat(list2);
+                for (var y = 0; y < list.length; y++) {
+                    list[y].years = list[y].date.substring(0, 4);
+                }
+                var obj = self.mergeArr(list);
+                if (self.projectDetail.appropriateBudgetList.length > 0) {
+                    data.appropriateBudget = JSON.stringify(self.projectDetail.appropriateBudgetList);
+                } else {
+                    data.appropriateBudget = "";
+                }
+                if (self.projectDetail.appropriateTopBudgetList.length > 0) {
+                    data.appropriateTopBudget = JSON.stringify(self.projectDetail.appropriateTopBudgetList);
+                } else {
+                    data.appropriateTopBudget = "";
+                }
+                //计算合计累计拨付
+                data.approTotalPlanMoneyNo = Utils.countTotalPlanMoney(obj);
+                //对象
+                data.approTotalMoney = JSON.stringify(obj);
+                data.nonPaymentTotalMoneyNo = -parseInt(data.approTotalPlanMoneyNo - self.projectDetail.yearsPlanTotalMoneyNo);
             } else if (self.step == 5) {
                 data.oldSuggestion = self.projectDetail.stepFiveApp;
                 data.stepFiveApp = 0;
@@ -697,6 +809,8 @@ export default {
                             self.deleteBudgetPlanMoneyList(self.projectDetail);
                             self.$emit('unAppStep3');
                         } else if (self.step == 4) {
+                            //删除表里的信息
+                            self.deleteAppBudgetMoneyList(self.projectDetail);
                             self.$emit('unAppStep4');
                         } else if (self.step == 5) {
                             self.$emit('unAppStep5');
@@ -720,7 +834,7 @@ export default {
                     }),
                 );
         },
-        deleteBudgetPlanMoneyList:function (detail) {
+        deleteBudgetPlanMoneyList: function (detail) {
             var self = this;
             var data = {};
             data.projectId = detail.id;
@@ -747,7 +861,36 @@ export default {
                         type: 'error'
                     }),
                 );
-        }
+        },
+
+        deleteAppBudgetMoneyList: function (detail) {
+            var self = this;
+            var data = {};
+            data.projectId = detail.id;
+            data.appStatus = 2;//删除状态为2
+            self.$http.post('/api/project/deleteAppropriateMoney', data).then(res => {
+                let status = res.status;
+                let statusText = res.statusText;
+                if (status !== 200) {
+                    self.$message({
+                        message: statusText,
+                        type: 'error'
+                    });
+                } else {
+                    if (res.data.length != 0) {
+
+                    } else {
+
+                    }
+                }
+            })
+                .catch(error =>
+                    self.$message({
+                        message: error.message,
+                        type: 'error'
+                    }),
+                );
+        },
 
     },
     filters: {

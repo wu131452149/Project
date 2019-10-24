@@ -5,7 +5,7 @@
             <el-collapse-item name="1">
                 <template slot="title">
                     <div class="f-l line-height-30 excessEllipsis  width-per100">
-                    <span class="bold">项目基本信息</span></div>
+                        <span class="bold">项目基本信息</span></div>
                 </template>
                 <div class="info-content scrollBar-inner width-per100 margin-t10 padding-0-20">
                     <div class="inline-block font13 width-per45 ver-text-top margin-t-15 margin-r">
@@ -132,7 +132,8 @@
             </el-collapse-item>
             <!--项目预算 end-->
             <!--项目预算年度安排 start-->
-            <el-collapse-item name="3" v-if="projectDetail.planYearsMoney||projectDetail.planYearsSelfMoney||projectDetail.planYearsTopMoney">
+            <el-collapse-item name="3"
+                              v-if="projectDetail.planYearsMoney||projectDetail.planYearsSelfMoney||projectDetail.planYearsTopMoney">
                 <template slot="title">
                     <div class="f-l line-height-30 excessEllipsis  width-per100">
                         <span class="bold">预算年度安排</span></div>
@@ -144,11 +145,13 @@
                             <div>
                                 <span class="info-val plan-years" v-if="projectDetail.planYearsSelfMoney">{{projectDetail.planYearsSelfMoney|renderPlanYearsSelfMoney}}</span>
                                 <span class="info-val plan-years" v-for="item in projectDetail.planYearsMoneyList">
-                                    <font color="red" v-if="item.status==2">{{item.years}},本级年度安排{{item.money}}(万元)</font>
+                                    <font color="red"
+                                          v-if="item.status==2">{{item.years}},本级年度安排{{item.money}}(万元)</font>
                                     <font v-else>{{item.years}},本级年度安排{{item.money}}(万元)</font>
                                 </span>
                                 <span class="info-val plan-years" v-for="item in projectDetail.planYearsTopMoneyList">
-                                    <font color="red" v-if="item.status==2">{{item.years}},上级年度安排{{item.money}}(万元)</font>
+                                    <font color="red"
+                                          v-if="item.status==2">{{item.years}},上级年度安排{{item.money}}(万元)</font>
                                     <font v-else>{{item.years}},上级年度安排{{item.money}}(万元)</font>
                                 </span>
                                 <!--总计-->
@@ -156,7 +159,8 @@
                                 <span class="info-val plan-years" v-for="item in projectDetail.yearsPlanTotalMoneyList">
                                     <font>{{item.years}},本级累计年度安排{{item.money}}(万元)</font>
                                 </span>
-                                <span class="info-val plan-years" v-for="item in projectDetail.yearsPlanTotalTopMoneyList">
+                                <span class="info-val plan-years"
+                                      v-for="item in projectDetail.yearsPlanTotalTopMoneyList">
                                     <font>{{item.years}},上级累计年度安排{{item.money}}(万元)</font>
                                 </span>
                             </div>
@@ -176,15 +180,29 @@
                     <div class="inline-block font13 width-per45 ver-text-top margin-t-15 margin-r">
                         <div class="clearFix">
                             <span class="info-label">预算拨付：</span>
-                            <div v-for="item in appropriateBudget" v-if="projectDetail.appropriateBudget">
-                            <span class="info-val plan-years">
-                                {{item.date}},本级拨付{{parseInt(item.money)}}（万元）
-                            </span>
-                            </div>
-                            <div v-for="item in appropriateTopBudget" v-if="projectDetail.appropriateTopBudget">
-                            <span class="info-val plan-years">
-                                {{item.date}},上级拨付{{parseInt(item.money)}}（万元）
-                            </span>
+                            <div>
+                                <span class="info-val plan-years"
+                                      v-for="item in projectDetail.appropriateBudgetList">
+                                    <font color="red"
+                                          v-if="item.status==2">{{item.date}},本级年度拨付{{item.money}}(万元)</font>
+                                    <font v-else>{{item.date}},本级年度拨付{{item.money}}(万元)</font>
+                                </span>
+                                <span class="info-val plan-years"
+                                      v-for="item in projectDetail.appropriateTopBudgetList">
+                                    <font color="red"
+                                          v-if="item.status==2">{{item.date}},上级年度拨付{{item.money}}(万元)</font>
+                                    <font v-else>{{item.date}},上级年度拨付{{item.money}}(万元)</font>
+                                </span>
+                                <!--总计-->
+                                <span class="info-label">累计：</span>
+                                <span class="info-val plan-years"
+                                      v-for="item in projectDetail.appropriateTotalBudgetList">
+                                    <font>{{item.years}}年度,本级累计年度拨付{{item.money}}(万元)</font>
+                                </span>
+                                <span class="info-val plan-years"
+                                      v-for="item in projectDetail.appropriateTopTotalBudgetList">
+                                    <font>{{item.years}}年度,上级累计年度拨付{{item.money}}(万元)</font>
+                                </span>
 
                             </div>
                         </div>
@@ -302,7 +320,8 @@
             <div class="demo-drawer__footer margin-t-25" style="text-align: center;">
                 <el-button type="primary" @click="approvalProject" :loading="loading">{{ loading ? '提交中 ...' : '审核通过' }}
                 </el-button>
-                <el-button type="primary" @click="disApprovalProject" :loading="loading">{{ loading ? '提交中 ...' : '审核不通过' }}
+                <el-button type="primary" @click="disApprovalProject" :loading="loading">{{ loading ? '提交中 ...' :
+                    '审核不通过' }}
                 </el-button>
             </div>
         </div>
@@ -319,7 +338,8 @@
     .right-header {
         background-color: #f2f6ff
     }
-    .plan-years{
+
+    .plan-years {
         width: 100%;
     }
 

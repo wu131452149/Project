@@ -35,9 +35,9 @@ export default {
                         }
                     }
                     var total = total1 + total2 + parseInt(value);
-                    console.log(total1);
-                    console.log(total2);
-                    console.log(total);
+                    // console.log(total1);
+                    // console.log(total2);
+                    // console.log(total);
                 }
                 if (total > self.projectDetail.budgetReviewMoney) {
                     callback(new Error('累计县级预算合计必须小于等于预算评审金额总数'));

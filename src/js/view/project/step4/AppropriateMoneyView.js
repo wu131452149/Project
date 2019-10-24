@@ -12,6 +12,24 @@ export default {
         "show-project-Detail": ShowProjectDetail
     },
     data() {
+        var checkMoney = (rule, value, callback) => {
+            var self = this;
+            if (!value) {
+                return callback(new Error('请输入金额'));
+            }
+            setTimeout(() => {
+                //累计拨付小于累计安排，累计安排总数yearsPlanTotalMoneyNo，累计拨付总数approTotalPlanMoneyNo
+                if(!self.projectDetail.approTotalPlanMoneyNo){
+                    self.projectDetail.approTotalPlanMoneyNo = 0;
+                }
+                var total = parseInt(self.projectDetail.approTotalPlanMoneyNo) + parseInt(value);
+                if (total > self.projectDetail.yearsPlanTotalMoneyNo) {
+                    callback(new Error('累计拨付总数必须小于等于累计安排总数'));
+                } else {
+                    callback();
+                }
+            }, 1000);
+        };
         return {
             activeNames:[],
             showEdit: false,
@@ -46,7 +64,10 @@ export default {
             yearsPlanType: Utils.getOptionYears(),
             rules: {
                 money: [
-                    {required: true, message: '请输入金额', trigger: 'blur'},
+                    {required: true, trigger: 'blur', validator: checkMoney},
+                ],
+                type: [
+                    {required: true, message: '请选择拨付类型', trigger: 'change'},
                 ],
             },
             user: {},
@@ -323,67 +344,28 @@ export default {
                     //存入数据库
                     if (editBudgetData.type == "县级预算安排") {
                         //存入数据库
-                        var obj = self.initObj(self.projectDetail.appropriateBudget, editBudgetData);
-                        var newObj = JSON.stringify(obj);
-                        self.projectDetail.appropriateBudget = newObj;
-                        editBudgetData.appropriateBudget = newObj;
-                        //拨付总表
-                        var planYearsMoney = "";
-                        if (self.projectDetail.appropriateTopBudget) {
-                            planYearsMoney = JSON.parse(self.projectDetail.appropriateTopBudget);
+                        var obj = {};
+                        if(!self.projectDetail.appropriateBudget){//第一次录入拨付
+                            obj = JSON.stringify([{date: Utils.format(editBudgetData.years), money: editBudgetData.money,status:2}]);//status是审核状态
+                        }else{
+                            var newObj = JSON.parse(self.projectDetail.appropriateBudget);//先解成数组；
+                            newObj.push({date: Utils.format(editBudgetData.years), money: parseInt(editBudgetData.money),status:2});
+                            obj = JSON.stringify(newObj);
                         }
-                        for (var x = 0; x < obj.length; x++) {
-                            if (obj[x].date) {
-                                obj[x].years = obj[x].date.substr(0, 4);
-                            }
-                        }
-                        for (var y = 0; y < planYearsMoney.length; y++) {
-                            if (planYearsMoney[y].date) {
-                                planYearsMoney[y].years = planYearsMoney[y].date.substr(0, 4);
-                            }
-                        }
-                        if (planYearsMoney.length > 0) {
-                            var concat = obj.concat(planYearsMoney);
-                        } else {
-                            var concat = obj;
-                        }
-                        var concat1 = Utils.mergeArr(concat);
-                        //计算合计累计安排
-                        editBudgetData.approTotalPlanMoneyNo = Utils.countTotalPlanMoney(concat1);
-                        editBudgetData.nonPaymentTotalMoneyNo = -parseInt(editBudgetData.approTotalPlanMoneyNo - self.projectDetail.yearsPlanTotalMoneyNo);
-                        //对象
-                        editBudgetData.approTotalMoney = JSON.stringify(concat1);
+                        self.projectDetail.appropriateBudget = obj;
+                        editBudgetData.appropriateBudget = obj;
                     } else if (editBudgetData.type == "上级专款") {
-                        var obj = self.initObj(self.projectDetail.appropriateTopBudget, editBudgetData);
-                        var newObj = JSON.stringify(obj);
-                        self.projectDetail.appropriateTopBudget = newObj;
-                        editBudgetData.appropriateTopBudget = newObj;
-                        //拨付总计
-                        var planYearsMoney = "";
-                        if (self.projectDetail.appropriateBudget) {
-                            planYearsMoney = JSON.parse(self.projectDetail.appropriateBudget);
+                        //存入数据库
+                        var obj = {};
+                        if(!self.projectDetail.appropriateTopBudget){//第一次录入拨付
+                            obj = JSON.stringify([{date: Utils.format(editBudgetData.years), money: parseInt(editBudgetData.money),status:2}]);//status是审核状态
+                        }else{
+                            var newObj = JSON.parse(self.projectDetail.appropriateTopBudget);//先解成数组；
+                            newObj.push({date: Utils.format(editBudgetData.years), money: parseInt(editBudgetData.money),status:2});
+                            obj = JSON.stringify(newObj);
                         }
-                        for (var x = 0; x < obj.length; x++) {
-                            if (obj[x].date) {
-                                obj[x].years = obj[x].date.substr(0, 4);
-                            }
-                        }
-                        for (var y = 0; y < planYearsMoney.length; y++) {
-                            if (planYearsMoney[y].date) {
-                                planYearsMoney[y].years = planYearsMoney[y].date.substr(0, 4);
-                            }
-                        }
-                        if (planYearsMoney.length > 0) {
-                            var concat = obj.concat(planYearsMoney);
-                        } else {
-                            var concat = obj;
-                        }
-                        var concat1 = Utils.mergeArr(concat);
-                        //计算合计累计安排
-                        editBudgetData.approTotalPlanMoneyNo = Utils.countTotalPlanMoney(concat1);
-                        editBudgetData.nonPaymentTotalMoneyNo = parseInt(editBudgetData.approTotalPlanMoneyNo - self.projectDetail.yearsPlanTotalMoneyNo);
-                        //对象
-                        editBudgetData.approTotalMoney = JSON.stringify(concat1);
+                        self.projectDetail.appropriateTopBudget = obj;
+                        editBudgetData.appropriateTopBudget = obj;
                     }
                     delete editBudgetData.years;
                     delete editBudgetData.money;
@@ -414,7 +396,6 @@ export default {
                                     message: error.message,
                                     type: 'error'
                                 }),
-                            self.logining = false
                         );
                 } else {
                     console.log('error submit!!');
@@ -449,7 +430,10 @@ export default {
                 money: self.editAppropriateMoneyProject.money,
                 projectId: self.projectDetail.id,
                 userName: self.user.role,
-                createTime: Utils.formatDate(new Date()) + ".000"
+                createTime: Utils.formatDate(new Date()) + ".000",
+                appStatus:2,//待审核
+                role:self.projectDetail.projectFinance,
+                years:self.editAppropriateMoneyProject.years.getFullYear()
             };
             self.$http.post('/api/project/addAppMoney', editAppMoneyData).then(res => {
                 let status = res.status;

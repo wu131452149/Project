@@ -181,13 +181,13 @@
                     <span>预算拨付</span>
                     <el-form :model="editAppropriateMoneyProject" :rules="rules" class="width300"
                              ref="editAppropriateMoneyProject">
-                        <el-form-item prop="money">
+                        <el-form-item prop="type">
                             <el-date-picker type="date" placeholder="选择预算拨付时间"
                                             v-model="editAppropriateMoneyProject.years"></el-date-picker>
                             <el-select
                                 v-model="editAppropriateMoneyProject.type"
                                 style="margin-left: 20px;"
-                                placeholder="请选择">
+                                placeholder="请选择" required>
                                 <el-option
                                     v-for="item in yearsPlanType"
                                     :key="item.value"
@@ -195,9 +195,9 @@
                                 </el-option>
                             </el-select>
                         </el-form-item>
-                        <el-form-item>
+                        <el-form-item prop="money">
                             <el-input style="width: 100px;" placeholder="请输入金额"
-                                      v-model="editAppropriateMoneyProject.money" maxlength="15">
+                                      v-model="editAppropriateMoneyProject.money" maxlength="15" required>
                                 <template slot="append">万元</template>
                             </el-input>
                         </el-form-item>
