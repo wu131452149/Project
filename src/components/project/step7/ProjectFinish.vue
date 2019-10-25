@@ -171,7 +171,7 @@
                     <span>项目决算信息录入</span>
                     <el-form :model="editBudgetFinish" :rules="rules" class="width300" ref="editBudgetPlan">
                         <el-form-item label="决算评审金额">
-                            <el-input placeholder="请输入决算评审金额" v-model="editBudgetFinish.finishMoney" maxlength="15">
+                            <el-input placeholder="请输入决算评审金额" type="number" v-model="editBudgetFinish.finishMoney" maxlength="15">
                                 <template slot="append">万元</template>
                             </el-input>
                         </el-form-item>

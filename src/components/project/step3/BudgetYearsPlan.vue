@@ -202,7 +202,7 @@
                                 </el-option>
                             </el-select>
                             <!--累计县级预算安排总数 需小于等于预算评审金额-->
-                            <el-input placeholder="请输入金额" v-model="editBudgetYearsPlan.money" maxlength="15">
+                            <el-input placeholder="请输入金额" type="number" v-model="editBudgetYearsPlan.money" maxlength="15">
                                 <template slot="append">万元</template>
                             </el-input>
                         </el-form-item>

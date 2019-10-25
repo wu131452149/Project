@@ -14,7 +14,7 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="财政归口股室">
+            <el-form-item label="财政归口股室" prop="projectFinance">
                 <el-select v-model="createProject.projectFinance" placeholder="请选择财政归口股室">
                     <el-option label="行政政法股" value="行政政法股"></el-option>
                     <el-option label="科教文股" value="科教文股"></el-option>
@@ -35,7 +35,7 @@
                 </el-radio-group>
             </el-form-item>
             <el-form-item label="投资估算总额" prop="projectMoney">
-                <el-input placeholder="请输入投资估算总额" v-model="createProject.projectMoney" maxlength="15">
+                <el-input placeholder="请输入投资估算总额" type="number" v-model="createProject.projectMoney" maxlength="15">
                     <template slot="append">万元</template>
                 </el-input>
             </el-form-item>

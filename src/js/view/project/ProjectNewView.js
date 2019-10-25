@@ -38,6 +38,9 @@ export default {
                 projectInstitution: [
                     {required: true, message: '请选择项目单位', trigger: 'change'}
                 ],
+                projectFinance: [
+                    {required: true, message: '请选择财政归口股室', trigger: 'change'}
+                ],
                 projectName: [
                     {required: true, message: '请输入项目名称', trigger: 'blur'},
                 ],

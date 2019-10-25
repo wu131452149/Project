@@ -178,8 +178,8 @@
                                           :value="item.value"></el-radio>
                             </el-radio-group>
                         </el-form-item>
-                        <el-form-item label="预算评审金额">
-                            <el-input placeholder="请输入预算评审金额" v-model="editBudgetPlan.budgetReviewMoney" maxlength="15">
+                        <el-form-item label="预算评审金额" prop="budgetReviewMoney">
+                            <el-input placeholder="请输入预算评审金额"  type="number" v-model="editBudgetPlan.budgetReviewMoney" maxlength="15">
                                 <template slot="append">万元</template>
                             </el-input>
                         </el-form-item>

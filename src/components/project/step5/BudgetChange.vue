@@ -200,7 +200,7 @@
                                     :value="item.value">
                                 </el-option>
                             </el-select>
-                            <el-input style="vertical-align: middle;" placeholder="请输入金额" v-model="editBudgetChange.money" maxlength="15">
+                            <el-input style="vertical-align: middle;" placeholder="请输入金额" type="number" v-model="editBudgetChange.money" maxlength="15">
                                 <template slot="append">万元</template>
                             </el-input>
                         </el-form-item>

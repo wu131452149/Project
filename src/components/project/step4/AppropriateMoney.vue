@@ -196,7 +196,7 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item prop="money">
-                            <el-input style="width: 100px;" placeholder="请输入金额"
+                            <el-input style="width: 100px;" placeholder="请输入金额" type="number"
                                       v-model="editAppropriateMoneyProject.money" maxlength="15" required>
                                 <template slot="append">万元</template>
                             </el-input>
