@@ -63,7 +63,7 @@ router.post('/queryAllProject', function (req, res, next) {
 router.post('/createProject', function (req, res, next) {
     var param = req.body;
     db.add(param, dbName, function (err, result) {//插入一条project
-        if (result.rowsAffected.length > 0) {
+        if (result.rowsAffected && result.rowsAffected.length > 0) {
             //插入一条表在newProject
             var whereSql = "where role = '" + param.projectFinance + "'";
             db.select(dbNewPro, 1, whereSql, "", "order by id", function (err, res1) {
@@ -121,9 +121,8 @@ router.post('/approvalProject', function (req, res, next) {
     delete param.oldSuggestion;
     delete param.projectFinance;
     db.update(param, whereObj, dbName, function (err, result) {//查询所有news表的数据
-        if (result.rowsAffected.length > 0) {
+        if (result.rowsAffected && result.rowsAffected.length > 0) {
             //查询newProject的表
-            //TODO 把每个步骤的审核的单位去掉
             var whereSql = "where role = '" + projectFinance + "'";
             db.select(dbNewPro, 1, whereSql, "", "order by id", function (err, res1) {
                 if (res1.recordset.length > 0) {
@@ -189,7 +188,7 @@ router.post('/updateProject', function (req, res, next) {
         delete param.projectFinance;
     }
     db.update(param, whereObj, dbName, function (err, result) {//查询所有news表的数据
-        if (result.rowsAffected.length > 0) {
+        if (result.rowsAffected && result.rowsAffected.length > 0) {
             //传入审批项目的人（插入一条表在newProject）
             var whereSql = "where role = '" + projectFinance + "'";
             db.select(dbNewPro, 1, whereSql, "", "order by id", function (err, res1) {
@@ -559,10 +558,10 @@ router.post('/queryAllBudgetReviewMoney', function (req, res, next) {
     var param = req.body;
     var whereSql = " where 1=1 ";
     if (param.commitName) {
-        whereSql = whereSql + "and commitName = '" + param.commitName+"'";
+        whereSql = whereSql + "and commitName = '" + param.commitName + "'";
     }
     if (param.projectFinance) {
-        whereSql = whereSql + "and projectFinance = '" + param.projectFinance+"'";
+        whereSql = whereSql + "and projectFinance = '" + param.projectFinance + "'";
     }
     var sql = "SELECT SUM(projectMoney) as projectMoney,SUM(budgetReviewMoney) as budgetReviewMoney,SUM(nonPaymentTotalMoneyNo) as nonPaymentTotalMoneyNo FROM dbo.project" + whereSql;
     db.querySql(sql, "", function (err, result) {//查询所有news表的数据
@@ -575,10 +574,10 @@ router.post('/queryAllAppropriateMoney', function (req, res, next) {
     var param = req.body;
     var whereSql = " where 1=1 ";
     if (param.userName) {
-        whereSql = whereSql + "and userName = '" + param.userName+"'";
+        whereSql = whereSql + "and userName = '" + param.userName + "'";
     }
     if (param.role) {
-        whereSql = whereSql + "and role = '" + param.role+"'";
+        whereSql = whereSql + "and role = '" + param.role + "'";
     }
     var sql = "SELECT SUM(money) as money FROM dbo.appropriateMoney" + whereSql;
     db.querySql(sql, "", function (err, result) {//查询所有news表的数据
@@ -591,10 +590,10 @@ router.post('/queryAllBudgetPlanMoney', function (req, res, next) {
     var param = req.body;
     var whereSql = " where 1=1 ";
     if (param.userName) {
-        whereSql = whereSql + "and userName = '" + param.userName+"'";
+        whereSql = whereSql + "and userName = '" + param.userName + "'";
     }
     if (param.role) {
-        whereSql = whereSql + "and role = '" + param.role+"'";
+        whereSql = whereSql + "and role = '" + param.role + "'";
     }
     var sql = "SELECT SUM(money) as money FROM dbo.budgetPlanMoney" + whereSql;
     db.querySql(sql, "", function (err, result) {//查询所有news表的数据
@@ -613,7 +612,7 @@ router.post('/updateBudgetPlanMoney', function (req, res, next) {
 //删除状态为2的
 router.post('/deleteBudgetPlanMoney', function (req, res, next) {
     var param = req.body;
-    var whereObj = {projectId: param.projectId,appStatus:param.appStatus};
+    var whereObj = {projectId: param.projectId, appStatus: param.appStatus};
     db.del("where projectId = @projectId and appStatus = @appStatus", whereObj, "dbo.budgetPlanMoney", function (err, result) {//删除字段
         res.json(result);
     });
@@ -632,12 +631,11 @@ router.post('/updateAppropriateBudgetMoney', function (req, res, next) {
 //删除状态为2的
 router.post('/deleteAppropriateMoney', function (req, res, next) {
     var param = req.body;
-    var whereObj = {projectId: param.projectId,appStatus:param.appStatus};
+    var whereObj = {projectId: param.projectId, appStatus: param.appStatus};
     db.del("where projectId = @projectId and appStatus = @appStatus", whereObj, "dbo.appropriateMoney", function (err, result) {//删除字段
         res.json(result);
     });
 });
-
 
 
 /*************统计************/
@@ -646,16 +644,16 @@ router.post('/queryAllAppropriateMoneyList', function (req, res, next) {
     var param = req.body;
     //SELECT userName,type,years,SUM(money) as money FROM dbo.appropriateMoney GROUP BY userName,type,years
     var data = "years";
-    if(param.userName){
-        data = data+","+"userName";
+    if (param.userName) {
+        data = data + "," + "userName";
     }
-    if(param.type){
-        data = data+","+"type";
+    if (param.type) {
+        data = data + "," + "type";
     }
-    if(param.role){
-        data = data+","+"role";
+    if (param.role) {
+        data = data + "," + "role";
     }
-    var sql = "SELECT "+data+", SUM(money) as money FROM dbo.appropriateMoney GROUP BY "+data;
+    var sql = "SELECT " + data + ", SUM(money) as money FROM dbo.appropriateMoney GROUP BY " + data;
     db.querySql(sql, "", function (err, result) {//查询所有news表的数据
         res.json(result);
     });
@@ -666,16 +664,16 @@ router.post('/queryAllBudgetPlanMoneyList', function (req, res, next) {
     var param = req.body;
     //SELECT userName,type,years,SUM(money) as money FROM dbo.appropriateMoney GROUP BY userName,type,years
     var data = "years";
-    if(param.userName){
-        data = data+","+"userName";
+    if (param.userName) {
+        data = data + "," + "userName";
     }
-    if(param.type){
-        data = data+","+"type";
+    if (param.type) {
+        data = data + "," + "type";
     }
-    if(param.role){
-        data = data+","+"role";
+    if (param.role) {
+        data = data + "," + "role";
     }
-    var sql = "SELECT "+data+", SUM(money) as money FROM dbo.budgetPlanMoney GROUP BY "+data;
+    var sql = "SELECT " + data + ", SUM(money) as money FROM dbo.budgetPlanMoney GROUP BY " + data;
     db.querySql(sql, "", function (err, result) {//查询所有news表的数据
         res.json(result);
     });
