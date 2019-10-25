@@ -339,14 +339,14 @@ export default {
                         if (res.data.length != 0) {
                             //横线那里改成退库中
                             self.$message({
-                                message: "申请退库成功",
+                                message: "删除成功",
                                 type: 'success'
                             });
                             //查询当前页数据
                             self.queryNewProject(true);
                         } else {
                             self.$message({
-                                message: "申请退库失败",
+                                message: "删除失败",
                                 type: 'warning'
                             });
                         }

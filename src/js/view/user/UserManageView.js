@@ -8,6 +8,23 @@ import Filters from "../common/Filters";
 export default {
     name: "UserManageView",
     data() {
+        var checkUser = (rule, value, callback) => {
+            var self = this;
+            if (!value) {
+                return callback(new Error('请输入用户名'));
+            }
+            setTimeout(() => {
+                //检测用户列表有无重复的名字
+                var index = _.findIndex(self.allUserList, function (o) {
+                    return o.userName == value;
+                });
+                if(index>-1){
+                    callback(new Error('已存在此用户，请重新填写'));
+                } else {
+                    callback();
+                }
+            }, 1000);
+        };
         return {
             table: false,
             dialog: false,
@@ -43,7 +60,7 @@ export default {
             },
             rules: {
                 userName: [
-                    {required: true, message: '请输入用户名', trigger: 'blur'}
+                    {required: true, trigger: 'blur',validator: checkUser}
                 ],
                 grade: [
                     {required: true, message: '请选择级别', trigger: 'change'},
@@ -56,7 +73,8 @@ export default {
                 ],
             },
             user: {},
-            formLabelWidth: '80px'
+            formLabelWidth: '80px',
+            allUserList:[]
         };
     },
     mounted: function () {
@@ -64,8 +82,37 @@ export default {
         self.user = JSON.parse(window.sessionStorage.getItem('user'));
         self.queryUsers();
         self.queryUsersCount();
+        self.queryAllUsers();
     },
     methods: {
+        queryAllUsers:function(){
+            let self = this;
+            self.$http.post('/api/user/queryUserName').then(res => {
+                let status = res.status;
+                let statusText = res.statusText;
+                if (status !== 200) {
+                    self.$message({
+                        message: statusText,
+                        type: 'error'
+                    });
+                } else {
+                    if (res.data.length != 0) {
+                        self.allUserList = res.data.recordset;
+                    } else {
+                        self.$message({
+                            message: "查询失败",
+                            type: 'warning'
+                        });
+                    }
+                }
+            })
+                .catch(error =>
+                    self.$message({
+                        message: error.message,
+                        type: 'error'
+                    }),
+                );
+        },
         showCreateUsers: function () {
             var self = this;
             //显示项目详情，并且显示预算信息
@@ -260,6 +307,7 @@ export default {
                         if (flag) {
                             self.queryUsersCount(data);
                         }
+                        self.queryAllUsers();
                     } else {
                         self.$message({
                             message: "查询失败",
@@ -274,8 +322,6 @@ export default {
                         type: 'error'
                     }),
                 );
-
-
         },
         showDefaultQuickQuery: function (flag) {
             var self = this;

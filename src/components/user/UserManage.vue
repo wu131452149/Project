@@ -109,20 +109,20 @@
             :before-close="handleClose">
             <div class="wrap wrap-crowded position-r clearfix scrollBar-inner" style="height: 500px;">
                 <el-form :model="createUser" :rules="rules" class="width300" ref="createUser">
-                    <el-form-item label="用户名" prop="userName">
+                    <el-form-item label="用户名" prop="userName" class="margin-b10">
                         <el-input v-model="createUser.userName" autocomplete="off"></el-input>
                     </el-form-item>
-                    <el-form-item label="级别"  prop="grade">
+                    <el-form-item label="级别"  prop="grade" class="margin-b10">
                         <el-radio-group v-model="createUser.grade">
                             <el-radio label="1" value="1"></el-radio>
                             <el-radio label="2" value="2"></el-radio>
                             <el-radio label="3" value="3"></el-radio>
                         </el-radio-group>
                     </el-form-item>
-                    <el-form-item label="密码"  prop="password">
+                    <el-form-item label="密码"  prop="password" class="margin-b10">
                         <el-input v-model="createUser.password" autocomplete="off"></el-input>
                     </el-form-item>
-                    <el-form-item label="单位"  prop="role">
+                    <el-form-item label="单位"  prop="role" class="margin-b10">
                         <el-input  v-model="createUser.role" autocomplete="off"></el-input>
                     </el-form-item>
                 </el-form>

@@ -164,5 +164,16 @@ router.post('/deleteUser', function (req, res, next) {
         res.json(result);
     });
 });
+router.post('/queryUserName', function (req, res, next) {
+    db.selectAll(dbName, function (err, data) {//查询userName
+        if (err) {
+            console.log("Error:" + err);
+            return res;
+        }
+        //封装一下
+        res.json(data);
+    })
+});
+
 
 module.exports = router;
