@@ -60,5 +60,8 @@ export default {
     mounted: function () {
 
     },
-    methods: {}
+    methods: {},
+    activated: function() {
+        this.getCase()
+    }
 }

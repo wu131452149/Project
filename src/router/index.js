@@ -21,6 +21,9 @@ export default new Router({
             path: '/*',
             name: 'mainFrame',
             component: MainFrame,
+            meta: {
+                keepAlive: false // 不需要被缓存
+            },
             children: [
                 {
                     path: '',
