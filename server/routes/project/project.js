@@ -45,6 +45,12 @@ router.post('/queryAllProject', function (req, res, next) {
     if (param.projectFinance) {
         whereSql = whereSql + " and projectFinance= '" + param.projectFinance + "'";
     }
+    var step = param.approvalStep;
+    if (step == 1 || step == 7) {
+        whereSql = whereSql + " and approvalStep= " + step ;
+    }else{
+        whereSql = whereSql + " and approvalStep>1 and  approvalStep<7";
+    }
     //var pageSize = 10;
     //分页查询
     // select * from [cz].[dbo].[project] where 1=1 and projectYears= 2 order by [id] offset 10*1 rows fetch next 10 rows only
@@ -494,6 +500,12 @@ router.post('/queryAllProjectCount', function (req, res, next) {
     }
     if (param.projectFinance) {
         whereSql = whereSql + " and projectFinance= '" + param.projectFinance + "'";
+    }
+    var step = param.approvalStep;
+    if (step == 1 || step == 7) {
+        whereSql = whereSql + " and approvalStep= " + step ;
+    }else{
+        whereSql = whereSql + " and approvalStep>1 and  approvalStep<7";
     }
     var sql = "select count(id) as num from " + dbName + " " + whereSql;
     db.querySql(sql, "", function (err, result) {//查询所有news表的数据

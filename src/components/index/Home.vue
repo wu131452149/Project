@@ -247,6 +247,14 @@
                                           prefix-icon="el-icon-search"
                                           class="input-with-select nick-name-input"></el-input>
                             </el-form-item>
+                            <el-form-item label="项目阶段" prop="projectYears" class="margin-r5">
+                                <el-select v-model="allProject.formData.approvalStep" clearable
+                                           placeholder="项目阶段">
+                                    <el-option :label="'新建库'" :value="'1'"></el-option>
+                                    <el-option :label="'在建库'" :value="'2-6'"></el-option>
+                                    <el-option :label="'完工库'" :value="'7'"></el-option>
+                                </el-select>
+                            </el-form-item>
                             <!--<el-button plain-->
                             <!--class="margin-t4 margin-l-5 color-blue border-blue"-->
                             <!--@click="showMoreQuery =! showMoreQuery">-->
