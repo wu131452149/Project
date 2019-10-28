@@ -6,6 +6,7 @@ import BudgetApproval from "../../../components/project/step2/BudgetApproval";
 import BudgetYearsPlan from "../../../components/project/step3/BudgetYearsPlan";
 import ProjectNew from "../../../components/project/ProjectNew";
 import ShowProjectDetail from "../../../components/project/ShowProjectDetail";
+import EventBus from "../../lib/event/EventBus";
 import Vue from "vue";
 
 export default {
@@ -35,6 +36,12 @@ export default {
         if(self.user.grade==2){
             self.queryIfNewProject();
         }
+        EventBus.$on("hideTwoBadge",function () {
+            self.showStepTwoRed = false;
+        });
+        EventBus.$on("hideThreeBadge",function () {
+            self.showStepThreeRed = false;
+        });
     },
     methods: {
         queryIfNewProject: function () {

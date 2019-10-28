@@ -4,6 +4,7 @@
  **/
 import Filters from "../common/Filters";
 import Utils from "../../lib/Utils/Utils";
+import EventBus from "../../lib/event/EventBus";
 
 export default {
     name: "ShowProjectDetailView",
@@ -240,6 +241,13 @@ export default {
             }
 
         },
+        //去除在建库的小红点
+        eventBusToDeleteRed: function (data) {
+            var total = parseInt(data.stepTwo) + parseInt(data.stepThree) + parseInt(data.stepFour) + parseInt(data.stepFive) + parseInt(data.stepSix);
+            if (total == 0) {
+                EventBus.$emit('hideMenuBadge', 'project_doing');
+            }
+        },
         //审核新建库
         approvalNewProject: function () {
             //审核通过，把第2步状态改为3，并且把项目step改成2
@@ -268,6 +276,11 @@ export default {
                             message: "审核成功",
                             type: 'success'
                         });
+                        //当stepOne=0的时候发送到前端消除小红点
+                        var data = res.data.recordsets[0];
+                        if (data.stepOne == 0) {
+                            EventBus.$emit('hideMenuBadge', 'show_new_project');
+                        }
                         //关闭当前页，查询当前表格
                         self.$emit('appStep1');
                     } else {
@@ -312,6 +325,13 @@ export default {
                             message: "审核成功",
                             type: 'success'
                         });
+                        //当stepTwo=0的时候发送到前端消除小红点
+                        var data = res.data.recordsets[0];
+                        if (data.stepTwo == 0) {
+                            EventBus.$emit('hideTwoBadge');
+                        }
+                        //去除在建库的小红点
+                        self.eventBusToDeleteRed(data);
                         //关闭当前页，查询当前表格
                         self.$emit('appStep2');
                     } else {
@@ -382,6 +402,12 @@ export default {
                             message: "审核成功",
                             type: 'success'
                         });
+                        var data = res.data.recordsets[0];
+                        if (data.stepThree == 0) {
+                            EventBus.$emit('hideThreeBadge');
+                        }
+                        //去除在建库的小红点
+                        self.eventBusToDeleteRed(data);
                         //关闭当前页，查询当前表格
                         self.$emit('appStep3');
                     } else {
@@ -525,6 +551,12 @@ export default {
                             message: "审核成功",
                             type: 'success'
                         });
+                        var data = res.data.recordsets[0];
+                        if (data.stepFour == 0) {
+                            EventBus.$emit('hideFourBadge');
+                        }
+                        //去除在建库的小红点
+                        self.eventBusToDeleteRed(data);
                         //关闭当前页，查询当前表格
                         self.$emit('appStep4');
                     } else {
@@ -571,6 +603,12 @@ export default {
                             message: "审核成功",
                             type: 'success'
                         });
+                        var data = res.data.recordsets[0];
+                        if (data.stepFive == 0) {
+                            EventBus.$emit('hideFiveBadge');
+                        }
+                        //去除在建库的小红点
+                        self.eventBusToDeleteRed(data);
                         //关闭当前页，查询当前表格
                         self.$emit('appStep5');
                     } else {
@@ -591,7 +629,6 @@ export default {
         //6三方审核
         approvalTri: function () {
             //审核通过，把第一步状态改为1，并且把项目step改成6
-            //todo 插入一张log表
             let self = this;
             let data = {};
             data.id = self.projectDetail.id;
@@ -624,6 +661,12 @@ export default {
                             message: "审核成功",
                             type: 'success'
                         });
+                        var data = res.data.recordsets[0];
+                        if (data.stepSix == 0) {
+                            EventBus.$emit('hideSixBadge');
+                        }
+                        //去除在建库的小红点
+                        self.eventBusToDeleteRed(data);
                         //关闭当前页，查询当前表格
                         self.$emit('appStep6');
                     } else {
@@ -644,7 +687,6 @@ export default {
         //7审核决算
         approvalFinish: function () {
             //审核通过，把第一步状态改为1，并且把项目step改成6
-            //todo 插入一张log表
             let self = this;
             let data = {};
             data.id = self.projectDetail.id;
@@ -668,6 +710,10 @@ export default {
                             message: "审核成功",
                             type: 'success'
                         });
+                        var data = res.data.recordsets[0];
+                        if (data.stepSeven == 0) {
+                            EventBus.$emit('hideMenuBadge', 'project_finish');
+                        }
                         //关闭当前页，查询当前表格
                         self.$emit('appStep7');
                     } else {
@@ -697,9 +743,9 @@ export default {
             let self = this;
             let data = {};
             //步骤等于当前的步骤，把审核状态改为0
-            data.approvalStep = self.step;
             data.id = self.projectDetail.id;
             data.oldStep = self.step;
+            data.projectFinance = self.user.role;
             if (self.step == 1) {
                 data.oldSuggestion = self.projectDetail.stepOneApp;
                 data.stepOneApp = 0;
@@ -800,23 +846,56 @@ export default {
                             type: 'success'
                         });
                         //重新查询一下表格
+                        var data = res.data.recordsets[0];
                         if (self.step == 1) {
+                            //当stepOne=0的时候发送到前端消除小红点
+                            if (data.stepOne == 0) {
+                                EventBus.$emit('hideMenuBadge', 'show_new_project');
+                            }
                             self.$emit('unAppStep1');
                         } else if (self.step == 2) {
+                            if (data.stepTwo == 0) {
+                                EventBus.$emit('hideTwoBadge');
+                            }
+                            //去除在建库的小红点
+                            self.eventBusToDeleteRed(data);
                             self.$emit('unAppStep2');
                         } else if (self.step == 3) {
                             //更新
+                            if (data.stepThree == 0) {
+                                EventBus.$emit('hideThreeBadge');
+                            }
+                            //去除在建库的小红点
+                            self.eventBusToDeleteRed(data);
                             self.deleteBudgetPlanMoneyList(self.projectDetail);
                             self.$emit('unAppStep3');
                         } else if (self.step == 4) {
+                            if (data.stepFour == 0) {
+                                EventBus.$emit('hideFourBadge');
+                            }
+                            //去除在建库的小红点
+                            self.eventBusToDeleteRed(data);
                             //删除表里的信息
                             self.deleteAppBudgetMoneyList(self.projectDetail);
                             self.$emit('unAppStep4');
                         } else if (self.step == 5) {
+                            if (data.stepFive == 0) {
+                                EventBus.$emit('hideFiveBadge');
+                            }
+                            //去除在建库的小红点
+                            self.eventBusToDeleteRed(data);
                             self.$emit('unAppStep5');
                         } else if (self.step == 6) {
+                            if (data.stepSix == 0) {
+                                EventBus.$emit('hideSixBadge');
+                            }
+                            //去除在建库的小红点
+                            self.eventBusToDeleteRed(data);
                             self.$emit('unAppStep6');
                         } else if (self.step == 7) {
+                            if (data.stepSeven == 0) {
+                                EventBus.$emit('hideMenuBadge', 'project_finish');
+                            }
                             self.$emit('unAppStep7');
                         }
                     } else {

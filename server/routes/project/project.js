@@ -69,7 +69,7 @@ router.post('/queryAllProject', function (req, res, next) {
 router.post('/createProject', function (req, res, next) {
     var param = req.body;
     db.add(param, dbName, function (err, result) {//插入一条project
-        if (result.rowsAffected && result.rowsAffected.length > 0) {
+        if (result && result.rowsAffected && result.rowsAffected.length > 0) {
             //插入一条表在newProject
             var whereSql = "where role = '" + param.projectFinance + "'";
             db.select(dbNewPro, 1, whereSql, "", "order by id", function (err, res1) {
@@ -89,7 +89,6 @@ router.post('/createProject', function (req, res, next) {
             res.json(result);
         }
 
-
     });
 });
 
@@ -98,27 +97,6 @@ router.post('/approvalProject', function (req, res, next) {
     var param = req.body;
     var step = param.oldStep;
     var whereObj = {id: param.id};
-    if (param.oldStep == 1) {
-        //如果是第1步并且是stepOneApp待审核状态也就是等于2，则更新为审核状态
-        whereObj.stepOneApp = param.oldSuggestion;
-    } else if (param.oldStep == 2) {
-        //如果是第2步并且是stepTwoApp待审核状态也就是等于2，则更新为审核状态
-        whereObj.stepTwoApp = param.oldSuggestion;
-    } else if (param.oldStep == 3) {
-        whereObj.stepThreeApp = param.oldSuggestion;
-        delete param.stepThreeApp;
-    } else if (param.oldStep == 4) {
-        whereObj.stepFourApp = param.oldSuggestion;
-        delete param.stepFourApp;
-    } else if (param.oldStep == 5) {
-        whereObj.stepFiveApp = param.oldSuggestion;
-        delete param.stepFiveApp;
-    } else if (param.oldStep == 6) {
-        whereObj.stepSixApp = param.oldSuggestion;
-        delete param.stepSixApp;
-    } else if (param.oldStep == 7) {
-        whereObj.stepSevenApp = param.oldSuggestion;
-    }
     if (param.projectFinance) {
         var projectFinance = param.projectFinance;
     }
@@ -127,7 +105,7 @@ router.post('/approvalProject', function (req, res, next) {
     delete param.oldSuggestion;
     delete param.projectFinance;
     db.update(param, whereObj, dbName, function (err, result) {//查询所有news表的数据
-        if (result.rowsAffected && result.rowsAffected.length > 0) {
+        if (result && result.rowsAffected && result.rowsAffected.length > 0) {
             //查询newProject的表
             var whereSql = "where role = '" + projectFinance + "'";
             db.select(dbNewPro, 1, whereSql, "", "order by id", function (err, res1) {
@@ -172,6 +150,7 @@ router.post('/approvalProject', function (req, res, next) {
                         }
                     }
                     db.update(data, whereObj, dbNewPro, function (err, result2) {//插入一条新的数据
+                        result.recordsets.push(data);
                         res.json(result);
                     });
                 } else {
@@ -215,7 +194,7 @@ router.post('/updateProject', function (req, res, next) {
         delete param.projectFinance;
     }
     db.update(param, whereObj, dbName, function (err, result) {//查询所有news表的数据
-        if (result.rowsAffected && result.rowsAffected.length > 0) {
+        if (result && result.rowsAffected && result.rowsAffected.length > 0) {
             //传入审批项目的人（插入一条表在newProject）
             var whereSql = "where role = '" + projectFinance + "'";
             db.select(dbNewPro, 1, whereSql, "", "order by id", function (err, res1) {

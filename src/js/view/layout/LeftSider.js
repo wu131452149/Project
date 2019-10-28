@@ -31,10 +31,10 @@ export default {
           if(self.user.grade==2){
               self.queryIfNewProject();
           }
-          EventBus.$on("showMenuBadge", function (navMenuID, pageID) {
+          EventBus.$on("showMenuBadge", function (pageID) {
               Vue.set(self.badge, pageID, true);
           });
-          EventBus.$on("hideMenuBadge", function (navMenuID, pageID) {
+          EventBus.$on("hideMenuBadge", function (pageID) {
               Vue.delete(self.badge, pageID);
           });
       },

@@ -5,6 +5,7 @@
 import AppropriateMoney from "../../../components/project/step4/AppropriateMoney";
 import BudgetChange from "../../../components/project/step5/BudgetChange";
 import ProjectProgressAndTriInfo from "../../../components/project/step6/ProjectProgressAndTriInfo";
+import EventBus from "../../lib/event/EventBus";
 
 
 export default {
@@ -36,13 +37,20 @@ export default {
         };
     },
     mounted: function () {
-        //this.queryBudgetPlanProject();
-        //this.queryBudgetPlanProjectCount();
         var self = this;
         self.user = JSON.parse(sessionStorage.getItem('user'));
         if(self.user.grade==2){
             self.queryIfNewProject();
         }
+        EventBus.$on("hideFourBadge",function () {
+            self.showStepFourRed = false;
+        });
+        EventBus.$on("hideFiveBadge",function () {
+            self.showStepFiveRed = false;
+        });
+        EventBus.$on("hideSixBadge",function () {
+            self.showStepSixRed = false;
+        });
     },
     methods: {
         queryIfNewProject: function () {
