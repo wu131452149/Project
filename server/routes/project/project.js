@@ -47,8 +47,8 @@ router.post('/queryAllProject', function (req, res, next) {
     }
     var step = param.approvalStep;
     if (step == 1 || step == 7) {
-        whereSql = whereSql + " and approvalStep= " + step ;
-    }else{
+        whereSql = whereSql + " and approvalStep= " + step;
+    } else {
         whereSql = whereSql + " and approvalStep>1 and  approvalStep<7";
     }
     //var pageSize = 10;
@@ -137,18 +137,39 @@ router.post('/approvalProject', function (req, res, next) {
                     delete data.id;
                     if (step == 1) {
                         data.stepOne = data.stepOne - 1;
+                        if (data.stepOne < 0) {
+                            data.stepOne = 0;
+                        }
                     } else if (step == 2) {
                         data.stepTwo = data.stepTwo - 1;
+                        if (data.stepTwo < 0) {
+                            data.stepTwo = 0;
+                        }
                     } else if (step == 3) {
                         data.stepThree = data.stepThree - 1;
+                        if (data.stepThree < 0) {
+                            data.stepThree = 0;
+                        }
                     } else if (step == 4) {
                         data.stepFour = data.stepFour - 1;
+                        if (data.stepFour < 0) {
+                            data.stepFour = 0;
+                        }
                     } else if (step == 5) {
                         data.stepFive = data.stepFive - 1;
+                        if (data.stepFive < 0) {
+                            data.stepFive = 0;
+                        }
                     } else if (step == 6) {
                         data.stepSix = data.stepSix - 1;
+                        if (data.stepSix < 0) {
+                            data.stepSix = 0;
+                        }
                     } else if (step == 7) {
                         data.stepSeven = data.stepSeven - 1;
+                        if (data.stepSeven < 0) {
+                            data.stepSeven = 0;
+                        }
                     }
                     db.update(data, whereObj, dbNewPro, function (err, result2) {//插入一条新的数据
                         res.json(result);
@@ -331,8 +352,19 @@ router.post('/queryProject', function (req, res, next) {
         res.json(result);
     });
 
-
 });
+//查询project表
+router.post('/queryOneProject', function (req, res, next) {
+    var param = req.body;
+    var whereSql = " where 1=1";
+    if (param.id) {
+        whereSql = whereSql + " and id= " + param.id;
+    }
+    db.select(dbName, 1, whereSql, "", "order by id", function (err, result) {//查询所有news表的数据
+        res.json(result);
+    });
+});
+
 //查询退库project表
 router.post('/queryReturnProject', function (req, res, next) {
     var param = req.body;
@@ -503,8 +535,8 @@ router.post('/queryAllProjectCount', function (req, res, next) {
     }
     var step = param.approvalStep;
     if (step == 1 || step == 7) {
-        whereSql = whereSql + " and approvalStep= " + step ;
-    }else{
+        whereSql = whereSql + " and approvalStep= " + step;
+    } else {
         whereSql = whereSql + " and approvalStep>1 and  approvalStep<7";
     }
     var sql = "select count(id) as num from " + dbName + " " + whereSql;

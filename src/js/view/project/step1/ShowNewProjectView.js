@@ -16,8 +16,8 @@ export default {
     },
     data() {
         return {
-            activeNames:[],
-            commitType:"",
+            activeNames: [],
+            commitType: "",
             objDrawer: this.$refs,
             drawerDetails: false,
             drawerCreate: false,
@@ -39,9 +39,9 @@ export default {
             showCountNumber: true,
             IsNewMediaSessionLargeData: '',
             projectDetail: {},
-            levelOneList:[],
-            levelOne:"",
-            newInstituation:[],
+            levelOneList: [],
+            levelOne: "",
+            newInstituation: [],
             user: {
                 grade: 0,
                 userName: "",
@@ -57,12 +57,12 @@ export default {
         self.user = JSON.parse(sessionStorage.getItem('user'));
         //var list = JSON.parse(window.sessionStorage.getItem('institution'));
         self.queryInstitution(function (list) {
-            if(self.user.grade==1){
+            if (self.user.grade == 1) {
                 self.projectInstitutionList = list;
                 console.log(list);
-            }else{
+            } else {
                 self.levelOneList = Utils.initLevelOne(list);
-                self.projectInstitutionList = Utils.initLevelTwo(self.levelOneList,list);
+                self.projectInstitutionList = Utils.initLevelTwo(self.levelOneList, list);
             }
         })
     },
@@ -169,9 +169,9 @@ export default {
 
         },
         handleClose(done) {
-           done();
+            done();
         },
-        commitProjectAgain:function(e,data){
+        commitProjectAgain: function (e, data) {
             let self = this;
             self.drawerCreate = true;
             self.projectDetail = data;
@@ -265,9 +265,45 @@ export default {
                 );
 
         },
-
-        //退库
-        returnProject: function (e, project) {
+        returnProjectDoing: function (project) {
+            let self = this;
+            let data = {};
+            data.id = project.id;
+            data.approvalStep = 0;
+            data.ifReturned = 1;
+            self.$http.post('/api/project/returnProject', data).then(res => {
+                let status = res.status;
+                let statusText = res.statusText;
+                if (status !== 200) {
+                    self.$message({
+                        message: statusText,
+                        type: 'error'
+                    });
+                } else {
+                    if (res.data.length != 0) {
+                        //横线那里改成退库中
+                        self.$message({
+                            message: "申请退库成功",
+                            type: 'success'
+                        });
+                        //查询当前页数据
+                        self.queryNewProject(true);
+                    } else {
+                        self.$message({
+                            message: "申请退库失败",
+                            type: 'warning'
+                        });
+                    }
+                }
+            })
+                .catch(error =>
+                    self.$message({
+                        message: error.message,
+                        type: 'error'
+                    }),
+                );
+        },
+        returnProject: function (e,project) {
             let self = this;
             self.$confirm('此操作将退库, 是否继续?', '提示', {
                 confirmButtonText: '确定',
@@ -276,9 +312,7 @@ export default {
             }).then(() => {
                 let data = {};
                 data.id = project.id;
-                data.approvalStep = 0;
-                data.ifReturned = 1;
-                self.$http.post('/api/project/returnProject', data).then(res => {
+                self.$http.post('/api/project/queryOneProject', data).then(res => {
                     let status = res.status;
                     let statusText = res.statusText;
                     if (status !== 200) {
@@ -288,16 +322,25 @@ export default {
                         });
                     } else {
                         if (res.data.length != 0) {
-                            //横线那里改成退库中
-                            self.$message({
-                                message: "申请退库成功",
-                                type: 'success'
-                            });
-                            //查询当前页数据
-                            self.queryNewProject(true);
+                            if (res.data && res.data.recordset.length > 0 && res.data.recordset[0]) {
+                                if (res.data.recordset[0].stepOneApp != 1) {
+                                    self.returnProjectDoing(project);
+                                }else{
+                                    self.$message({
+                                        message: "删除失败,该项目已通过审核",
+                                        type: 'warning'
+                                    });
+                                }
+
+                            } else {
+                                self.$message({
+                                    message: "不存在此项目",
+                                    type: 'warning'
+                                });
+                            }
                         } else {
                             self.$message({
-                                message: "申请退库失败",
+                                message: "查询失败",
                                 type: 'warning'
                             });
                         }
@@ -310,15 +353,12 @@ export default {
                         }),
                     );
             }).catch(() => {
-                // self.$message({
-                //     type: 'info',
-                //     message: '已取消'
-                // });
+
             });
 
         },
         //删除项目
-        deleteProject:function(e, project){
+        deleteProject: function (e, project) {
             let self = this;
             self.$confirm('确定删除该项目吗?', '提示', {
                 confirmButtonText: '确定',
@@ -327,7 +367,8 @@ export default {
             }).then(() => {
                 let data = {};
                 data.id = project.id;
-                self.$http.post('/api/project/deleteProject', data).then(res => {
+                //查询stepOneApp是否审核，若已经审核不可以删除
+                self.$http.post('/api/project/queryOneProject', data).then(res => {
                     let status = res.status;
                     let statusText = res.statusText;
                     if (status !== 200) {
@@ -337,16 +378,54 @@ export default {
                         });
                     } else {
                         if (res.data.length != 0) {
-                            //横线那里改成退库中
-                            self.$message({
-                                message: "删除成功",
-                                type: 'success'
-                            });
-                            //查询当前页数据
-                            self.queryNewProject(true);
+                            if (res.data && res.data.recordset.length > 0 && res.data.recordset[0]) {
+                                if (res.data.recordset[0].stepOneApp != 1) {
+                                    self.$http.post('/api/project/deleteProject', data).then(res => {
+                                        let status = res.status;
+                                        let statusText = res.statusText;
+                                        if (status !== 200) {
+                                            self.$message({
+                                                message: statusText,
+                                                type: 'error'
+                                            });
+                                        } else {
+                                            if (res.data.length != 0) {
+                                                //横线那里改成退库中
+                                                self.$message({
+                                                    message: "删除成功",
+                                                    type: 'success'
+                                                });
+                                                //查询当前页数据
+                                                self.queryNewProject(true);
+                                            } else {
+                                                self.$message({
+                                                    message: "删除失败",
+                                                    type: 'warning'
+                                                });
+                                            }
+                                        }
+                                    })
+                                        .catch(error =>
+                                            self.$message({
+                                                message: error.message,
+                                                type: 'error'
+                                            }),
+                                        );
+                                }else{
+                                    self.$message({
+                                        message: "删除失败,该项目已通过审核",
+                                        type: 'warning'
+                                    });
+                                }
+                            } else {
+                                self.$message({
+                                    message: "不存在此项目",
+                                    type: 'warning'
+                                });
+                            }
                         } else {
                             self.$message({
-                                message: "删除失败",
+                                message: "查询失败",
                                 type: 'warning'
                             });
                         }
@@ -366,27 +445,36 @@ export default {
             self.drawerDetails = true;
             self.projectDetail = data;
             self.activeNames = ['1'];
-        },
+        }
+        ,
         //关闭表格查询当前页数据
-        handleAppStep1:function(){
+        handleAppStep1: function () {
             var self = this;
             self.closeForm();
             //查询当前页数据
             self.queryNewProject(true);
-        },
+        }
+        ,
         closeForm: function () {
             var self = this;
             self.$refs.editProjectNew.closeDrawer();
             //self.showEdit = false;
-        },
-    },
+        }
+        ,
+    }
+    ,
     filters: {
         renderMoneyFrom: Filters.renderMoneyFrom,
-        renderIndustry: Filters.renderIndustry,
-        renderStatus: Filters.renderStatus,
-        renderStep: Filters.renderStep,
-        renderBeginTime: Filters.renderBeginTime,
-        renderProjectYears: Filters.renderProjectYears
+        renderIndustry:
+        Filters.renderIndustry,
+        renderStatus:
+        Filters.renderStatus,
+        renderStep:
+        Filters.renderStep,
+        renderBeginTime:
+        Filters.renderBeginTime,
+        renderProjectYears:
+        Filters.renderProjectYears
 
     }
 }
