@@ -48,8 +48,10 @@ router.post('/queryAllProject', function (req, res, next) {
     var step = param.approvalStep;
     if (step == 1 || step == 7) {
         whereSql = whereSql + " and approvalStep= " + step;
-    } else {
+    } else if (step == '2-6') {
         whereSql = whereSql + " and approvalStep>1 and  approvalStep<7";
+    } else {
+        whereSql = whereSql;
     }
     //var pageSize = 10;
     //分页查询
@@ -65,6 +67,44 @@ router.post('/queryAllProject', function (req, res, next) {
     });
 });
 
+//首页的报表统计
+router.post('/queryAllProjectWithoutPage', function (req, res, next) {
+    var param = req.body;
+    var whereSql = " where 1=1";
+    if (param.id) {
+        whereSql = whereSql + " and id= " + param.id;
+    }
+    if (param.projectInstitution) {
+        whereSql = whereSql + " and projectInstitution = '" + param.projectInstitution + "'";
+    }
+    if (param.projectName) {
+        whereSql = whereSql + " and projectName = '" + param.projectName + "'";
+    }
+    if (param.projectType) {
+        whereSql = whereSql + " and projectType= '" + param.projectType + "'";
+    }
+    if (param.projectYears) {
+        whereSql = whereSql + " and projectYears= " + param.projectYears;
+    }
+    if (param.commitName) {
+        whereSql = whereSql + " and commitName= '" + param.commitName + "'";
+    }
+    if (param.projectFinance) {
+        whereSql = whereSql + " and projectFinance= '" + param.projectFinance + "'";
+    }
+    var step = param.approvalStep;
+    if (step == 1 || step == 7) {
+        whereSql = whereSql + " and approvalStep= " + step;
+    } else if (step == '2-6') {
+        whereSql = whereSql + " and approvalStep>1 and  approvalStep<7";
+    } else {
+        whereSql = whereSql;
+    }
+    var sql = "select * from " + dbName + " " + whereSql;
+    db.querySql(sql, "", function (err, result) {//查询所有news表的数据
+        res.json(result);
+    });
+});
 //新建project
 router.post('/createProject', function (req, res, next) {
     var param = req.body;
@@ -515,8 +555,10 @@ router.post('/queryAllProjectCount', function (req, res, next) {
     var step = param.approvalStep;
     if (step == 1 || step == 7) {
         whereSql = whereSql + " and approvalStep= " + step;
-    } else {
+    } else if (step == '2-6') {
         whereSql = whereSql + " and approvalStep>1 and  approvalStep<7";
+    } else {
+        whereSql = whereSql;
     }
     var sql = "select count(id) as num from " + dbName + " " + whereSql;
     db.querySql(sql, "", function (err, result) {//查询所有news表的数据

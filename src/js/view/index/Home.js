@@ -12,6 +12,7 @@ export default {
     },
     data() {
         return {
+            sums:[],
             activeNames: [],
             userInfoActiveName: "pro-monitor",
             o: 2,
@@ -34,6 +35,9 @@ export default {
                 },
                 count: 0,
                 currentPage: 1
+            },
+            sumProject: {
+                sumProjectList: [],
             },
             showCountNumber: true,
             IsNewMediaSessionLargeData: '',
@@ -71,6 +75,7 @@ export default {
         self.queryAllBudgetReviewMoney();//预算评审金额和估算总额
         self.queryAllAppropriateMoney();//查询拨付金额
         self.queryAllBudgetPlanMoney();//查询年度安排金额
+        self.queryAllProjectWithoutPage();
 
     },
     methods: {
@@ -220,6 +225,41 @@ export default {
             this.allProject.formData.projectInstitution = value;
         },
         //查询报表,查询所有报表
+        queryAllProjectWithoutPage: function () {
+            let self = this;
+            let data = _.cloneDeep(self.allProject.formData);
+            if (self.user.grade == 1) {//第一个项目查自己的加上条件
+                data.commitName = self.user.role;
+            } else if (self.user.grade == 2) {
+                data.projectFinance = self.user.role;
+            }
+            self.$http.post('/api/project/queryAllProjectWithoutPage', data).then(res => {
+                let status = res.status;
+                let statusText = res.statusText;
+                if (status !== 200) {
+                    self.$message({
+                        message: statusText,
+                        type: 'error'
+                    });
+                } else {
+                    if (res.data.length != 0) {
+                        self.sumProject.sumProjectList = res.data.recordset;
+                    } else {
+                        self.$message({
+                            message: "查询失败",
+                            type: 'warning'
+                        });
+                    }
+                }
+            })
+                .catch(error =>
+                    self.$message({
+                        message: error.message,
+                        type: 'error'
+                    }),
+                );
+        },
+        //查询报表,查询所有报表
         queryAllProject: function (flag) {
             let self = this;
             let data = _.cloneDeep(self.allProject.formData);
@@ -244,6 +284,7 @@ export default {
                         if (flag) {
                             self.queryAllProjectCount(data);
                         }
+                        self.queryAllProjectWithoutPage();
                     } else {
                         self.$message({
                             message: "查询失败",
@@ -276,7 +317,6 @@ export default {
                 } else {
                     if (res.data.length != 0) {
                         self.budgetYearsPlanMoneyList = res.data.recordset;
-                        //todo 封装成总数
                     } else {
                         self.$message({
                             message: "查询成功",
@@ -331,6 +371,38 @@ export default {
                 );
 
         },
+        //合计
+        getSummaries:function(param){
+            const { columns, data } = param;
+            const sums = [];
+            columns.forEach((column, index) => {
+                if (index === 0) {
+                    sums[index] = '总金额';
+                    return;
+                }
+                const values = data.map(item => Number(item[column.property]));
+                if (!values.every(value => isNaN(value))) {
+                    sums[index] = values.reduce((prev, curr) => {
+                        const value = Number(curr);
+                        if (!isNaN(value)) {
+                            return prev + curr;
+                        } else {
+                            return prev;
+                        }
+                    }, 0);
+                    sums[index] += ' 万元';
+                } else {
+                    sums[index] = 'N/A';
+                }
+            });
+            return sums;
+        },
+        // 获取columns
+        getColumns(param) {
+            const { columns } = param;
+            this.columns = columns;
+            return []
+        },
         showAllProjectDetails: function (e, data) {
             let self = this;
             self.drawerDetails = true;
@@ -373,6 +445,7 @@ export default {
             self.allProject.formData.projectName = "";
             self.allProject.formData.projectYears = "";
             self.allProject.formData.id = "";
+            self.allProject.formData.approvalStep = "";
             self.levelOne = "";
             if (flag) {
                 self.queryAllProject(true);
