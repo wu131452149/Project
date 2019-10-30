@@ -571,6 +571,10 @@
     .all-form-without-page .el-table__footer-wrapper{
         overflow: auto;
     }
+    .all-form-without-page .el-table .el-table__footer-wrapper .el-table__footer td .cell{
+        white-space: normal !important;
+    }
+
     .all-form-without-page .el-table{
         height: 7% !important;
     }

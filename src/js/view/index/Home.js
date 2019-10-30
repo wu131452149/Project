@@ -377,7 +377,7 @@ export default {
             const sums = [];
             columns.forEach((column, index) => {
                 if (index === 0) {
-                    sums[index] = '总金额';
+                    sums[index] = '总金额(万元）';
                     return;
                 }
                 if (index === 2) {
@@ -398,7 +398,7 @@ export default {
                             return prev;
                         }
                     }, 0);
-                    sums[index] += ' 万元';
+                    sums[index] += ' ';
                 } else {
                     sums[index] = 'N/A';
                 }
