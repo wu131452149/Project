@@ -380,6 +380,14 @@ export default {
                     sums[index] = '总金额';
                     return;
                 }
+                if (index === 2) {
+                    sums[index] = 'N/A';
+                    return;
+                }
+                if (index === 5) {
+                    sums[index] = 'N/A';
+                    return;
+                }
                 const values = data.map(item => Number(item[column.property]));
                 if (!values.every(value => isNaN(value))) {
                     sums[index] = values.reduce((prev, curr) => {
@@ -395,6 +403,7 @@ export default {
                     sums[index] = 'N/A';
                 }
             });
+            self.sums = sums;
             return sums;
         },
         // 获取columns

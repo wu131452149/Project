@@ -171,7 +171,7 @@
             ref = "budgetChange"
             size=55%
             :before-close="handleClose">
-            <div style="overflow: auto;height: 500px;">
+            <div style="overflow: auto;">
                 <show-project-Detail @onListen="handleClose"
                                      :projectDetail="projectDetail"
                                      @appStep5="handleAppStep5"

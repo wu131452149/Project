@@ -156,7 +156,7 @@
             custom-class="demo-drawer"
             size=55%
             :before-close="handleClose">
-            <div class="scrollBar-inner" style="height: 430px;">
+            <div class="scrollBar-inner">
                 <show-project-Detail @onListen="handleClose"
                                      @appStep3="handleAppStep3"
                                      @unAppStep3="handleAppStep3"

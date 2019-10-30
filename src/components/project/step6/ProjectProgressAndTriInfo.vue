@@ -173,7 +173,7 @@
             ref = "proAndTri"
             size=55%
             :before-close="handleClose">
-            <div style="overflow: auto;height: 500px;">
+            <div style="overflow: auto;">
                 <show-project-Detail @onListen="handleClose"
                                      @appStep6="handleAppStep6"
                                      @unAppStep6="handleAppStep6"

@@ -384,6 +384,15 @@ export default {
                 }
             }
 
+        },
+        'type':{
+            immediate: true,
+            handler: function (val) {
+                var self = this;
+                if(val=='new'){
+                    self.clearFormData();
+                }
+            }
         }
     },
 }

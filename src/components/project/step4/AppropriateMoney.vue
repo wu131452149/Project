@@ -165,7 +165,7 @@
             custom-class="demo-drawer"
             size=55%
             :before-close="handleClose">
-            <div style="overflow: auto;height: 500px;">
+            <div style="overflow: auto;">
                 <show-project-Detail @onListen="handleClose"
                                      @appStep4="handleAppStep4"
                                      @unAppStep4="handleAppStep4"

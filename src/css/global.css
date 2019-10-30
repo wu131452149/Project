@@ -1045,4 +1045,7 @@ table {
 .width200 .el-input,.width200 .el-input__inner,.width200 .el-textarea__inner{
     width: 200px
 }
+.el-drawer{
+    overflow-y: auto;
+}
 /*public style end*/

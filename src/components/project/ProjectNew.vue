@@ -2,7 +2,7 @@
 <template>
     <!--录入项目信息-->
 
-    <div class="project-new wrap wrap-crowded position-r clearfix scrollBar-inner" style="height: 520px;">
+    <div class="project-new wrap wrap-crowded position-r clearfix scrollBar-inner">
         <el-form :model="createProject" :rules="rules" class="width300" ref="createProject">
             <el-form-item label="项目单位" prop="projectInstitution">
                 <el-select v-model="createProject.projectInstitution" placeholder="请选择项目单位">
@@ -78,7 +78,7 @@
         </el-form>
         <div class="demo-drawer__footer margin-t-25" style="text-align: center;">
             <el-button @click="closeForm">取 消</el-button>
-            <el-button v-if="!type" type="primary" @click="commitForm" :loading="loading">{{ loading ? '提交中 ...' : '提交' }}
+            <el-button v-if="type == 'new'" type="primary" @click="commitForm" :loading="loading">{{ loading ? '提交中 ...' : '提交' }}
             </el-button>
             <el-button v-if="type=='recommit'" type="primary" @click="updateForm(1)" :loading="loading">{{ loading ? '提交中 ...' : '重新提交' }}
             </el-button>

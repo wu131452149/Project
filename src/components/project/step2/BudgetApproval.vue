@@ -158,7 +158,7 @@
             ref = "drawerBudget"
             size=55%
             :before-close="handleClose">
-            <div class="scrollBar-inner" style="height: 430px;">
+            <div class="scrollBar-inner">
                 <show-project-Detail @onListen="handleClose"
                                      @appStep2="handleAppStep2"
                                      @unAppStep2="handleAppStep2"

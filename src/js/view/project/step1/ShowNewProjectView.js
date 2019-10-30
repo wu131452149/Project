@@ -166,6 +166,7 @@ export default {
         createNewProject: function () {
             let self = this;
             self.drawerCreate = true;
+            self.commitType = 'new';
 
         },
         handleClose(done) {

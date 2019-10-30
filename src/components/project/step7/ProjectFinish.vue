@@ -155,7 +155,7 @@
             ref = "finishProject"
             size=55%
             :before-close="handleClose">
-            <div class="scrollBar-inner" style="height: 500px;">
+            <div class="scrollBar-inner">
                 <show-project-Detail @onListen="handleClose"
                                      @appStep7="handleAppStep7"
                                      @unAppStep7="handleAppStep7"
