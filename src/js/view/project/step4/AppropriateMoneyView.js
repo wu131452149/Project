@@ -22,7 +22,7 @@ export default {
                 if(!self.projectDetail.approTotalPlanMoneyNo){
                     self.projectDetail.approTotalPlanMoneyNo = 0;
                 }
-                var total = parseInt(self.projectDetail.approTotalPlanMoneyNo) + parseInt(value);
+                var total = Number(self.projectDetail.approTotalPlanMoneyNo) + Number(value);
                 if (total > self.projectDetail.yearsPlanTotalMoneyNo) {
                     callback(new Error('累计拨付总数必须小于等于累计安排总数'));
                 } else {
@@ -349,7 +349,7 @@ export default {
                             obj = JSON.stringify([{date: Utils.format(editBudgetData.years), money: editBudgetData.money,status:2}]);//status是审核状态
                         }else{
                             var newObj = JSON.parse(self.projectDetail.appropriateBudget);//先解成数组；
-                            newObj.push({date: Utils.format(editBudgetData.years), money: parseInt(editBudgetData.money),status:2});
+                            newObj.push({date: Utils.format(editBudgetData.years), money: Number(editBudgetData.money),status:2});
                             obj = JSON.stringify(newObj);
                         }
                         self.projectDetail.appropriateBudget = obj;
@@ -358,10 +358,10 @@ export default {
                         //存入数据库
                         var obj = {};
                         if(!self.projectDetail.appropriateTopBudget){//第一次录入拨付
-                            obj = JSON.stringify([{date: Utils.format(editBudgetData.years), money: parseInt(editBudgetData.money),status:2}]);//status是审核状态
+                            obj = JSON.stringify([{date: Utils.format(editBudgetData.years), money: Number(editBudgetData.money),status:2}]);//status是审核状态
                         }else{
                             var newObj = JSON.parse(self.projectDetail.appropriateTopBudget);//先解成数组；
-                            newObj.push({date: Utils.format(editBudgetData.years), money: parseInt(editBudgetData.money),status:2});
+                            newObj.push({date: Utils.format(editBudgetData.years), money: Number(editBudgetData.money),status:2});
                             obj = JSON.stringify(newObj);
                         }
                         self.projectDetail.appropriateTopBudget = obj;
@@ -412,7 +412,7 @@ export default {
                     return o.date == date;
                 });
                 if (index > -1) {
-                    returnObj[index].money = parseInt(returnObj[index].money) + parseInt(editBudgetData.money);
+                    returnObj[index].money = Number(returnObj[index].money) + Number(editBudgetData.money);
                 } else {
                     var newObj = {date: date, money: editBudgetData.money};
                     returnObj.push(newObj);

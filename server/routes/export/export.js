@@ -11,6 +11,7 @@ const nodeExcel = require('node-xlsx');
 const urlencode = require('urlencode');
 const bodyParser = require("body-parser");
 var jsonParser = bodyParser.json();
+var _ = require('lodash');
 
 const excelTitleConfig = [{
     name: 'id',
@@ -54,7 +55,7 @@ const excelTitleConfig = [{
             var totalMoney = 0;
             if (list.length > 0) {
                 for (var i = 0; i < list.length; i++) {
-                    totalMoney = totalMoney + parseInt(list[i].money);
+                    totalMoney = totalMoney + Number(list[i].money);
                 }
                 return totalMoney;
             } else {
@@ -166,6 +167,20 @@ router.post('/exportExcel', jsonParser, async (req, res) => {
     if (param.projectYears) {
         whereSql = whereSql + " and projectYears= " + param.projectYears;
     }
+    if (param.commitName) {
+        whereSql = whereSql + " and commitName= '" + param.commitName + "'";
+    }
+    if (param.projectFinance) {
+        whereSql = whereSql + " and projectFinance= '" + param.projectFinance + "'";
+    }
+    var step = param.approvalStep;
+    if (step == 1 || step == 7) {
+        whereSql = whereSql + " and approvalStep= " + step;
+    } else if (step == '2-6') {
+        whereSql = whereSql + " and approvalStep>1 and  approvalStep<7";
+    } else {
+        whereSql = whereSql;
+    }
     db.select(dbName, "", whereSql, param, "order by id", function (err, result) {//查询所有news表的数据
         let excelConfig = [];
         var listData = result.recordset;
@@ -180,6 +195,13 @@ router.post('/exportExcel', jsonParser, async (req, res) => {
                 return item.format && item.format(value, list) || value;
             }))
         })
+        //计算合计
+        var temp = _.cloneDeep(excelConfig);
+        var columns = excelConfig[0];
+        temp.shift();
+        var data = temp;
+        var sums = getSummaries(columns,data);
+        excelConfig.push(sums);
         var excelName = "report";
         let buffer = nodeExcel.build([{name: excelName, data: excelConfig}]);
         res.setHeader('Content-Type', 'application/octet-stream');
@@ -189,6 +211,34 @@ router.post('/exportExcel', jsonParser, async (req, res) => {
     });
 
 });
+function getSummaries(columns,data){
+    const sums = [];
+    columns.forEach((column, index) => {
+        if (index === 0) {
+            sums[index] = '总金额(万元）';
+            return;
+        }
+        if (index === 1 || index === 2 ||index === 3||index === 4) {
+            sums[index] = 'N/A';
+            return;
+        }
+        const values = data.map(item => Number(item[index]));
+        if (!values.every(value => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+                const value = Number(curr);
+                if (!isNaN(value)) {
+                    return prev + curr;
+                } else {
+                    return prev;
+                }
+            }, 0);
+            sums[index] += ' ';
+        } else {
+            sums[index] = 'N/A';
+        }
+    });
+    return sums;
+}
 
 module.exports = router;
 

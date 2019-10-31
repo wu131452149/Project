@@ -449,7 +449,7 @@ export default {
             if (!obj[item.years]) {
                 obj[item.years] = 0
             }
-            obj[item.years] += parseInt(item.money)
+            obj[item.years] += Number(item.money)
             return obj
         }, {})
         return Object.keys(result).map(key => ({years: key, money: result[key]}))
@@ -459,7 +459,7 @@ export default {
             if (!obj[item.years]) {
                 obj[item.years] = 0
             }
-            obj[item.years] += parseInt(item.money)
+            obj[item.years] += Number(item.money)
             return obj
         }, {})
         return Object.keys(result).map(key => ({years: key, money: result[key]}))
@@ -470,7 +470,7 @@ export default {
         var totalMoney = 0;
         if (arr.length > 0) {
             for (var i = 0; i < arr.length; i++) {
-                totalMoney = totalMoney + parseInt(arr[i].money);
+                totalMoney = totalMoney + Number(arr[i].money);
             }
             return totalMoney;
 

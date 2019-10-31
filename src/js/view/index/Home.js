@@ -1,5 +1,4 @@
 import ShowProjectDetail from "../../../components/project/ShowProjectDetail";
-import budgetStatistics from "../../../components/index/budgetStatistics";
 import Filters from "../common/Filters";
 import Utils from "../../lib/Utils/Utils";
 
@@ -8,11 +7,10 @@ export default {
     name: "Home",
     components: {
         "show-project-Detail": ShowProjectDetail,
-        "budget-statistics":budgetStatistics
     },
     data() {
         return {
-            sums:[],
+            sum:[],
             activeNames: [],
             userInfoActiveName: "pro-monitor",
             o: 2,
@@ -403,14 +401,7 @@ export default {
                     sums[index] = 'N/A';
                 }
             });
-            self.sums = sums;
             return sums;
-        },
-        // 获取columns
-        getColumns(param) {
-            const { columns } = param;
-            this.columns = columns;
-            return []
         },
         showAllProjectDetails: function (e, data) {
             let self = this;
@@ -425,6 +416,11 @@ export default {
         ExportFinishedProject: function () {
             var self = this;
             var data = _.cloneDeep(self.allProject.formData);
+            if (self.user.grade == 1) {//第一个项目查自己的加上条件
+                data.commitName = self.user.role;
+            } else if (self.user.grade == 2) {
+                data.projectFinance = self.user.role;
+            }
             fetch('/api/export/exportExcel',
                 {
                     method: 'post',
@@ -498,10 +494,6 @@ export default {
                         type: 'error'
                     }),
                 );
-
-        },
-        //审核通过个数
-        queryApprovalProjectCount: function () {
 
         },
         //完工库

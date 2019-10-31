@@ -103,7 +103,7 @@ export default {
             for (var i in obj) {
                 if (obj[i]) {
                     var string = "";
-                    string = obj[i].years + "，自筹安排" + parseInt(obj[i].money) + "万元，";
+                    string = obj[i].years + "，自筹安排" + Number(obj[i].money) + "万元，";
                     money = money + string;
                 }
             }
@@ -119,7 +119,7 @@ export default {
             for (var i in obj) {
                 if (obj[i]) {
                     var string = "";
-                    string = obj[i].years + ", 上级累计安排" + parseInt(obj[i].money) + "万元，";
+                    string = obj[i].years + ", 上级累计安排" + Number(obj[i].money) + "万元，";
                     money = money + string;
                 }
             }
@@ -129,20 +129,6 @@ export default {
         }
     },
     renderPlanYearsMoney: function (data) {
-        // if (data) {
-        //     let obj = JSON.parse(data);
-        //     let money = "";
-        //     for (var i in obj) {
-        //         if (obj[i]) {
-        //             var string = "";
-        //             string = obj[i].years + ", 本级累计安排" + parseInt(obj[i].money) + "万元，";
-        //             money = money + string;
-        //         }
-        //     }
-        //     return money;
-        // } else {
-        //     return "";
-        // }
         let dataA = JSON.parse(data);
         var list = _.cloneDeep(dataA);
         var obj = Utils.mergeArr(list);
@@ -161,7 +147,7 @@ export default {
             var totalMoney = 0;
             if (list.length > 0) {
                 for (var i = 0; i < list.length; i++) {
-                    totalMoney = totalMoney + parseInt(list[i].money);
+                    totalMoney = totalMoney + Number(list[i].money);
                 }
                 return totalMoney;
             } else {
@@ -236,7 +222,7 @@ export default {
             var totalMoney = 0;
             if (money.length > 0) {
                 for (var i = 0; i < money.length; i++) {
-                    totalMoney = totalMoney + parseInt(money[i].money);
+                    totalMoney = totalMoney + Number(money[i].money);
                 }
                 return totalMoney;
             } else {
@@ -256,7 +242,7 @@ export default {
             var totalMoney = 0;
             if (money.length > 0) {
                 for (var i = 0; i < money.length; i++) {
-                    totalMoney = totalMoney + parseInt(money[i].money);
+                    totalMoney = totalMoney + Number(money[i].money);
                 }
                 return totalMoney;
             } else {
@@ -275,7 +261,7 @@ export default {
             var totalMoney = 0;
             if (money.length > 0) {
                 for (var i = 0; i < money.length; i++) {
-                    totalMoney = totalMoney + parseInt(money[i].money);
+                    totalMoney = totalMoney + Number(money[i].money);
                 }
                 return totalMoney;
             } else {

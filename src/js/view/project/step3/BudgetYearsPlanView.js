@@ -24,17 +24,17 @@ export default {
                         var planYearsMoney = JSON.parse(self.projectDetail.planYearsMoney);
                         var total1 = 0;
                         for (var x = 0; x < planYearsMoney.length; x++) {
-                            total1 = total1 + parseInt(planYearsMoney[x].money);
+                            total1 = total1 + Number(planYearsMoney[x].money);
                         }
                     }
                     if (self.projectDetail.planYearsTopMoney) {
                         var total2 = 0;
                         var planYearsTopMoney = JSON.parse(self.projectDetail.planYearsTopMoney);
                         for (var y = 0; y < planYearsTopMoney.length; y++) {
-                            total2 = total2 + parseInt(planYearsTopMoney[y].money);
+                            total2 = total2 + Number(planYearsTopMoney[y].money);
                         }
                     }
-                    var total = total1 + total2 + parseInt(value);
+                    var total = total1 + total2 + Number(value);
                     // console.log(total1);
                     // console.log(total2);
                     // console.log(total);
@@ -374,7 +374,7 @@ export default {
                             obj = JSON.stringify([{years: editBudgetData.years, money: editBudgetData.money,status:2}]);
                         }else{
                             var newObj = JSON.parse(self.projectDetail.planYearsMoney);//先解成数组；
-                            newObj.push({years: editBudgetData.years, money: parseInt(editBudgetData.money),status:2});
+                            newObj.push({years: editBudgetData.years, money: Number(editBudgetData.money),status:2});
                             obj = JSON.stringify(newObj);
                         }
                         //var obj = self.initObj(self.projectDetail.planYearsMoney, editBudgetData);
@@ -387,7 +387,7 @@ export default {
                             obj = JSON.stringify([{years: editBudgetData.years, money: editBudgetData.money,status:2}]);
                         }else{
                             var newObj = JSON.parse(self.projectDetail.planYearsTopMoney);//先解成数组；
-                            newObj.push({years: editBudgetData.years, money: parseInt(editBudgetData.money),status:2});
+                            newObj.push({years: editBudgetData.years, money: Number(editBudgetData.money),status:2});
                             obj = JSON.stringify(newObj);
                         }
                         self.projectDetail.planYearsTopMoney = obj;
@@ -439,7 +439,7 @@ export default {
                     return o.years == editBudgetData.years;
                 });
                 if (index > -1) {
-                    returnObj[index].money = parseInt(returnObj[index].money) + parseInt(editBudgetData.money);
+                    returnObj[index].money = Number(returnObj[index].money) + Number(editBudgetData.money);
                 } else {
                     var newObj = {years: editBudgetData.years, money: editBudgetData.money};
                     returnObj.push(newObj);

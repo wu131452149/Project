@@ -166,18 +166,18 @@ export default {
                 if (self.cutBudget) {
                     var total1 = 0;
                     for (var x = 0; x < self.cutBudget.length; x++) {
-                        total1 = total1 + parseInt(self.cutBudget[x].money);
+                        total1 = total1 + Number(self.cutBudget[x].money);
                     }
                 }
                 if (self.addBudget) {
                     var total2 = 0;
                     for (var y = 0; y < self.addBudget.length; y++) {
-                        total2 = total2 + parseInt(self.addBudget[y].money);
+                        total2 = total2 + Number(self.addBudget[y].money);
                     }
                 }
                 self.totalCut = total1;
                 self.totalAdd = total2;
-                self.totalMoney = parseInt(self.projectDetail.budgetReviewMoney) - total1 + total2;
+                self.totalMoney = Number(self.projectDetail.budgetReviewMoney) - total1 + total2;
             }
         },
         downloadUrl: function (data) {
@@ -243,10 +243,13 @@ export default {
         },
         //去除在建库的小红点
         eventBusToDeleteRed: function (data) {
-            var total = parseInt(data.stepTwo) + parseInt(data.stepThree) + parseInt(data.stepFour) + parseInt(data.stepFive) + parseInt(data.stepSix);
-            if (total == 0) {
-                EventBus.$emit('hideMenuBadge', 'project_doing');
+            if(data){
+                var total = Number(data.stepTwo) + Number(data.stepThree) + Number(data.stepFour) + Number(data.stepFive) + Number(data.stepSix);
+                if (total == 0) {
+                    EventBus.$emit('hideMenuBadge', 'project_doing');
+                }
             }
+
         },
         //审核新建库
         approvalNewProject: function () {
@@ -278,7 +281,7 @@ export default {
                         });
                         //当stepOne=0的时候发送到前端消除小红点
                         var data = res.data.recordsets[0];
-                        if (data.stepOne == 0) {
+                        if (data && data.stepOne == 0) {
                             EventBus.$emit('hideMenuBadge', 'show_new_project');
                         }
                         //关闭当前页，查询当前表格
@@ -327,7 +330,7 @@ export default {
                         });
                         //当stepTwo=0的时候发送到前端消除小红点
                         var data = res.data.recordsets[0];
-                        if (data.stepTwo == 0) {
+                        if (data && data.stepTwo == 0) {
                             EventBus.$emit('hideTwoBadge');
                         }
                         //去除在建库的小红点
@@ -403,7 +406,7 @@ export default {
                             type: 'success'
                         });
                         var data = res.data.recordsets[0];
-                        if (data.stepThree == 0) {
+                        if (data && data.stepThree == 0) {
                             EventBus.$emit('hideThreeBadge');
                         }
                         //去除在建库的小红点
@@ -431,7 +434,7 @@ export default {
                 if (!obj[item.years]) {
                     obj[item.years] = 0
                 }
-                obj[item.years] += parseInt(item.money)
+                obj[item.years] += Number(item.money)
                 return obj
             }, {})
             return Object.keys(result).map(key => ({years: key, money: result[key]}))
@@ -534,7 +537,7 @@ export default {
             data.approTotalPlanMoneyNo = Utils.countTotalPlanMoney(obj);
             //对象
             data.approTotalMoney = JSON.stringify(obj);
-            data.nonPaymentTotalMoneyNo = -parseInt(data.approTotalPlanMoneyNo - self.projectDetail.yearsPlanTotalMoneyNo);
+            data.nonPaymentTotalMoneyNo = -Number(data.approTotalPlanMoneyNo - self.projectDetail.yearsPlanTotalMoneyNo);
             self.$http.post('/api/project/approvalProject', data).then(res => {
                 let status = res.status;
                 let statusText = res.statusText;
@@ -552,7 +555,7 @@ export default {
                             type: 'success'
                         });
                         var data = res.data.recordsets[0];
-                        if (data.stepFour == 0) {
+                        if (data && data.stepFour == 0) {
                             EventBus.$emit('hideFourBadge');
                         }
                         //去除在建库的小红点
@@ -604,7 +607,7 @@ export default {
                             type: 'success'
                         });
                         var data = res.data.recordsets[0];
-                        if (data.stepFive == 0) {
+                        if (data && data.stepFive == 0) {
                             EventBus.$emit('hideFiveBadge');
                         }
                         //去除在建库的小红点
@@ -662,7 +665,7 @@ export default {
                             type: 'success'
                         });
                         var data = res.data.recordsets[0];
-                        if (data.stepSix == 0) {
+                        if (data && data.stepSix == 0) {
                             EventBus.$emit('hideSixBadge');
                         }
                         //去除在建库的小红点
@@ -711,7 +714,7 @@ export default {
                             type: 'success'
                         });
                         var data = res.data.recordsets[0];
-                        if (data.stepSeven == 0) {
+                        if (data && data.stepSeven == 0) {
                             EventBus.$emit('hideMenuBadge', 'project_finish');
                         }
                         //关闭当前页，查询当前表格
@@ -819,7 +822,7 @@ export default {
                 data.approTotalPlanMoneyNo = Utils.countTotalPlanMoney(obj);
                 //对象
                 data.approTotalMoney = JSON.stringify(obj);
-                data.nonPaymentTotalMoneyNo = -parseInt(data.approTotalPlanMoneyNo - self.projectDetail.yearsPlanTotalMoneyNo);
+                data.nonPaymentTotalMoneyNo = -Number(data.approTotalPlanMoneyNo - self.projectDetail.yearsPlanTotalMoneyNo);
             } else if (self.step == 5) {
                 data.oldSuggestion = self.projectDetail.stepFiveApp;
                 data.stepFiveApp = 0;
@@ -847,56 +850,58 @@ export default {
                         });
                         //重新查询一下表格
                         var data = res.data.recordsets[0];
-                        if (self.step == 1) {
-                            //当stepOne=0的时候发送到前端消除小红点
-                            if (data.stepOne == 0) {
-                                EventBus.$emit('hideMenuBadge', 'show_new_project');
+                        if(data){
+                            if (self.step == 1) {
+                                //当stepOne=0的时候发送到前端消除小红点
+                                if (data.stepOne == 0) {
+                                    EventBus.$emit('hideMenuBadge', 'show_new_project');
+                                }
+                                self.$emit('unAppStep1');
+                            } else if (self.step == 2) {
+                                if (data.stepTwo == 0) {
+                                    EventBus.$emit('hideTwoBadge');
+                                }
+                                //去除在建库的小红点
+                                self.eventBusToDeleteRed(data);
+                                self.$emit('unAppStep2');
+                            } else if (self.step == 3) {
+                                //更新
+                                if (data.stepThree == 0) {
+                                    EventBus.$emit('hideThreeBadge');
+                                }
+                                //去除在建库的小红点
+                                self.eventBusToDeleteRed(data);
+                                self.deleteBudgetPlanMoneyList(self.projectDetail);
+                                self.$emit('unAppStep3');
+                            } else if (self.step == 4) {
+                                if (data.stepFour == 0) {
+                                    EventBus.$emit('hideFourBadge');
+                                }
+                                //去除在建库的小红点
+                                self.eventBusToDeleteRed(data);
+                                //删除表里的信息
+                                self.deleteAppBudgetMoneyList(self.projectDetail);
+                                self.$emit('unAppStep4');
+                            } else if (self.step == 5) {
+                                if (data.stepFive == 0) {
+                                    EventBus.$emit('hideFiveBadge');
+                                }
+                                //去除在建库的小红点
+                                self.eventBusToDeleteRed(data);
+                                self.$emit('unAppStep5');
+                            } else if (self.step == 6) {
+                                if (data.stepSix == 0) {
+                                    EventBus.$emit('hideSixBadge');
+                                }
+                                //去除在建库的小红点
+                                self.eventBusToDeleteRed(data);
+                                self.$emit('unAppStep6');
+                            } else if (self.step == 7) {
+                                if (data.stepSeven == 0) {
+                                    EventBus.$emit('hideMenuBadge', 'project_finish');
+                                }
+                                self.$emit('unAppStep7');
                             }
-                            self.$emit('unAppStep1');
-                        } else if (self.step == 2) {
-                            if (data.stepTwo == 0) {
-                                EventBus.$emit('hideTwoBadge');
-                            }
-                            //去除在建库的小红点
-                            self.eventBusToDeleteRed(data);
-                            self.$emit('unAppStep2');
-                        } else if (self.step == 3) {
-                            //更新
-                            if (data.stepThree == 0) {
-                                EventBus.$emit('hideThreeBadge');
-                            }
-                            //去除在建库的小红点
-                            self.eventBusToDeleteRed(data);
-                            self.deleteBudgetPlanMoneyList(self.projectDetail);
-                            self.$emit('unAppStep3');
-                        } else if (self.step == 4) {
-                            if (data.stepFour == 0) {
-                                EventBus.$emit('hideFourBadge');
-                            }
-                            //去除在建库的小红点
-                            self.eventBusToDeleteRed(data);
-                            //删除表里的信息
-                            self.deleteAppBudgetMoneyList(self.projectDetail);
-                            self.$emit('unAppStep4');
-                        } else if (self.step == 5) {
-                            if (data.stepFive == 0) {
-                                EventBus.$emit('hideFiveBadge');
-                            }
-                            //去除在建库的小红点
-                            self.eventBusToDeleteRed(data);
-                            self.$emit('unAppStep5');
-                        } else if (self.step == 6) {
-                            if (data.stepSix == 0) {
-                                EventBus.$emit('hideSixBadge');
-                            }
-                            //去除在建库的小红点
-                            self.eventBusToDeleteRed(data);
-                            self.$emit('unAppStep6');
-                        } else if (self.step == 7) {
-                            if (data.stepSeven == 0) {
-                                EventBus.$emit('hideMenuBadge', 'project_finish');
-                            }
-                            self.$emit('unAppStep7');
                         }
                     } else {
                         self.$message({

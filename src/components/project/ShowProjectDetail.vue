@@ -222,12 +222,12 @@
                             <span class="info-label">预算变更：</span>
                             <div v-for="item in cutBudget" v-if="projectDetail.cutBudget">
                             <span class="info-val plan-years">
-                                {{item.date}},{{item.type}}{{parseInt(item.money)}}（万元）,评审文号为{{item.No}}
+                                {{item.date}},{{item.type}}{{Number(item.money)}}（万元）,评审文号为{{item.No}}
                             </span>
                             </div>
                             <div v-for="item in addBudget" v-if="projectDetail.addBudget">
                             <span class="info-val plan-years">
-                                {{item.date}},{{item.type}}{{parseInt(item.money)}}（万元）,评审文号为{{item.No}}
+                                {{item.date}},{{item.type}}{{Number(item.money)}}（万元）,评审文号为{{item.No}}
                             </span>
                             </div>
                             <span class="info-val plan-years">累计增加金额为：{{totalAdd}}（万元）</span>
