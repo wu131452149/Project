@@ -49,7 +49,8 @@ export default {
                 approvalProject: 0,
                 finishedProjectCount: 0,
                 returnedProjectCount: 0,
-            }
+            },
+            excelTitleConfig:[],
         }
     },
     mounted: function () {
@@ -74,6 +75,141 @@ export default {
         self.queryAllAppropriateMoney();//查询拨付金额
         self.queryAllBudgetPlanMoney();//查询年度安排金额
         self.queryAllProjectWithoutPage();
+        self.excelTitleConfig = [{
+            name: 'id',
+            title: '项目编号',
+        }, {
+            name: 'commitName',
+            title: '主管部门',
+        }, {
+            name: 'projectInstitution',
+            title: '项目单位',
+        }, {
+            name: 'projectName',
+            title: '项目名称',
+        }, {
+            name: 'projectType',
+            title: '项目类型',
+        }, {
+            name: 'projectMoney',
+            title: '概算金额',
+        }, {
+            name: 'projectYears',
+            title: '项目周期',
+        }, {
+            name: 'budgetReviewMoney',
+            title: '预算评审金额',
+        }, {
+            name: 'yearsPlanTotalMoneyNo',
+            title: '三年滚动预算合计',
+        }, {
+            name: 'yearsPlanTotalMoney',
+            title: '以前年度累计安排',
+            format: function (data) {
+                let value = "0";
+                var thisYears = new Date().getFullYear()+"年度";
+                //var thisYears = 2020;
+                if (data) {
+                    let money = JSON.parse(data);
+                    var list = money.filter(function (item) {
+                        return item.years < thisYears;
+                    });
+                    var totalMoney = 0;
+                    if (list.length > 0) {
+                        for (var i = 0; i < list.length; i++) {
+                            totalMoney = totalMoney + Number(list[i].money);
+                        }
+                        return totalMoney;
+                    } else {
+                        return value;
+                    }
+                } else {
+                    return value;
+                }
+            }
+        }, {
+            name: 'yearsPlanTotalMoney',
+            title: '当年安排',
+            format: function (data) {
+                let value = "0";
+                var thisYears = new Date().getFullYear()+"年度";
+                if (data) {
+                    let money = JSON.parse(data);
+                    var index = money.find(function(x) {
+                        return x.years == thisYears;
+                    });
+                    if(index){
+                        value = index.money;
+                    }
+                    return value;
+                } else {
+                    return value;
+                }
+            }
+        }, {
+            name: 'yearsPlanTotalMoney',
+            title: '次年安排',
+            format: function (data) {
+                let value = "0";
+                var nextYears = new Date().getFullYear() + 1+"年度";
+                if (data) {
+                    let money = JSON.parse(data);
+                    var index = money.find(function(x) {
+                        return x.years == nextYears;
+                    });
+                    if(index){
+                        value = index.money;
+                    }
+                    return value;
+                } else {
+                    return value;
+                }
+            }
+        }, {
+            name: 'yearsPlanTotalMoney',
+            title: '第三年安排',
+            format: function (data) {
+                let value = "0";
+                var nextYearsA = new Date().getFullYear() + 2+"年度";
+                if (data) {
+                    let money = JSON.parse(data);
+                    var index = money.find(function(x) {
+                        return x.years == nextYearsA;
+                    });
+                    if(index){
+                        value = index.money;
+                    }
+                    return value;
+                } else {
+                    return value;
+                }
+            }
+        }, {
+            name: 'approTotalMoney',
+            title: '资金当年拨付',
+            format: function (data) {
+                let value = "0";
+                var thisYears = new Date().getFullYear();
+                if (data) {
+                    let money = JSON.parse(data);
+                    var index = money.find(function(x) {
+                        return x.years == thisYears;
+                    });
+                    if(index){
+                        value = index.money;
+                    }
+                    return value;
+                } else {
+                    return value;
+                }
+            }
+        }, {
+            name: 'approTotalPlanMoneyNo',
+            title: '资金累计拨付',
+        }, {
+            name: 'nonPaymentTotalMoneyNo',
+            title: '欠付金额',
+        }]
 
     },
     methods: {
@@ -241,7 +377,26 @@ export default {
                     });
                 } else {
                     if (res.data.length != 0) {
-                        self.sumProject.sumProjectList = res.data.recordset;
+                        let excelConfig = [];
+                        var listData = res.data.recordset;
+                        excelConfig.push(self.excelTitleConfig.map(item => {
+                            return item.title
+                        }))
+
+                        listData.forEach(list => {
+                            excelConfig.push(self.excelTitleConfig.map(item => {
+                                const value = list[item.name];
+                                // 不一定要有value， 因为可能是自由组合的value
+                                return item.format && item.format(value, list) || value;
+                            }))
+                        })
+                        //计算合计
+                        var temp = _.cloneDeep(excelConfig);
+                        var columns = excelConfig[0];
+                        temp.shift();
+                        var data = temp;
+                        var sums = self.getSummaries(columns,data);
+                        self.sum = sums;
                     } else {
                         self.$message({
                             message: "查询失败",
@@ -370,23 +525,18 @@ export default {
 
         },
         //合计
-        getSummaries:function(param){
-            const { columns, data } = param;
+        getSummaries:function(columns,data){
             const sums = [];
             columns.forEach((column, index) => {
                 if (index === 0) {
                     sums[index] = '总金额(万元）';
                     return;
                 }
-                if (index === 2) {
+                if (index === 1 || index === 2 ||index === 3||index === 4) {
                     sums[index] = 'N/A';
                     return;
                 }
-                if (index === 5) {
-                    sums[index] = 'N/A';
-                    return;
-                }
-                const values = data.map(item => Number(item[column.property]));
+                const values = data.map(item => Number(item[index]));
                 if (!values.every(value => isNaN(value))) {
                     sums[index] = values.reduce((prev, curr) => {
                         const value = Number(curr);
@@ -399,6 +549,22 @@ export default {
                     sums[index] += ' ';
                 } else {
                     sums[index] = 'N/A';
+                }
+            });
+            return sums;
+        },
+        //
+        getSummary:function(param){
+            var self = this;
+            const { columns, data } = param;
+            const sums = [];
+            console.log('this.getAllTotalData2',self.sum);
+            columns.forEach((column, index) => {
+                if (index === 0) {
+                    sums[index] = '合计';    //这里就是显示你要写的啥名字,是合计还是汇总什么
+                    return;
+                }else{
+                    sums[index] = self.sum[index+1];
                 }
             });
             return sums;

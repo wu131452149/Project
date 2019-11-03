@@ -161,7 +161,7 @@ export default {
     //当年安排
     renderThisYearPlanTotalMoney: function (data) {
         let money = "";
-        var thisYears = new Date().getFullYear();
+        var thisYears = new Date().getFullYear()+"年度";
         if (data) {
             money = JSON.parse(data);
             var index = _.findIndex(money, function (o) {
@@ -180,7 +180,7 @@ export default {
     //次年安排
     renderNextYearsPlanTotalMoney: function (data) {
         let money = "";
-        var nextYears = new Date().getFullYear() + 1;
+        var nextYears = new Date().getFullYear() + 1+"年度";
         if (data) {
             money = JSON.parse(data);
             var index = _.findIndex(money, function (o) {
@@ -198,7 +198,7 @@ export default {
     //第三年安排
     renderThirdYearsPlanTotalMoney: function (data) {
         let money = "";
-        var nextYearsA = new Date().getFullYear() + 2;
+        var nextYearsA = new Date().getFullYear() + 2+"年度";
         if (data) {
             money = JSON.parse(data);
             var index = _.findIndex(money, function (o) {

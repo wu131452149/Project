@@ -45,7 +45,7 @@ const excelTitleConfig = [{
     title: '以前年度累计安排',
     format: function (data) {
         let value = "0";
-        var thisYears = new Date().getFullYear();
+        var thisYears = new Date().getFullYear()+"年度";
         //var thisYears = 2020;
         if (data) {
             let money = JSON.parse(data);
@@ -70,7 +70,7 @@ const excelTitleConfig = [{
     title: '当年安排',
     format: function (data) {
         let value = "0";
-        var thisYears = new Date().getFullYear();
+        var thisYears = new Date().getFullYear()+"年度";
         if (data) {
             let money = JSON.parse(data);
             var index = money.find(function(x) {
@@ -89,7 +89,7 @@ const excelTitleConfig = [{
     title: '次年安排',
     format: function (data) {
         let value = "0";
-        var nextYears = new Date().getFullYear() + 1;
+        var nextYears = new Date().getFullYear() + 1+"年度";
         if (data) {
             let money = JSON.parse(data);
             var index = money.find(function(x) {
@@ -108,7 +108,7 @@ const excelTitleConfig = [{
     title: '第三年安排',
     format: function (data) {
         let value = "0";
-        var nextYearsA = new Date().getFullYear() + 2;
+        var nextYearsA = new Date().getFullYear() + 2+"年度";
         if (data) {
             let money = JSON.parse(data);
             var index = money.find(function(x) {

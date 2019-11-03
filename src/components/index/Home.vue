@@ -267,10 +267,12 @@
                 <div class="report-form element-table less-condition">
                     <el-table
                         :data="allProject.allProjectList"
+                        border
                         tooltip-effect="light"
-                        height="100%"
+                        :summary-method="getSummary"
+                        show-summary
                         @click.stop.prevent="stopPropagationPreventDef($event)"
-                        style="width: 100%;">
+                        style="width: 100%;height:100%">
                         <el-table-column show-overflow-tooltip prop="commitName" label="主管部门" width="100">
                             <template slot-scope="scope">{{scope.row.commitName}}</template>
                         </el-table-column>
@@ -344,85 +346,9 @@
                         </el-table-column>
                     </el-table>
                 </div>
-                <div class="report-form element-table less-condition all-form-without-page" style="">
-                    <el-table
-                        :data="sumProject.sumProjectList"
-                        tooltip-effect="light"
-                        :summary-method="getSummaries"
-                        show-summary
-                        style="width: 100%;">
-                        <el-table-column show-overflow-tooltip prop="commitName" label="主管部门" width="100">
-                            <template slot-scope="scope">{{scope.row.commitName}}</template>
-                        </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="projectInstitution" label="项目单位">
-                            <template slot-scope="scope">{{scope.row.projectInstitution}}</template>
-                        </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="projectName" label="项目名称">
-                            <template slot-scope="scope"><a @click.stop="showAllProjectDetails($event,scope.row)">{{scope.row.projectName}}</a>
-                            </template>
-                        </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="projectType" label="项目类型">
-                            <template slot-scope="scope">{{scope.row.projectType}}</template>
-                        </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="projectMoney" label="项目估算总额（万元）" width="80">
-                            <template slot-scope="scope">
-                                <span>{{scope.row.projectMoney}}</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="projectYears" label="项目周期" width="80">
-                            <template slot-scope="scope">
-                                <span>{{scope.row.projectYears}}</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="budgetReviewMoney" label="预算评审金额（万元）" width="80">
-                            <template slot-scope="scope">
-                                <span>{{scope.row.budgetReviewMoney}}</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="yearsPlanTotalMoneyNo" label="合计安排（万元）" width="80">
-                            <template slot-scope="scope">
-                                <span>{{scope.row.yearsPlanTotalMoneyNo}}</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="yearsPlanTotalMoney" label="以前年度累计安排（万元）"
-                                         width="80">
-                            <template slot-scope="scope">
-                                <span>{{scope.row.yearsPlanTotalMoney|renderBeforeYearPlanTotalMoney}}</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="yearsPlanTotalMoney" label="当年安排（万元）" width="80">
-                            <template slot-scope="scope">
-                                <span>{{scope.row.yearsPlanTotalMoney|renderThisYearPlanTotalMoney}}</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="yearsPlanTotalMoney" label="次年安排（万元）" width="80">
-                            <template slot-scope="scope">
-                                <span>{{scope.row.yearsPlanTotalMoney|renderNextYearsPlanTotalMoney}}</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="yearsPlanTotalMoney" label="第三年安排（万元）" width="80">
-                            <template slot-scope="scope">
-                                <span>{{scope.row.yearsPlanTotalMoney|renderThirdYearsPlanTotalMoney}}</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="approTotalMoney" label="资金当年拨付（万元）" width="80">
-                            <template slot-scope="scope">
-                                <span>{{scope.row.approTotalMoney|renderAppThisYearMoney}}</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="approTotalPlanMoneyNo" label="资金累计拨付（万元）"
-                                         width="80">
-                            <template slot-scope="scope">
-                                <span>{{scope.row.approTotalPlanMoneyNo}}</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="nonPaymentTotalMoneyNo" label="欠付金额（万元）"
-                                         width="80">
-                            <template slot-scope="scope">
-                                <span>{{scope.row.nonPaymentTotalMoneyNo}}</span>
-                            </template>
-                        </el-table-column>
-                    </el-table>
+                <!--合计行-->
+                <div>
+
                 </div>
                 <!--表格end-->
                 <!--分页 start-->
