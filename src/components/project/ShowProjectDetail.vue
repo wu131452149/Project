@@ -241,7 +241,7 @@
             </el-collapse-item>
             <!--预算变更 end-->
             <!--工程进度和第三方信息 start-->
-            <el-collapse-item name="6" v-if="projectDetail.speed||projectDetail.agreementName">
+            <el-collapse-item name="6" v-if="projectDetail.speed||projectDetail.triInfoList.length>0">
                 <template slot="title">
                     <div class="f-l line-height-30 excessEllipsis  width-per100">
                         <span class="bold">工程进度和第三方信息</span></div>
@@ -253,49 +253,90 @@
                             <span class="info-val" v-if="projectDetail.speed">{{projectDetail.speed}}%</span>
                         </div>
                     </div>
-                    <div class="inline-block font13 width-per45 ver-text-top margin-t-15 margin-r">
-                        <div class="clearFix">
-                            <span class="info-label"></span>
-                            <span class="info-val"></span>
+                    <!--三方 start-->
+                    <div v-for="(item,index) in projectDetail.triInfoList">
+                        <div class="inline-block font13 width-per45 ver-text-top margin-t-15 margin-r">
                         </div>
-                    </div>
-                    <div class="inline-block font13 width-per45 ver-text-top margin-t-15 margin-r">
-                        <div class="clearFix">
-                            <span class="info-label">合同名称：</span>
-                            <span class="info-val">{{projectDetail.agreementName}}</span>
-                        </div>
-                    </div>
+                        <div v-if="item.status==2" class="color-red">
+                            <div class="inline-block font13 width-per45 ver-text-top margin-t-15 margin-r">
+                                <div class="clearFix">
+                                    <span class="info-label">合同名称：</span>
+                                    <span class="info-val">{{item.triName}}</span>
+                                </div>
+                            </div>
 
-                    <div class="inline-block font13 width-per45 ver-text-top margin-t-15 margin-r">
-                        <div class="clearFix">
-                            <span class="info-label">合同金额：</span>
-                            <span class="info-val">{{projectDetail.agreementMoney}}(万元）</span>
+                            <div class="inline-block font13 width-per45 ver-text-top margin-t-15 margin-r">
+                                <div class="clearFix">
+                                    <span class="info-label">合同金额：</span>
+                                    <span class="info-val">{{item.triMoney}}(万元）</span>
+                                </div>
+                            </div>
+                            <div class="inline-block font13 width-per45 ver-text-top margin-t-15 margin-r">
+                                <div class="clearFix">
+                                    <span class="info-label">负责人：</span>
+                                    <span class="info-val">{{item.triUserName}}</span>
+                                </div>
+                            </div>
+                            <div class="inline-block font13 width-per45 ver-text-top margin-t-15 margin-r">
+                                <div class="clearFix">
+                                    <span class="info-label">负责人电话：</span>
+                                    <span class="info-val">{{item.triPhone}}</span>
+                                </div>
+                            </div>
+                            <div class="inline-block font13 width-per45 ver-text-top margin-t-15 margin-r">
+                                <div class="clearFix">
+                                    <span class="info-label">开户行：</span>
+                                    <span class="info-val">{{item.triBank}}</span>
+                                </div>
+                            </div>
+                            <div class="inline-block font13 width-per45 ver-text-top margin-t-15 margin-r">
+                                <div class="clearFix">
+                                    <span class="info-label">银行卡号：</span>
+                                    <span class="info-val">{{item.triCardNo}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-else>
+                            <div class="inline-block font13 width-per45 ver-text-top margin-t-15 margin-r">
+                                <div class="clearFix">
+                                    <span class="info-label">合同名称：</span>
+                                    <span class="info-val">{{item.triName}}</span>
+                                </div>
+                            </div>
+
+                            <div class="inline-block font13 width-per45 ver-text-top margin-t-15 margin-r">
+                                <div class="clearFix">
+                                    <span class="info-label">合同金额：</span>
+                                    <span class="info-val">{{item.triMoney}}(万元）</span>
+                                </div>
+                            </div>
+                            <div class="inline-block font13 width-per45 ver-text-top margin-t-15 margin-r">
+                                <div class="clearFix">
+                                    <span class="info-label">负责人：</span>
+                                    <span class="info-val">{{item.triUserName}}</span>
+                                </div>
+                            </div>
+                            <div class="inline-block font13 width-per45 ver-text-top margin-t-15 margin-r">
+                                <div class="clearFix">
+                                    <span class="info-label">负责人电话：</span>
+                                    <span class="info-val">{{item.triPhone}}</span>
+                                </div>
+                            </div>
+                            <div class="inline-block font13 width-per45 ver-text-top margin-t-15 margin-r">
+                                <div class="clearFix">
+                                    <span class="info-label">开户行：</span>
+                                    <span class="info-val">{{item.triBank}}</span>
+                                </div>
+                            </div>
+                            <div class="inline-block font13 width-per45 ver-text-top margin-t-15 margin-r">
+                                <div class="clearFix">
+                                    <span class="info-label">银行卡号：</span>
+                                    <span class="info-val">{{item.triCardNo}}</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="inline-block font13 width-per45 ver-text-top margin-t-15 margin-r">
-                        <div class="clearFix">
-                            <span class="info-label">负责人：</span>
-                            <span class="info-val">{{projectDetail.agreementUserName}}</span>
-                        </div>
-                    </div>
-                    <div class="inline-block font13 width-per45 ver-text-top margin-t-15 margin-r">
-                        <div class="clearFix">
-                            <span class="info-label">负责人电话：</span>
-                            <span class="info-val">{{projectDetail.agreementUserPhone}}</span>
-                        </div>
-                    </div>
-                    <div class="inline-block font13 width-per45 ver-text-top margin-t-15 margin-r">
-                        <div class="clearFix">
-                            <span class="info-label">开户行：</span>
-                            <span class="info-val">{{projectDetail.agreementBank}}</span>
-                        </div>
-                    </div>
-                    <div class="inline-block font13 width-per45 ver-text-top margin-t-15 margin-r">
-                        <div class="clearFix">
-                            <span class="info-label">银行卡号：</span>
-                            <span class="info-val">{{projectDetail.agreementCardNo}}</span>
-                        </div>
-                    </div>
+                    <!--三方 end-->
                 </div>
             </el-collapse-item>
             <!--工程进度和第三方信息 end-->

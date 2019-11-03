@@ -206,29 +206,29 @@
                         <span>三方信息</span>
                         <el-form :model="TriInfo" :rules="rules2" class="width300" ref="TriInfo">
                             <!--1年显示一次-->
-                            <el-form-item label="合同名称" prop="agreementName" class="padding-10">
-                                <el-input placeholder="请输入合同名称" v-model="TriInfo.agreementName" maxlength="15">
+                            <el-form-item label="合同名称" prop="triName" class="padding-10">
+                                <el-input placeholder="请输入合同名称" v-model="TriInfo.triName" maxlength="15">
                                 </el-input>
                             </el-form-item>
-                            <el-form-item label="合同金额" prop="agreementMoney"  class="padding-10">
-                                <el-input placeholder="请输入金额" v-model="TriInfo.agreementMoney" maxlength="15">
+                            <el-form-item label="合同金额" prop="triMoney"  class="padding-10">
+                                <el-input placeholder="请输入金额" v-model="TriInfo.triMoney" type="number" maxlength="15">
                                     <template slot="append">万元</template>
                                 </el-input>
                             </el-form-item>
-                            <el-form-item label="负责人" prop="agreementUserName"  class="padding-10">
-                                <el-input placeholder="请输入负责人" v-model="TriInfo.agreementUserName" maxlength="15">
+                            <el-form-item label="负责人" prop="triUserName"  class="padding-10">
+                                <el-input placeholder="请输入负责人" v-model="TriInfo.triUserName" maxlength="15">
                                 </el-input>
                             </el-form-item>
-                            <el-form-item label="负责人电话" prop="agreementUserPhone"  class="padding-10">
-                                <el-input placeholder="请输入负责人电话" v-model="TriInfo.agreementUserPhone" maxlength="15">
+                            <el-form-item label="负责人电话" prop="triPhone"  class="padding-10">
+                                <el-input placeholder="请输入负责人电话" v-model="TriInfo.triPhone" maxlength="15">
                                 </el-input>
                             </el-form-item>
-                            <el-form-item label="开户行" prop="agreementBank"  class="padding-10">
-                                <el-input placeholder="请输入开户行" v-model="TriInfo.agreementBank">
+                            <el-form-item label="开户行" prop="triBank"  class="padding-10">
+                                <el-input placeholder="请输入开户行" v-model="TriInfo.triBank">
                                 </el-input>
                             </el-form-item>
-                            <el-form-item label="银行卡号" prop="agreementCardNo" class="padding-10">
-                                <el-input placeholder="请输入银行卡号" v-model="TriInfo.agreementCardNo">
+                            <el-form-item label="银行卡号" prop="triCardNo" class="padding-10">
+                                <el-input placeholder="请输入银行卡号" v-model="TriInfo.triCardNo">
                                 </el-input>
                             </el-form-item>
 

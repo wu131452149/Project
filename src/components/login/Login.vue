@@ -5,7 +5,7 @@
                 <el-col :span="18" ><div class=""></div></el-col>
                 <el-col :span="4" :pull="1">
                     <div class="clearfix" style="padding-top:10px;min-width:274px;">
-                        <div class="login-envelope"><i class="fa fa-envelope" style="font-size:26px;" aria-hidden="true"></i></div>
+                        <!--<div class="login-envelope"><i class="fa fa-envelope" style="font-size:26px;" aria-hidden="true"></i></div>-->
                         <!--<div class="login-email"><a class="black-color">15611771610@163.com</a></div>-->
                     </div></el-col>
             </el-row>

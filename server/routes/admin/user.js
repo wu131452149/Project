@@ -133,10 +133,22 @@ router.post('/createUser', function (req, res, next) {
             db.add(data, "dbo.institution", function (err, result) {//插入一条数据
                 res.json(result);
             })
-        } else {
+        } else  if(param.grade==2){
+            var userData = {};
+            userData.stepOne = 0;
+            userData.stepTwo = 0;
+            userData.stepThree = 0;
+            userData.stepFour = 0;
+            userData.stepFive = 0;
+            userData.stepSix = 0;
+            userData.stepSeven = 0;
+            userData.role = param.role;
+            db.add(userData, "dbo.newProject", function (err, result) {//插入一条数据
+                res.json(result);
+            });
+        }else{
             res.json(result);
         }
-
     });
 });
 router.post('/updateUser', function (req, res, next) {

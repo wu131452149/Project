@@ -43,12 +43,12 @@ export default {
                 speed: "",
             },
             TriInfo: {
-                agreementName: "",
-                agreementMoney: "",
-                agreementUserName: "",
-                agreementUserPhone: "",
-                agreementBank: "",
-                agreementCardNo: ""
+                triName: "",
+                triMoney: "",
+                triUserName: "",
+                triPhone: "",
+                triBank: "",
+                triCardNo: ""
             },
             options: [],
             levelOneList:[],
@@ -326,7 +326,19 @@ export default {
             var self = this;
             self.$refs.TriInfo.validate((valid) => {
                 if (valid) {
-                    let editBudgetData = _.cloneDeep(self.TriInfo);
+                    let editBudgetData = {};
+                    self.TriInfo.status = 2;//合同信息待审核
+                    var triInfo = _.cloneDeep(self.TriInfo);
+                    var triList = [];
+                    //如果是第一次提交合同
+                    if(!self.projectDetail.triInfo){
+                        triList.push(triInfo);
+                    }else{
+                        //之前有提交过
+                        triList = JSON.parse(self.projectDetail.triInfo);
+                        triList.push(triInfo);
+                    }
+                    editBudgetData.triInfo = JSON.stringify(triList);//转换一下数据
                     //根据id来改变
                     editBudgetData.id = self.projectDetail.id;
                     editBudgetData.step = 6;//新建的并且已经通过审核了的才能提交预算
@@ -334,6 +346,7 @@ export default {
                     editBudgetData.stepSixApp = 2;//将第二步设置为待审核
                     editBudgetData.ifEdit = 1;
                     editBudgetData.projectFinance = self.projectDetail.projectFinance;//传入后台取newproject表里面+1
+                    //换成字符串存入triInfo里面
                     self.$http.post('/api/project/updateProject', editBudgetData).then(res => {
                         let status = res.status;
                         let statusText = res.statusText;
@@ -375,15 +388,17 @@ export default {
             });
         },
         clearProFormData: function () {
+            var self = this;
             this.editPro.speed = "";
         },
         clearTriFormData: function () {
-            this.TriInfo.agreementName = "";
-            this.TriInfo.agreementMoney = "";
-            this.TriInfo.agreementUserName = "";
-            this.TriInfo.agreementUserPhone = "";
-            this.TriInfo.agreementBank = "";
-            this.TriInfo.agreementCardNo = "";
+            var self = this;
+            self.TriInfo.triName = "";
+            self.TriInfo.triMoney = "";
+            self.TriInfo.triUserName = "";
+            self.TriInfo.triPhone = "";
+            self.TriInfo.triBank = "";
+            self.TriInfo.triCardNo = "";
         },
         //关闭表格查询当前页数据
         handleAppStep6:function(){

@@ -108,6 +108,11 @@ export default {
                     self.projectDetail.appropriateTopBudgetList = [];
                     self.projectDetail.appropriateTopTotalBudgetList = [];
                 }
+                if (self.projectDetail.triInfo) {//第三方
+                    self.projectDetail.triInfoList = JSON.parse(self.projectDetail.triInfo);
+                }else{
+                    self.projectDetail.triInfoList = [];
+                }
             }
         },
     },
@@ -650,6 +655,12 @@ export default {
             }
             data.ifEdit = 0;
             data.projectFinance = self.user.role;
+            //三方信息审核通过，把所有status为2的改成1
+            var list = _.cloneDeep(self.projectDetail.triInfoList);
+            for(var i=0;i<list.length;i++){
+                list[i].status = 1;
+            }
+            data.triInfo = JSON.stringify(list);
             self.$http.post('/api/project/approvalProject', data).then(res => {
                 let status = res.status;
                 let statusText = res.statusText;
@@ -829,6 +840,13 @@ export default {
             } else if (self.step == 6) {
                 data.oldSuggestion = self.projectDetail.stepSixApp;
                 data.stepSixApp = 0;
+                //三方信息审核通过，把所有status为2的去掉
+                for(var i=0;i<self.projectDetail.triInfoList.length;i++){
+                    if (self.projectDetail.triInfoList[i].status == 2) {
+                        self.projectDetail.triInfoList.splice(i, 1);
+                    }
+                }
+                data.triInfo = JSON.stringify(self.projectDetail.triInfoList);
             } else if (self.step == 7) {
                 data.oldSuggestion = self.projectDetail.stepSevenApp;
                 data.stepSevenApp = 0;

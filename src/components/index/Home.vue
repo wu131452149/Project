@@ -2,6 +2,57 @@
     <div class="home-contain wrap">
         <!--监控地方-->
         <el-tabs v-model="userInfoActiveName">
+            <el-tab-pane label="项目流程" name="pro-step">
+                <div class="home-monitor-hint">
+                    <div class="scrollBar-inner">
+                        <div class="padding-t-15 padding-r-10 padding-l-10 padding-b-10">
+                            <div class="padding-t-5 padding-l padding-r padding-b-10 bg-color-active">
+                                <h4>1. 拟建库</h4>
+                                <div class="padding-t-10 padding-l line-height-25">
+                                    <div><p>1.1 录入项目信息，通过财政审核后，可以进入在建阶段在建库</p></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="padding-t-15 padding-r-10 padding-l-10 padding-b-10">
+                            <div class="padding-t-5 padding-l padding-r padding-b-10 bg-color-active">
+                                <h4>2. 在建库</h4>
+                                <div class="padding-t-10 padding-l line-height-25">
+                                    <div><p>2.1 在建库分准备阶段和建设阶段</p></div>
+                                    <div><p>2.2 准备阶段 :</p>
+                                        <div class="margin-l">
+                                            <p>• 分为项目预算评审和县级预算分年度安排,共2个财政审核环节</p>
+                                            <p class="bold">注意
+                                                :录入项目预算评审后可录入县级预算分年度安排，财政确认顺序亦相同，县级预算分年度安排通过财政审核后进入建设阶段</p>
+                                        </div>
+                                    </div>
+                                    <div><p>2.3 建设阶段 :</p>
+                                        <div class="margin-l">
+                                            <p>• 分为预算资金拨付、项目预算变更评审、工程进度和第三方信息，共3个财政审核环节，其中工程进度不审核</p>
+                                            <p class="bold">注意 :工程进度为100%后，可进入完工阶段</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="padding-t-15 padding-r-10 padding-l-10 padding-b-10">
+                            <div class="padding-t-5 padding-l padding-r padding-b-10 bg-color-active">
+                                <h4>3. 完工库</h4>
+                                <div class="padding-t-10 padding-l line-height-25">
+                                    <div><p>3.1 录入财政决算评审信息，通过财政审核后，进入完工库</p></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="padding-t-15 padding-r-10 padding-l-10 padding-b-10">
+                            <div class="padding-t-5 padding-l padding-r padding-b-10 bg-color-active">
+                                <h4>4. 退库</h4>
+                                <div class="padding-t-10 padding-l line-height-25">
+                                    <div><p>4.1 录入项目信息后，未进入在建阶段，可申请退库，通过财政审核后，完成退库</p></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </el-tab-pane>
             <el-tab-pane label="项目监控" name="pro-monitor">
                 <div class="home-monitor element-table th-bold">
                     <div><i class="fa fa-bar-chart"></i><h5 class="inline-block">项目数量统计</h5></div>
@@ -121,59 +172,6 @@
 
                         </div>
                     </div>
-                </div>
-                <div class="home-monitor-hint">
-                    <div><i class="fa fa-bar-chart"></i><h5 class="inline-block">项目流程</h5></div>
-                    <el-container style="height: 500px; border: 1px solid #eee">
-                        <el-main class="scrollBar-inner">
-                            <div class="padding-t-15 padding-r-10 padding-l-10 padding-b-10">
-                                <div class="padding-t-5 padding-l padding-r padding-b-10 bg-color-active">
-                                    <h4>1. 拟建库</h4>
-                                    <div class="padding-t-10 padding-l line-height-25">
-                                        <div><p>1.1 录入项目信息，通过财政审核后，可以进入在建阶段在建库</p></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="padding-t-15 padding-r-10 padding-l-10 padding-b-10">
-                                <div class="padding-t-5 padding-l padding-r padding-b-10 bg-color-active">
-                                    <h4>2. 在建库</h4>
-                                    <div class="padding-t-10 padding-l line-height-25">
-                                        <div><p>2.1 在建库分准备阶段和建设阶段</p></div>
-                                        <div><p>2.2 准备阶段 :</p>
-                                            <div class="margin-l">
-                                                <p>• 分为项目预算评审和县级预算分年度安排,共2个财政审核环节</p>
-                                                <p class="bold">注意
-                                                    :录入项目预算评审后可录入县级预算分年度安排，财政确认顺序亦相同，县级预算分年度安排通过财政审核后进入建设阶段</p>
-                                            </div>
-                                        </div>
-                                        <div><p>2.3 建设阶段 :</p>
-                                            <div class="margin-l">
-                                                <p>• 分为预算资金拨付、项目预算变更评审、工程进度和第三方信息，共3个财政审核环节，其中工程进度不审核</p>
-                                                <p class="bold">注意 :工程进度为100%后，可进入完工阶段</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="padding-t-15 padding-r-10 padding-l-10 padding-b-10">
-                                <div class="padding-t-5 padding-l padding-r padding-b-10 bg-color-active">
-                                    <h4>3. 完工库</h4>
-                                    <div class="padding-t-10 padding-l line-height-25">
-                                        <div><p>3.1 录入财政决算评审信息，通过财政审核后，进入完工库</p></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="padding-t-15 padding-r-10 padding-l-10 padding-b-10">
-                                <div class="padding-t-5 padding-l padding-r padding-b-10 bg-color-active">
-                                    <h4>4. 退库</h4>
-                                    <div class="padding-t-10 padding-l line-height-25">
-                                        <div><p>4.1 录入项目信息后，未进入在建阶段，可申请退库，通过财政审核后，完成退库</p></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </el-main>
-
-                    </el-container>
                 </div>
             </el-tab-pane>
             <el-tab-pane label="项目统计详情" name="all-pro-details">
@@ -469,113 +467,29 @@
                 </el-drawer>
                 <!--新建项目页面 end-->
             </el-tab-pane>
-            <!--<el-tab-pane label="金额统计详情" name="all-money-details">-->
-               <!--<budget-statistics></budget-statistics>-->
-            <!--</el-tab-pane>-->
-            <!--<el-tab-pane label="项目合计" name="all-pro-details-money">-->
-                <!--&lt;!&ndash;表格start&ndash;&gt;-->
-                <!--<div class="report-form element-table less-condition" style="">-->
-                    <!--<el-table-->
-                        <!--:data="sumProject.sumProjectList"-->
-                        <!--tooltip-effect="light"-->
-                        <!--:summary-method="getSummaries"-->
-                        <!--show-summary-->
-                        <!--style="width: 100%;height: 100%;">-->
-                        <!--<el-table-column show-overflow-tooltip prop="commitName" label="主管部门" width="100">-->
-                            <!--<template slot-scope="scope">{{scope.row.commitName}}</template>-->
-                        <!--</el-table-column>-->
-                        <!--<el-table-column show-overflow-tooltip prop="projectInstitution" label="项目单位">-->
-                            <!--<template slot-scope="scope">{{scope.row.projectInstitution}}</template>-->
-                        <!--</el-table-column>-->
-                        <!--<el-table-column show-overflow-tooltip prop="projectName" label="项目名称">-->
-                            <!--<template slot-scope="scope"><a @click.stop="showAllProjectDetails($event,scope.row)">{{scope.row.projectName}}</a>-->
-                            <!--</template>-->
-                        <!--</el-table-column>-->
-                        <!--<el-table-column show-overflow-tooltip prop="projectType" label="项目类型">-->
-                            <!--<template slot-scope="scope">{{scope.row.projectType}}</template>-->
-                        <!--</el-table-column>-->
-                        <!--<el-table-column show-overflow-tooltip prop="projectMoney" label="项目估算总额（万元）" width="80">-->
-                            <!--<template slot-scope="scope">-->
-                                <!--<span>{{scope.row.projectMoney}}</span>-->
-                            <!--</template>-->
-                        <!--</el-table-column>-->
-                        <!--<el-table-column show-overflow-tooltip prop="projectYears" label="项目周期" width="80">-->
-                            <!--<template slot-scope="scope">-->
-                                <!--<span>{{scope.row.projectYears}}</span>-->
-                            <!--</template>-->
-                        <!--</el-table-column>-->
-                        <!--<el-table-column show-overflow-tooltip prop="budgetReviewMoney" label="预算评审金额（万元）" width="80">-->
-                            <!--<template slot-scope="scope">-->
-                                <!--<span>{{scope.row.budgetReviewMoney}}</span>-->
-                            <!--</template>-->
-                        <!--</el-table-column>-->
-                        <!--<el-table-column show-overflow-tooltip prop="yearsPlanTotalMoneyNo" label="合计安排（万元）" width="80">-->
-                            <!--<template slot-scope="scope">-->
-                                <!--<span>{{scope.row.yearsPlanTotalMoneyNo}}</span>-->
-                            <!--</template>-->
-                        <!--</el-table-column>-->
-                        <!--<el-table-column show-overflow-tooltip prop="yearsPlanTotalMoney" label="以前年度累计安排（万元）"-->
-                                         <!--width="80">-->
-                            <!--<template slot-scope="scope">-->
-                                <!--<span>{{scope.row.yearsPlanTotalMoney|renderBeforeYearPlanTotalMoney}}</span>-->
-                            <!--</template>-->
-                        <!--</el-table-column>-->
-                        <!--<el-table-column show-overflow-tooltip prop="yearsPlanTotalMoney" label="当年安排（万元）" width="80">-->
-                            <!--<template slot-scope="scope">-->
-                                <!--<span>{{scope.row.yearsPlanTotalMoney|renderThisYearPlanTotalMoney}}</span>-->
-                            <!--</template>-->
-                        <!--</el-table-column>-->
-                        <!--<el-table-column show-overflow-tooltip prop="yearsPlanTotalMoney" label="次年安排（万元）" width="80">-->
-                            <!--<template slot-scope="scope">-->
-                                <!--<span>{{scope.row.yearsPlanTotalMoney|renderNextYearsPlanTotalMoney}}</span>-->
-                            <!--</template>-->
-                        <!--</el-table-column>-->
-                        <!--<el-table-column show-overflow-tooltip prop="yearsPlanTotalMoney" label="第三年安排（万元）" width="80">-->
-                            <!--<template slot-scope="scope">-->
-                                <!--<span>{{scope.row.yearsPlanTotalMoney|renderThirdYearsPlanTotalMoney}}</span>-->
-                            <!--</template>-->
-                        <!--</el-table-column>-->
-                        <!--<el-table-column show-overflow-tooltip prop="approTotalMoney" label="资金当年拨付（万元）" width="80">-->
-                            <!--<template slot-scope="scope">-->
-                                <!--<span>{{scope.row.approTotalMoney|renderAppThisYearMoney}}</span>-->
-                            <!--</template>-->
-                        <!--</el-table-column>-->
-                        <!--<el-table-column show-overflow-tooltip prop="approTotalPlanMoneyNo" label="资金累计拨付（万元）"-->
-                                         <!--width="80">-->
-                            <!--<template slot-scope="scope">-->
-                                <!--<span>{{scope.row.approTotalPlanMoneyNo}}</span>-->
-                            <!--</template>-->
-                        <!--</el-table-column>-->
-                        <!--<el-table-column show-overflow-tooltip prop="nonPaymentTotalMoneyNo" label="欠付金额（万元）"-->
-                                         <!--width="80">-->
-                            <!--<template slot-scope="scope">-->
-                                <!--<span>{{scope.row.nonPaymentTotalMoneyNo}}</span>-->
-                            <!--</template>-->
-                        <!--</el-table-column>-->
-                    <!--</el-table>-->
-                <!--</div>-->
-                <!--&lt;!&ndash;表格end&ndash;&gt;-->
-            <!--</el-tab-pane>-->
         </el-tabs>
     </div>
 </template>
 <script src="../../js/view/index/Home.js"></script>
 <style src="../../css/index/knowledge.css" scoped></style>
 <style>
-    .all-form-without-page .el-table__header-wrapper{
+    .all-form-without-page .el-table__header-wrapper {
         display: none;
     }
-    .all-form-without-page .el-table__body-wrapper{
+
+    .all-form-without-page .el-table__body-wrapper {
         display: none;
     }
-    .all-form-without-page .el-table__footer-wrapper{
+
+    .all-form-without-page .el-table__footer-wrapper {
         overflow: auto;
     }
-    .all-form-without-page .el-table .el-table__footer-wrapper .el-table__footer td .cell{
+
+    .all-form-without-page .el-table .el-table__footer-wrapper .el-table__footer td .cell {
         white-space: normal !important;
     }
 
-    .all-form-without-page .el-table{
+    .all-form-without-page .el-table {
         height: 7% !important;
     }
 </style>
