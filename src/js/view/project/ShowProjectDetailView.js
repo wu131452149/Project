@@ -72,6 +72,7 @@ export default {
             handler: function (val) {
                 var self = this;
                 self.initMoney();
+                self.computeTotal();
                 if (self.projectDetail.planYearsMoney) {
                     self.projectDetail.planYearsMoneyList = JSON.parse(self.projectDetail.planYearsMoney);
                     self.projectDetail.yearsPlanTotalMoneyList = Utils.mergeArr(self.projectDetail.planYearsMoneyList);//累计本级
@@ -168,21 +169,21 @@ export default {
         computeTotal: function () {
             var self = this;
             if (self.projectDetail.cutBudget || self.projectDetail.addBudget) {
-                if (self.cutBudget) {
-                    var total1 = 0;
+                var total1 = 0;
+                var total2 = 0;
+                if (self.cutBudget.length>0) {
                     for (var x = 0; x < self.cutBudget.length; x++) {
                         total1 = total1 + Number(self.cutBudget[x].money);
                     }
                 }
-                if (self.addBudget) {
-                    var total2 = 0;
+                if (self.addBudget.length>0) {
                     for (var y = 0; y < self.addBudget.length; y++) {
                         total2 = total2 + Number(self.addBudget[y].money);
                     }
                 }
                 self.totalCut = total1;
                 self.totalAdd = total2;
-                self.totalMoney = Number(self.projectDetail.budgetReviewMoney) - total1 + total2;
+                self.totalMoney = Number(self.projectDetail.budgetReviewMoney) - Number(total1) +  Number(total2);
             }
         },
         downloadUrl: function (data) {
@@ -542,7 +543,7 @@ export default {
                 self.projectDetail.appropriateBudgetList[i].status = 1;
             }
             for (var j = 0; j < self.projectDetail.appropriateTopBudgetList.length; j++) {
-                if(self.projectDetail.appropriateTopBudgetList[i].status==2){
+                if(self.projectDetail.appropriateTopBudgetList[j].status==2){
                     redCount = redCount+1;
                 }
                 self.projectDetail.appropriateTopBudgetList[j].status = 1;
@@ -613,6 +614,28 @@ export default {
             data.oldSuggestion = 2;
             data.ifEdit = 0;
             data.projectFinance = self.user.role;
+            //存入总字段
+            var redCount = 0;
+            //把所有的审核的status变成1
+            for (var i = 0; i < self.addBudget.length; i++) {
+                if(self.addBudget[i].status==2){
+                    redCount = redCount+1;
+                }
+                self.addBudget[i].status = 1;
+            }
+            for (var j = 0; j < self.cutBudget.length; j++) {
+                if(self.cutBudget[j].status==2){
+                    redCount = redCount+1;
+                }
+                self.cutBudget[j].status = 1;
+            }
+            if (self.addBudget.length > 0) {
+                data.addBudget = JSON.stringify(self.addBudget);
+            }
+            if (self.cutBudget.length > 0) {
+                data.cutBudget = JSON.stringify(self.cutBudget);
+            }
+            data.redCount = redCount;
             self.$http.post('/api/project/approvalProject', data).then(res => {
                 let status = res.status;
                 let statusText = res.statusText;
@@ -865,6 +888,27 @@ export default {
             } else if (self.step == 5) {
                 data.oldSuggestion = self.projectDetail.stepFiveApp;
                 data.stepFiveApp = 0;
+                var redCount = 0;
+                //变更审核不通过，把所有status为2的去掉
+                for(var i=0;i<self.cutBudget.length;i++){
+                    if (self.cutBudget[i].status == 2) {
+                        redCount = redCount +1;
+                        self.cutBudget.splice(i, 1);
+                    }
+                }
+                for(var i=0;i<self.addBudget.length;i++){
+                    if (self.addBudget[i].status == 2) {
+                        redCount = redCount +1;
+                        self.addBudget.splice(i, 1);
+                    }
+                }
+                if (self.addBudget.length > 0) {
+                    data.addBudget = JSON.stringify(self.addBudget);
+                }
+                if (self.cutBudget.length > 0) {
+                    data.cutBudget = JSON.stringify(self.cutBudget);
+                }
+                data.redCount = redCount;
             } else if (self.step == 6) {
                 data.oldSuggestion = self.projectDetail.stepSixApp;
                 data.stepSixApp = 0;

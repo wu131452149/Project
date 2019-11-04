@@ -186,7 +186,11 @@ router.post('/approvalProject', function (req, res, next) {
                             data.stepFour = 0;
                         }
                     } else if (step == 5) {
-                        data.stepFive = data.stepFive - 1;
+                        if(redCount){
+                            data.stepFive = data.stepFive - redCount;
+                        }else{
+                            data.stepFive = data.stepFive - 1;
+                        }
                         if (data.stepFive < 0) {
                             data.stepFive = 0;
                         }

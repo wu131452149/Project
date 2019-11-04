@@ -234,6 +234,9 @@ table {
 .color-red{
   color: #e05343 !important;
 }
+.color-red2{
+    color: red;
+}
 .color-green{
   color: rgb(55,170,115);
 }

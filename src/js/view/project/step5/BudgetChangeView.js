@@ -356,18 +356,19 @@ export default {
                 // if (index > -1) {
                 //     returnObj[index].money = parseInt(returnObj[index].money) + parseInt(editBudgetData.money);
                 // } else {
-                var newObj = {date: date, money: editBudgetData.money, type: editBudgetData.type,No:editBudgetData.approvalChangeNo};
+                var newObj = {date: date, money: editBudgetData.money, type: editBudgetData.type,No:editBudgetData.approvalChangeNo,status:2};
                 returnObj.push(newObj);
                 //}
             } else {
-                returnObj = [{date: date, money: editBudgetData.money, type: editBudgetData.type,No:editBudgetData.approvalChangeNo}];
+                returnObj = [{date: date, money: editBudgetData.money, type: editBudgetData.type,No:editBudgetData.approvalChangeNo,status:2}];
             }
             return returnObj;
         },
         clearFormData: function () {
-            this.budgetChangeProject.approvalChangeNo = "";
-            this.budgetChangeProject.type = "";
-            this.budgetChangeProject.money = "";
+            var self = this;
+            self.editBudgetChange.approvalChangeNo = "";
+            self.editBudgetChange.type = "";
+            self.editBudgetChange.money = "";
         },
         saveAPPNo: function () {
             var self = this;
@@ -389,10 +390,6 @@ export default {
                     });
                 } else {
                     if (res.data.length != 0) {
-                        self.$message({
-                            message: "提交成功",
-                            type: 'success'
-                        });
                         //关闭当前页，并清空表格数据
                         self.clearFormData();
                         self.closeForm();

@@ -221,12 +221,18 @@
                         <div class="clearFix">
                             <span class="info-label">预算变更：</span>
                             <div v-for="item in cutBudget" v-if="projectDetail.cutBudget">
-                            <span class="info-val plan-years">
+                            <span class="info-val plan-years color-red2" v-if="item.status==2">
+                                {{item.date}},{{item.type}}{{Number(item.money)}}（万元）,评审文号为{{item.No}}
+                            </span>
+                                <span class="info-val plan-years" v-else>
                                 {{item.date}},{{item.type}}{{Number(item.money)}}（万元）,评审文号为{{item.No}}
                             </span>
                             </div>
                             <div v-for="item in addBudget" v-if="projectDetail.addBudget">
-                            <span class="info-val plan-years">
+                            <span class="info-val plan-years color-red2" v-if="item.status==2">
+                                {{item.date}},{{item.type}}{{Number(item.money)}}（万元）,评审文号为{{item.No}}
+                            </span>
+                                <span class="info-val plan-years" v-else>
                                 {{item.date}},{{item.type}}{{Number(item.money)}}（万元）,评审文号为{{item.No}}
                             </span>
                             </div>
@@ -257,7 +263,7 @@
                     <div v-for="(item,index) in projectDetail.triInfoList">
                         <div class="inline-block font13 width-per45 ver-text-top margin-t-15 margin-r">
                         </div>
-                        <div v-if="item.status==2" class="color-red">
+                        <div v-if="item.status==2" class="color-red2">
                             <div class="inline-block font13 width-per45 ver-text-top margin-t-15 margin-r">
                                 <div class="clearFix">
                                     <span class="info-label">合同名称：</span>
