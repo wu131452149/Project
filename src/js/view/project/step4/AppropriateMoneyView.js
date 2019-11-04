@@ -232,7 +232,7 @@ export default {
                 data.commitName = self.user.role;
             } else if (self.user.grade == 2) {//如果是2，那么查询提交上来只查自己部门审批的
                 data.projectFinance = self.user.role;
-                data.ifEdit = 1;
+                data.ifFourEdit = 1;
                 data.grade = 2;
             }
             self.$http.post('/api/project/queryProject', data).then(res => {
@@ -320,7 +320,7 @@ export default {
                 data.commitName = self.user.role;
             } else if (self.user.grade == 2) {//如果是2，那么查询提交上来只查自己部门审批的
                 data.projectFinance = self.user.role;
-                data.ifEdit = 1;
+                data.ifFourEdit = 1;
             }
             self.$http.post('/api/project/queryProjectCount', data).then(res => {
                 let status = res.status;
@@ -390,7 +390,7 @@ export default {
                     editBudgetData.trueStep = 4;
                     editBudgetData.suggestion = 1;//第一步已经通过审核
                     editBudgetData.stepFourApp = 2;//将第二步设置为待审核
-                    editBudgetData.ifEdit = 1;
+                    editBudgetData.ifFourEdit = 1;
                     //存入数据库
                     if (editBudgetData.type == "县级预算安排") {
                         //存入数据库

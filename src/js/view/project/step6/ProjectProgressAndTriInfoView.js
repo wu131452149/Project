@@ -150,7 +150,7 @@ export default {
                 data.commitName = self.user.role;
             } else if (self.user.grade == 2) {//如果是2，那么查询提交上来只查自己部门审批的
                 data.projectFinance = self.user.role;
-                data.ifEdit = 1;
+                data.ifSixEdit = 1;
                 data.grade = 2;
             }
             self.$http.post('/api/project/queryProject', data).then(res => {
@@ -197,7 +197,7 @@ export default {
                 data.commitName = self.user.role;
             } else if (self.user.grade == 2) {//如果是2，那么查询提交上来只查自己部门审批的
                 data.projectFinance = self.user.role;
-                data.ifEdit = 1;
+                data.ifSixEdit = 1;
             }
             self.$http.post('/api/project/queryProjectCount', data).then(res => {
                 let status = res.status;
@@ -345,7 +345,7 @@ export default {
                     editBudgetData.step = 6;//新建的并且已经通过审核了的才能提交预算
                     editBudgetData.suggestion = 1;//第一步已经通过审核
                     editBudgetData.stepSixApp = 2;//将第二步设置为待审核
-                    editBudgetData.ifEdit = 1;
+                    editBudgetData.ifSixEdit = 1;
                     editBudgetData.projectFinance = self.projectDetail.projectFinance;//传入后台取newproject表里面+1
                     //换成字符串存入triInfo里面
                     self.$http.post('/api/project/updateProject', editBudgetData).then(res => {

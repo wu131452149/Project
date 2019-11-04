@@ -374,7 +374,7 @@ export default {
             data.stepThreeApp = 1;
             data.stepFourApp = 2;
             data.oldSuggestion = 2;
-            data.ifEdit = 0;
+            data.ifThreeEdit = 0;
             data.projectFinance = self.user.role;
             //存入总字段
             var list1 = _.cloneDeep(self.projectDetail.planYearsMoneyList);
@@ -527,7 +527,7 @@ export default {
             data.stepFourApp = 1;
             data.stepFiveApp = 2;
             data.oldSuggestion = 2;
-            data.ifEdit = 0;
+            data.ifFourEdit = 0;
             data.projectFinance = self.user.role;
             //存入总字段
             var list1 = _.cloneDeep(self.projectDetail.appropriateBudgetList);
@@ -615,7 +615,7 @@ export default {
             data.stepFiveApp = 1;
             data.stepSixApp = 2;
             data.oldSuggestion = 2;
-            data.ifEdit = 0;
+            data.ifFiveEdit = 0;
             data.projectFinance = self.user.role;
             //存入总字段
             var redCount = 0;
@@ -694,7 +694,7 @@ export default {
                 data.oldSuggestion = 2;
             }
             data.oldStep = 6;
-            data.ifEdit = 0;
+            data.ifSixEdit = 0;
             data.projectFinance = self.user.role;
             //三方信息审核通过，把所有status为2的改成1
             var redCount = 0;

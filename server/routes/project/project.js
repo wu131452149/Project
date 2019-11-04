@@ -412,8 +412,26 @@ router.post('/queryProject', function (req, res, next) {
     if (param.projectYears) {
         whereSql = whereSql + " and projectYears= " + param.projectYears;
     }
-    if (param.ifEdit) {
-        whereSql = whereSql + " and ifEdit= " + param.ifEdit;
+    if (step == 3) {
+        if (param.ifThreeEdit) {
+            whereSql = whereSql + " and ifThreeEdit= " + param.ifThreeEdit;
+        }
+    }else if(step == 4){
+        if (param.ifFourEdit) {
+            whereSql = whereSql + " and ifFourEdit= " + param.ifFourEdit;
+        }
+    }else if(step == 5){
+        if (param.ifFiveEdit) {
+            whereSql = whereSql + " and ifFiveEdit= " + param.ifFiveEdit;
+        }
+    }else if(step == 6){
+        if (param.ifSixEdit) {
+            whereSql = whereSql + " and ifSixEdit= " + param.ifSixEdit;
+        }
+    }else{
+        if (param.ifEdit) {
+            whereSql = whereSql + " and ifEdit= " + param.ifEdit;
+        }
     }
     //默认查询条件
     if (param.step) {
@@ -581,8 +599,26 @@ router.post('/queryProjectCount', function (req, res, next) {
     if (param.projectFinance) {
         whereSql = whereSql + " and projectFinance= '" + param.projectFinance + "'";
     }
-    if (param.ifEdit) {
-        whereSql = whereSql + " and ifEdit= " + param.ifEdit;
+    if (step == 3) {
+        if (param.ifThreeEdit) {
+            whereSql = whereSql + " and ifThreeEdit= " + param.ifThreeEdit;
+        }
+    }else if(step == 4){
+        if (param.ifFourEdit) {
+            whereSql = whereSql + " and ifFourEdit= " + param.ifFourEdit;
+        }
+    }else if(step == 5){
+        if (param.ifFiveEdit) {
+            whereSql = whereSql + " and ifFiveEdit= " + param.ifFiveEdit;
+        }
+    }else if(step == 6){
+        if (param.ifSixEdit) {
+            whereSql = whereSql + " and ifSixEdit= " + param.ifSixEdit;
+        }
+    }else{
+        if (param.ifEdit) {
+            whereSql = whereSql + " and ifEdit= " + param.ifEdit;
+        }
     }
     delete param.grade;
 
