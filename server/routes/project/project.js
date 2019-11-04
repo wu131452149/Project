@@ -344,7 +344,7 @@ router.post('/deleteProject', function (req, res, next) {
                     });
                 }
             })
-        }else{
+        } else {
             res.json(result);
         }
     });
@@ -364,22 +364,37 @@ router.post('/queryProject', function (req, res, next) {
         suggestionStep = "stepTwoApp";
         suggestion = param.stepTwoApp;
     } else if (step == 3) {//年度预算可以录入多次
-        //suggestionStep = "stepThreeApp";
-        //suggestion = param.stepThreeApp;
+
+        if (param.grade == 2) {
+            suggestionStep = "stepThreeApp";
+            suggestion = param.stepThreeApp;
+        }
     } else if (step == 4) {//拨付可以录入多次
-        //suggestionStep = "stepFourApp";
-        //suggestion = param.stepFourApp;
+
+        if (param.grade == 2) {
+            suggestionStep = "stepFourApp";
+            suggestion = param.stepFourApp;
+        }
     } else if (step == 5) {//预算可以变更多次
-        //suggestionStep = "stepFiveApp";
-        //suggestion = param.stepFiveApp;
+
+        if (param.grade == 2) {
+            suggestionStep = "stepFiveApp";
+            suggestion = param.stepFiveApp;
+        }
 
     } else if (step == 6) {//6不用查审核，工程进度可以直接录入多次
-        // suggestionStep = "stepSixApp";
-        // suggestion = param.stepSixApp;
+
+        if (param.grade == 2) {
+            suggestionStep = "stepSixApp";
+            suggestion = param.stepSixApp;
+        }
 
     } else if (step == 7) {//完工库都可以显示，无论是否审核
-        // suggestionStep = "stepSevenApp";
-        // suggestion = param.stepSevenApp;
+
+        if (param.grade == 2) {
+            suggestionStep = "stepSevenApp";
+            suggestion = param.stepSevenApp;
+        }
     }
     var whereSql = " where 1=1";
     if (param.id) {
@@ -422,6 +437,7 @@ router.post('/queryProject', function (req, res, next) {
     if (param.projectFinance) {
         whereSql = whereSql + " and projectFinance= '" + param.projectFinance + "'";
     }
+    delete param.grade;
 
     //var pageSize = 10;
     //分页查询
@@ -494,26 +510,38 @@ router.post('/queryProjectCount', function (req, res, next) {
     } else if (step == 2) {
         suggestionStep = "stepTwoApp";
         suggestion = param.stepTwoApp;
-    } else if (step == 3) {
-        // suggestionStep = "stepThreeApp";
-        //suggestion = param.stepThreeApp;
+    } else if (step == 3) {//年度预算可以录入多次
 
-    } else if (step == 4) {
-        //suggestionStep = "stepFourApp";
-        //suggestion = param.stepFourApp;
+        if (param.grade == 2) {
+            suggestionStep = "stepThreeApp";
+            suggestion = param.stepThreeApp;
+        }
+    } else if (step == 4) {//拨付可以录入多次
 
-    } else if (step == 5) {
-        //suggestionStep = "stepFiveApp";
-        //suggestion = param.stepFiveApp;
+        if (param.grade == 2) {
+            suggestionStep = "stepFourApp";
+            suggestion = param.stepFourApp;
+        }
+    } else if (step == 5) {//预算可以变更多次
 
-    } else if (step == 6) {
-        // suggestionStep = "stepSixApp";
-        // suggestion = param.stepSixApp;
+        if (param.grade == 2) {
+            suggestionStep = "stepFiveApp";
+            suggestion = param.stepFiveApp;
+        }
 
-    } else if (step == 7) {
-        // suggestionStep = "stepSevenApp";
-        // suggestion = param.stepSevenApp;
+    } else if (step == 6) {//6不用查审核，工程进度可以直接录入多次
 
+        if (param.grade == 2) {
+            suggestionStep = "stepSixApp";
+            suggestion = param.stepSixApp;
+        }
+
+    } else if (step == 7) {//完工库都可以显示，无论是否审核
+
+        if (param.grade == 2) {
+            suggestionStep = "stepSevenApp";
+            suggestion = param.stepSevenApp;
+        }
     }
     var whereSql = " ";
     if (param.id) {
@@ -556,6 +584,7 @@ router.post('/queryProjectCount', function (req, res, next) {
     if (param.ifEdit) {
         whereSql = whereSql + " and ifEdit= " + param.ifEdit;
     }
+    delete param.grade;
 
     var sql = "select count(id) as num from " + dbName + " where 1=1" + whereSql;
     db.querySql(sql, "", function (err, result) {//查询所有news表的数据

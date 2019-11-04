@@ -254,6 +254,7 @@ export default {
             } else if (self.user.grade == 2) {//如果是2，那么查询提交上来只查自己部门审批的
                 data.projectFinance = self.user.role;
                 data.ifEdit = 1;
+                data.grade = 2;
             }
             self.$http.post('/api/project/queryProject', data).then(res => {
                 let status = res.status;

@@ -121,6 +121,7 @@ export default {
                     createProject.ifReturned = 0;
                     createProject.stepOneApp = 2;
                     createProject.commitName = self.user.role;
+                    delete createProject.id;
                     createProject.projectCommitTime = Utils.formatDate(new Date()) + ".000";
                     for (var i = 0; i < self.getProjectYears.length; i++) {
                         if (createProject.projectYears == self.getProjectYears[i].name) {

@@ -563,6 +563,9 @@ export default {
                 if (index === 0) {
                     sums[index] = '合计';    //这里就是显示你要写的啥名字,是合计还是汇总什么
                     return;
+                }else if(index === 5){
+                    sums[index] = 'N/A';    //这里就是显示你要写的啥名字,是合计还是汇总什么
+                    return;
                 }else{
                     sums[index] = self.sum[index+1];
                 }

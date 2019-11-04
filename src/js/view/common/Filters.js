@@ -137,7 +137,7 @@ export default {
     //累计以前年度安排
     renderBeforeYearPlanTotalMoney: function (data) {
         let money = "";
-        var thisYears = new Date().getFullYear();
+        var thisYears = new Date().getFullYear()+"年度";
         //var thisYears = 2020;
         if (data) {
             money = JSON.parse(data);

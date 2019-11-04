@@ -176,7 +176,7 @@
                                     </div>
                                     <div class="text item">
                                         <div>
-                                            <span>{{ -allBudgetReviewMoney.nonPaymentTotalMoneyNo}}(万元）</span>
+                                            <span>{{ allBudgetReviewMoney.nonPaymentTotalMoneyNo}}(万元）</span>
                                         </div>
                                     </div>
                                 </el-card>
