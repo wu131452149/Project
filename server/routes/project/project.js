@@ -140,6 +140,10 @@ router.post('/approvalProject', function (req, res, next) {
     if (param.projectFinance) {
         var projectFinance = param.projectFinance;
     }
+    if(param.redCount){
+        var redCount = param.redCount
+    }
+    delete param.redCount;
     delete param.id;
     delete param.oldStep;
     delete param.oldSuggestion;
@@ -164,12 +168,20 @@ router.post('/approvalProject', function (req, res, next) {
                             data.stepTwo = 0;
                         }
                     } else if (step == 3) {
-                        data.stepThree = data.stepThree - 1;
+                        if(redCount){
+                            data.stepThree = data.stepThree - redCount;
+                        }else{
+                            data.stepThree = data.stepThree - 1;
+                        }
                         if (data.stepThree < 0) {
                             data.stepThree = 0;
                         }
                     } else if (step == 4) {
-                        data.stepFour = data.stepFour - 1;
+                        if(redCount){
+                            data.stepFour = data.stepFour - redCount;
+                        }else{
+                            data.stepFour = data.stepFour - 1;
+                        }
                         if (data.stepFour < 0) {
                             data.stepFour = 0;
                         }
@@ -179,7 +191,11 @@ router.post('/approvalProject', function (req, res, next) {
                             data.stepFive = 0;
                         }
                     } else if (step == 6) {
-                        data.stepSix = data.stepSix - 1;
+                        if(redCount){
+                            data.stepSix = data.stepSix - redCount;
+                        }else{
+                            data.stepSix = data.stepSix - 1;
+                        }
                         if (data.stepSix < 0) {
                             data.stepSix = 0;
                         }
@@ -235,35 +251,40 @@ router.post('/updateProject', function (req, res, next) {
     }
     db.update(param, whereObj, dbName, function (err, result) {//查询所有news表的数据
         if (result && result.rowsAffected && result.rowsAffected.length > 0) {
-            //传入审批项目的人（插入一条表在newProject）
-            var whereSql = "where role = '" + projectFinance + "'";
-            db.select(dbNewPro, 1, whereSql, "", "order by id", function (err, res1) {
-                if (res1.recordset.length > 0) {
-                    var data = res1.recordset[0];
-                    var whereObj = {id: data.id};
-                    delete data.id;
-                    if (step == 1) {
-                        data.stepOne = data.stepOne + 1;
-                    } else if (step == 2) {
-                        data.stepTwo = data.stepTwo + 1;
-                    } else if (step == 3) {
-                        data.stepThree = data.stepThree + 1;
-                    } else if (step == 4) {
-                        data.stepFour = data.stepFour + 1;
-                    } else if (step == 5) {
-                        data.stepFive = data.stepFive + 1;
-                    } else if (step == 6) {
-                        data.stepSix = data.stepSix + 1;
-                    } else if (step == 7) {
-                        data.stepSeven = data.stepSeven + 1;
-                    }
-                    db.update(data, whereObj, dbNewPro, function (err, result2) {//插入一条新的数据
+            if(!param.planYearsSelfMoney){
+                //传入审批项目的人（插入一条表在newProject）
+                var whereSql = "where role = '" + projectFinance + "'";
+                db.select(dbNewPro, 1, whereSql, "", "order by id", function (err, res1) {
+                    if (res1.recordset.length > 0) {
+                        var data = res1.recordset[0];
+                        var whereObj = {id: data.id};
+                        delete data.id;
+                        if (step == 1) {
+                            data.stepOne = data.stepOne + 1;
+                        } else if (step == 2) {
+                            data.stepTwo = data.stepTwo + 1;
+                        } else if (step == 3) {
+                            data.stepThree = data.stepThree + 1;
+                        } else if (step == 4) {
+                            data.stepFour = data.stepFour + 1;
+                        } else if (step == 5) {
+                            data.stepFive = data.stepFive + 1;
+                        } else if (step == 6) {
+                            data.stepSix = data.stepSix + 1;
+                        } else if (step == 7) {
+                            data.stepSeven = data.stepSeven + 1;
+                        }
+                        db.update(data, whereObj, dbNewPro, function (err, result2) {//插入一条新的数据
+                            res.json(result);
+                        });
+                    } else {
                         res.json(result);
-                    });
-                } else {
-                    res.json(result);
-                }
-            });
+                    }
+                });
+            }else{
+                res.json(result);
+            }
+
         } else {
             res.json(result);
         }

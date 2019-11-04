@@ -80,7 +80,7 @@ export default {
             levelOneList:[],
             levelOne:"",
             newInstituation:[],
-            yearsPlanType: Utils.getYearsPlanType(),
+            yearsPlanType: Utils.getYearsPlanType(),//3个
             yearsOptionType: Utils.getOptionYears(),//如果有自筹金额了就不用显示自筹的修改了
             rules: {
                 money: [
@@ -110,6 +110,60 @@ export default {
         self.queryBudgetYearsPlanMoney();
     },
     methods: {
+        ifHasPlanYearsSelfMoney:function(){
+            //查询当前自筹金额是不是全部填写过了，只可以填写一次
+            var self = this;
+            var thisYears = new Date().getFullYear()+"年度";
+            var nextYears = new Date().getFullYear()+1+"年度";
+            var nextAYears = new Date().getFullYear()+2+"年度";
+            if(!self.projectDetail.planYearsSelfMoney){
+                return true;
+            }else{
+                var list = JSON.parse(self.projectDetail.planYearsSelfMoney);
+                if(self.projectDetail.projectYears==1){
+                    var index = _.findIndex(list, function (o) {
+                        return o.years == thisYears;
+                    });
+                    if(index>-1){
+                        return false
+                    }else{
+                        return true;
+                    }
+                }else if(self.projectDetail.projectYears==2){
+                    var index = _.findIndex(list, function (o) {
+                        return o.years == thisYears;
+                    });
+                    var index1 = _.findIndex(list, function (o) {
+                        return o.years == nextYears;
+                    });
+                    if(index>-1&&index1>-1){//说明都存在，那就不显示自筹
+                        return false
+                    }else{
+                        return true;
+                    }
+                }else if(self.projectDetail.projectYears==3){
+                    var index = _.findIndex(list, function (o) {
+                        return o.years == thisYears;
+                    });
+                    var index1 = _.findIndex(list, function (o) {
+                        return o.years == nextYears;
+                    });
+                    var index2 = _.findIndex(list, function (o) {
+                        return o.years == nextAYears;
+                    });
+                    if(index>-1&&index1>-1&&index2>-1){//说明都存在，那就不显示自筹
+                        return false
+                    }else{
+                        return true;
+                    }
+                }
+            }
+
+
+            for(var i=0;i<self.projectDetail.planYearsSelfMoney.length;i++){
+
+           }
+        },
         //查询单位
         queryInstitution: function (callback) {
             let self = this;
@@ -363,7 +417,15 @@ export default {
                     editBudgetData.ifEdit = 1;
                     if (editBudgetData.type == "自筹金额") {
                         //存入数据库//只能编辑一次
-                        var obj = JSON.stringify([{years: editBudgetData.years, money: editBudgetData.money}]);
+                        var obj = {};
+                        //status是审核状态
+                        if(!self.projectDetail.planYearsSelfMoney){//第一次录入
+                            obj = JSON.stringify([{years: editBudgetData.years, money: editBudgetData.money}]);
+                        }else{
+                            var newObj = JSON.parse(self.projectDetail.planYearsSelfMoney);//先解成数组；
+                            newObj.push({years: editBudgetData.years, money: Number(editBudgetData.money)});
+                            obj = JSON.stringify(newObj);
+                        }
                         self.projectDetail.planYearsSelfMoney = obj;
                         editBudgetData.planYearsSelfMoney = obj;
                     } else if (editBudgetData.type == "县级预算安排") {

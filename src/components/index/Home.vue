@@ -84,6 +84,18 @@
                         <div class="el-col el-col-4">
                             <el-card class="box-card">
                                 <div slot="header" class="clearfix">
+                                    <span>在建项目</span>
+                                </div>
+                                <div class="text item">
+                                    <div><span>个数：</span>
+                                        <span>{{ allProject.count-monitor.finishedProjectCount-monitor.returnedProjectCount-monitor.newProjectCount}}</span>
+                                    </div>
+                                </div>
+                            </el-card>
+                        </div>
+                        <div class="el-col el-col-4">
+                            <el-card class="box-card">
+                                <div slot="header" class="clearfix">
                                     <span>完工项目</span>
                                 </div>
                                 <div class="text item">

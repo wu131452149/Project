@@ -365,8 +365,8 @@ export default {
             data.id = self.projectDetail.id;
             if (self.projectDetail.approvalStep <= 3) {
                 data.approvalStep = 4;
-                data.oldStep = 3;
             }
+            data.oldStep = 3;
             data.stepThreeApp = 1;
             data.stepFourApp = 2;
             data.oldSuggestion = 2;
@@ -377,11 +377,18 @@ export default {
             var list2 = _.cloneDeep(self.projectDetail.planYearsTopMoneyList);
             var list = list1.concat(list2);
             var obj = self.mergeArr(list);
+            var redCount = 0;
             //把所有的审核的status变成1
             for (var i = 0; i < self.projectDetail.planYearsMoneyList.length; i++) {
+                if(self.projectDetail.planYearsMoneyList[i].status==2){
+                    redCount = redCount +1;
+                }
                 self.projectDetail.planYearsMoneyList[i].status = 1;
             }
             for (var i = 0; i < self.projectDetail.planYearsTopMoneyList.length; i++) {
+                if(self.projectDetail.planYearsTopMoneyList[i].status==2){
+                    redCount = redCount +1;
+                }
                 self.projectDetail.planYearsTopMoneyList[i].status = 1;
             }
             if (self.projectDetail.planYearsMoneyList.length > 0) {
@@ -394,6 +401,7 @@ export default {
             data.yearsPlanTotalMoneyNo = Utils.countTotalPlanMoney(obj);
             //对象
             data.yearsPlanTotalMoney = JSON.stringify(obj);
+            data.redCount = redCount;
             self.$http.post('/api/project/approvalProject', data).then(res => {
                 let status = res.status;
                 let statusText = res.statusText;
@@ -510,8 +518,8 @@ export default {
             data.id = self.projectDetail.id;
             if (self.projectDetail.approvalStep <= 4) {
                 data.approvalStep = 5;
-                data.oldStep = 4;
             }
+            data.oldStep = 4;
             data.stepFourApp = 1;
             data.stepFiveApp = 2;
             data.oldSuggestion = 2;
@@ -525,11 +533,18 @@ export default {
                 list[y].years = list[y].date.substring(0, 4);
             }
             var obj = Utils.mergeArr(list);
+            var redCount = 0;
             //把所有的审核的status变成1
             for (var i = 0; i < self.projectDetail.appropriateBudgetList.length; i++) {
+                if(self.projectDetail.appropriateBudgetList[i].status==2){
+                    redCount = redCount+1;
+                }
                 self.projectDetail.appropriateBudgetList[i].status = 1;
             }
             for (var j = 0; j < self.projectDetail.appropriateTopBudgetList.length; j++) {
+                if(self.projectDetail.appropriateTopBudgetList[i].status==2){
+                    redCount = redCount+1;
+                }
                 self.projectDetail.appropriateTopBudgetList[j].status = 1;
             }
             if (self.projectDetail.appropriateBudgetList.length > 0) {
@@ -543,6 +558,7 @@ export default {
             //对象
             data.approTotalMoney = JSON.stringify(obj);
             data.nonPaymentTotalMoneyNo = -Number(data.approTotalPlanMoneyNo - self.projectDetail.yearsPlanTotalMoneyNo);
+            data.redCount = redCount;
             self.$http.post('/api/project/approvalProject', data).then(res => {
                 let status = res.status;
                 let statusText = res.statusText;
@@ -590,8 +606,8 @@ export default {
             data.id = self.projectDetail.id;
             if (self.projectDetail.approvalStep <= 5) {
                 data.approvalStep = 6;
-                data.oldStep = 5;
             }
+            data.oldStep = 5;
             data.stepFiveApp = 1;
             data.stepSixApp = 2;
             data.oldSuggestion = 2;
@@ -644,23 +660,27 @@ export default {
                 data.approvalStep = 7;
                 data.stepSixApp = 1;
                 data.stepSevenApp = 2;
-                data.oldStep = 6;
                 data.oldSuggestion = 2;
             } else {
                 data.approvalStep = 6;
                 data.stepSixApp = 1;
                 //data.stepSevenApp = 2;
-                data.oldStep = 6;
                 data.oldSuggestion = 2;
             }
+            data.oldStep = 6;
             data.ifEdit = 0;
             data.projectFinance = self.user.role;
             //三方信息审核通过，把所有status为2的改成1
+            var redCount = 0;
             var list = _.cloneDeep(self.projectDetail.triInfoList);
             for(var i=0;i<list.length;i++){
+                if(list[i].status==2){
+                   redCount = redCount +1;
+                }
                 list[i].status = 1;
             }
             data.triInfo = JSON.stringify(list);
+            data.redCount = redCount;
             self.$http.post('/api/project/approvalProject', data).then(res => {
                 let status = res.status;
                 let statusText = res.statusText;
@@ -769,14 +789,17 @@ export default {
             } else if (self.step == 3) {
                 data.oldSuggestion = self.projectDetail.stepThreeApp;
                 data.stepThreeApp = 0;
+                var redCount = 0;
                 //删除未审核的数据
                 for (var i = 0; i < self.projectDetail.planYearsMoneyList.length; i++) {
                     if (self.projectDetail.planYearsMoneyList[i].status == 2) {
+                        redCount = redCount +1;
                         self.projectDetail.planYearsMoneyList.splice(i, 1);
                     }
                 }
                 for (var i = 0; i < self.projectDetail.planYearsTopMoneyList.length; i++) {
                     if (self.projectDetail.planYearsTopMoneyList[i].status == 2) {
+                        redCount = redCount +1;
                         self.projectDetail.planYearsTopMoneyList.splice(i, 1);
                     }
                 }
@@ -798,17 +821,21 @@ export default {
                 data.yearsPlanTotalMoneyNo = Utils.countTotalPlanMoney(obj);
                 //对象
                 data.yearsPlanTotalMoney = JSON.stringify(obj);
+                data.redCount = redCount;
             } else if (self.step == 4) {
                 data.oldSuggestion = self.projectDetail.stepFourApp;
                 data.stepFourApp = 0;
+                var redCount = 0;
                 //删除未审核的数据
                 for (var i = 0; i < self.projectDetail.appropriateBudgetList.length; i++) {
                     if (self.projectDetail.appropriateBudgetList[i].status == 2) {
+                        redCount = redCount +1;
                         self.projectDetail.appropriateBudgetList.splice(i, 1);
                     }
                 }
                 for (var j = 0; j < self.projectDetail.appropriateTopBudgetList.length; j++) {
                     if (self.projectDetail.appropriateTopBudgetList[j].status == 2) {
+                        redCount = redCount +1;
                         self.projectDetail.appropriateTopBudgetList.splice(j, 1);
                     }
                 }
@@ -829,6 +856,7 @@ export default {
                 } else {
                     data.appropriateTopBudget = "";
                 }
+                data.redCount = redCount;
                 //计算合计累计拨付
                 data.approTotalPlanMoneyNo = Utils.countTotalPlanMoney(obj);
                 //对象
@@ -840,12 +868,15 @@ export default {
             } else if (self.step == 6) {
                 data.oldSuggestion = self.projectDetail.stepSixApp;
                 data.stepSixApp = 0;
+                var redCount = 0;
                 //三方信息审核通过，把所有status为2的去掉
                 for(var i=0;i<self.projectDetail.triInfoList.length;i++){
                     if (self.projectDetail.triInfoList[i].status == 2) {
+                        redCount = redCount +1;
                         self.projectDetail.triInfoList.splice(i, 1);
                     }
                 }
+                data.redCount = redCount;
                 data.triInfo = JSON.stringify(self.projectDetail.triInfoList);
             } else if (self.step == 7) {
                 data.oldSuggestion = self.projectDetail.stepSevenApp;

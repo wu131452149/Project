@@ -180,21 +180,22 @@
                                     :value="item.value">
                                 </el-option>
                             </el-select>
-
+                            <!--3个选项-->
                             <el-select
                                 v-model="editBudgetYearsPlan.type"
                                 style="margin-left: 20px;"
-                                placeholder="请选择类型" v-if="!projectDetail.planYearsSelfMoney">
+                                placeholder="请选择类型" v-if="ifHasPlanYearsSelfMoney()">
                                 <el-option
                                     v-for="item in yearsPlanType"
                                     :key="item.value"
                                     :value="item.value">
                                 </el-option>
                             </el-select>
+                            <!--2个选项-->
                             <el-select
                                 v-model="editBudgetYearsPlan.type"
                                 style="margin-left: 20px;"
-                                placeholder="请选择" v-if="projectDetail.planYearsSelfMoney">
+                                placeholder="请选择" v-else>
                                 <el-option
                                     v-for="item in yearsOptionType"
                                     :key="item.value"
