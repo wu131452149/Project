@@ -36,7 +36,9 @@ export default {
         var self = this;
         self.initMoney();
         self.computeTotal();
-        self.queryIfNewProject();
+        if(self.user.grade==2){
+            self.queryIfNewProject();
+        }
     },
     watch: {
         "showEdit": {
@@ -137,6 +139,7 @@ export default {
         queryIfNewProject: function () {
             let self = this;
             var data = {};
+            data.role = self.user.role;
             self.$http.post('/api/project/queryIfNewProject', data).then(res => {
                 let status = res.status;
                 let statusText = res.statusText;
