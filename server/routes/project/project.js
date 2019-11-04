@@ -140,7 +140,7 @@ router.post('/approvalProject', function (req, res, next) {
     if (param.projectFinance) {
         var projectFinance = param.projectFinance;
     }
-    if(param.redCount){
+    if (param.redCount) {
         var redCount = param.redCount
     }
     delete param.redCount;
@@ -168,36 +168,36 @@ router.post('/approvalProject', function (req, res, next) {
                             data.stepTwo = 0;
                         }
                     } else if (step == 3) {
-                        if(redCount){
+                        if (redCount) {
                             data.stepThree = data.stepThree - redCount;
-                        }else{
+                        } else {
                             data.stepThree = data.stepThree - 1;
                         }
                         if (data.stepThree < 0) {
                             data.stepThree = 0;
                         }
                     } else if (step == 4) {
-                        if(redCount){
+                        if (redCount) {
                             data.stepFour = data.stepFour - redCount;
-                        }else{
+                        } else {
                             data.stepFour = data.stepFour - 1;
                         }
                         if (data.stepFour < 0) {
                             data.stepFour = 0;
                         }
                     } else if (step == 5) {
-                        if(redCount){
+                        if (redCount) {
                             data.stepFive = data.stepFive - redCount;
-                        }else{
+                        } else {
                             data.stepFive = data.stepFive - 1;
                         }
                         if (data.stepFive < 0) {
                             data.stepFive = 0;
                         }
                     } else if (step == 6) {
-                        if(redCount){
+                        if (redCount) {
                             data.stepSix = data.stepSix - redCount;
-                        }else{
+                        } else {
                             data.stepSix = data.stepSix - 1;
                         }
                         if (data.stepSix < 0) {
@@ -255,7 +255,7 @@ router.post('/updateProject', function (req, res, next) {
     }
     db.update(param, whereObj, dbName, function (err, result) {//查询所有news表的数据
         if (result && result.rowsAffected && result.rowsAffected.length > 0) {
-            if(!param.planYearsSelfMoney){
+            if (!param.planYearsSelfMoney) {
                 //传入审批项目的人（插入一条表在newProject）
                 var whereSql = "where role = '" + projectFinance + "'";
                 db.select(dbNewPro, 1, whereSql, "", "order by id", function (err, res1) {
@@ -285,7 +285,7 @@ router.post('/updateProject', function (req, res, next) {
                         res.json(result);
                     }
                 });
-            }else{
+            } else {
                 res.json(result);
             }
 
@@ -300,14 +300,53 @@ router.post('/returnProject', function (req, res, next) {
     var whereObj = {id: param.id};
     delete param.id;
     db.update(param, whereObj, dbName, function (err, result) {//查询所有news表的数据
-        res.json(result);
+        if (result && result.rowsAffected && result.rowsAffected.length > 0) {
+            var whereSql = "where role = '" + param.projectFinance + "'";
+            db.select(dbNewPro, 1, whereSql, "", "order by id", function (err, res1) {
+                if (res1.recordset.length > 0) {
+                    var data = res1.recordset[0];
+                    var whereObj = {id: data.id};
+                    delete data.id;
+                    data.stepOne = data.stepOne - 1;
+                    if (data.stepOne < 0) {
+                        data.stepOne = 0;
+                    }
+                    db.update(data, whereObj, dbNewPro, function (err, result2) {//插入一条新的数据
+                        result.recordsets.push(data);
+                        res.json(result);
+                    });
+                }
+            })
+        } else {
+            res.json(result);
+        }
     });
 });
-//退库申请
+//删除申请
 router.post('/deleteProject', function (req, res, next) {
     var param = req.body;
     db.del("where id = @id", {id: param.id}, dbName, function (err, result) {//删除字段
-        res.json(result);
+        if (result && result.rowsAffected && result.rowsAffected.length > 0) {
+            var whereSql = "where role = '" + param.projectFinance + "'";
+            db.select(dbNewPro, 1, whereSql, "", "order by id", function (err, res1) {
+                if (res1.recordset.length > 0) {
+                    var data = res1.recordset[0];
+                    var whereObj = {id: data.id};
+                    delete data.id;
+
+                    data.stepOne = data.stepOne - 1;
+                    if (data.stepOne < 0) {
+                        data.stepOne = 0;
+                    }
+                    db.update(data, whereObj, dbNewPro, function (err, result2) {//插入一条新的数据
+                        result.recordsets.push(data);
+                        res.json(result);
+                    });
+                }
+            })
+        }else{
+            res.json(result);
+        }
     });
 });
 //查询project表

@@ -1,7 +1,7 @@
 <!--用户管理-->
 <template>
     <div v-if="user.grade==0">
-        <div class="edit-department scrollBar-inner wrap" style="height: 514px;" >
+        <div class="edit-department scrollBar-inner wrap">
             <!--查询条件 start-->
             <div class="general-search" >
                 <div><i class="el-icon-search cursor-default"></i><h5 class="inline-block">用户查询</h5></div>
@@ -107,7 +107,7 @@
             ref = "createUserDraw"
             size=55%
             :before-close="handleClose">
-            <div class="wrap wrap-crowded position-r clearfix scrollBar-inner" style="height: 500px;">
+            <div class="wrap wrap-crowded position-r clearfix scrollBar-inner">
                 <el-form :model="createUser" :rules="rules" class="width300" ref="createUser">
                     <el-form-item label="用户名" prop="userName" class="margin-b10">
                         <el-input v-model="createUser.userName" autocomplete="off"></el-input>

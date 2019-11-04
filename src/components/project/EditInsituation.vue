@@ -1,6 +1,6 @@
 <!--添加二级单位-->
 <template>
-    <div class="edit-department scrollBar-inner wrap" style="height: 514px;">
+    <div class="edit-department scrollBar-inner wrap">
         <!--查询条件 start-->
         <div class="general-search">
             <div><i class="el-icon-search cursor-default"></i><h5 class="inline-block">单位查询</h5></div>

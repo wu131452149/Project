@@ -272,6 +272,7 @@ export default {
             data.id = project.id;
             data.approvalStep = 0;
             data.ifReturned = 1;
+            data.projectFinance = project.projectFinance;
             self.$http.post('/api/project/returnProject', data).then(res => {
                 let status = res.status;
                 let statusText = res.statusText;
@@ -368,6 +369,7 @@ export default {
             }).then(() => {
                 let data = {};
                 data.id = project.id;
+                data.projectFinance = project.projectFinance;
                 //查询stepOneApp是否审核，若已经审核不可以删除
                 self.$http.post('/api/project/queryOneProject', data).then(res => {
                     let status = res.status;
