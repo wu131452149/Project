@@ -15,6 +15,7 @@ export default {
             drawerCreated: false,
             loading: false,
             direction: 'rtl',
+            defaultDate:new Date(),
             newProject: [],
             projectInstitution: [],
             createProject: {
@@ -49,6 +50,9 @@ export default {
                 ],
                 projectYears:[
                     {required: true, message: '请选择项目建设周期', trigger: 'change'},
+                ],
+                projectBeginTime:[
+                    {required: true, message: '请选择项目开工时间', trigger: 'change'},
                 ]
             },
             newIndustry: [],

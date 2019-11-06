@@ -184,7 +184,7 @@
                             <el-select
                                 v-model="editBudgetYearsPlan.type"
                                 style="margin-left: 20px;"
-                                placeholder="请选择类型" v-if="ifHasPlanYearsSelfMoney()">
+                                placeholder="请选择类型" v-if="showSelfMoney">
                                 <el-option
                                     v-for="item in yearsPlanType"
                                     :key="item.value"

@@ -28,7 +28,7 @@ export default {
                 if (!self.projectDetail.approTotalPlanMoneyNo) {
                     self.projectDetail.approTotalPlanMoneyNo = 0;
                 }
-                //todo 未审核的拨付也要算上总数
+                //未审核的拨付也要算上总数
                 var bjbf = 0;
                 var sjbf = 0;
                 var bjap = 0;
@@ -67,7 +67,7 @@ export default {
                     } else {
                         callback();
                     }
-                } else if (self.editAppropriateMoneyProject.type == '上级专项') {
+                } else if (self.editAppropriateMoneyProject.type == '上级专款') {
                     var total = Number(sjbf) + Number(value);
                     if (total > sjap) {
                         callback(new Error('累计上级拨付总数必须小于等于累计上级安排总数'));

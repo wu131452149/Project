@@ -36,7 +36,7 @@ export default {
         var self = this;
         self.initMoney();
         self.computeTotal();
-        if(self.user.grade==2){
+        if (self.user.grade == 2) {
             self.queryIfNewProject();
         }
     },
@@ -113,7 +113,7 @@ export default {
                 }
                 if (self.projectDetail.triInfo) {//第三方
                     self.projectDetail.triInfoList = JSON.parse(self.projectDetail.triInfo);
-                }else{
+                } else {
                     self.projectDetail.triInfoList = [];
                 }
             }
@@ -174,19 +174,19 @@ export default {
             if (self.projectDetail.cutBudget || self.projectDetail.addBudget) {
                 var total1 = 0;
                 var total2 = 0;
-                if (self.cutBudget.length>0) {
+                if (self.cutBudget.length > 0) {
                     for (var x = 0; x < self.cutBudget.length; x++) {
                         total1 = total1 + Number(self.cutBudget[x].money);
                     }
                 }
-                if (self.addBudget.length>0) {
+                if (self.addBudget.length > 0) {
                     for (var y = 0; y < self.addBudget.length; y++) {
                         total2 = total2 + Number(self.addBudget[y].money);
                     }
                 }
                 self.totalCut = total1;
                 self.totalAdd = total2;
-                self.totalMoney = Number(self.projectDetail.budgetReviewMoney) - Number(total1) +  Number(total2);
+                self.totalMoney = Number(self.projectDetail.budgetReviewMoney) - Number(total1) + Number(total2);
             }
         },
         downloadUrl: function (data) {
@@ -252,7 +252,7 @@ export default {
         },
         //去除在建库的小红点
         eventBusToDeleteRed: function (data) {
-            if(data){
+            if (data) {
                 var total = Number(data.stepTwo) + Number(data.stepThree) + Number(data.stepFour) + Number(data.stepFive) + Number(data.stepSix);
                 if (total == 0) {
                     EventBus.$emit('hideMenuBadge', 'project_doing');
@@ -381,17 +381,36 @@ export default {
             var list2 = _.cloneDeep(self.projectDetail.planYearsTopMoneyList);
             var list = list1.concat(list2);
             var obj = self.mergeArr(list);
+            var culObj = _.cloneDeep(obj);
+            //计算当年累计安排，次年累计安排，第三年累计安排
+            var thisYears = Number(self.projectDetail.projectBeginTime.substring(0, 4));
+            var nextYears = thisYears + 1;
+            var nextYearsA = thisYears + 2;
+            var beforeYearPlanMoney = 0;
+            for (var a = 0; a < culObj.length; a++) {
+                var years = Number(culObj[a].years.substring(0, 4));
+                if (years == thisYears) {//当年累计安排
+                    data.thisYearPlanMoney = Number(culObj[a].money);
+                } else if (years == nextYears) {
+                    data.nextYearPlanMoney = Number(culObj[a].money);
+                } else if (years == nextYearsA) {
+                    data.nextAYearPlanMoney = Number(culObj[a].money);
+                } else if (years < thisYears) {
+                    beforeYearPlanMoney = beforeYearPlanMoney + Number(culObj[a].money);
+                }
+            }
+            data.beforeYearPlanMoney = beforeYearPlanMoney;
             var redCount = 0;
             //把所有的审核的status变成1
             for (var i = 0; i < self.projectDetail.planYearsMoneyList.length; i++) {
-                if(self.projectDetail.planYearsMoneyList[i].status==2){
-                    redCount = redCount +1;
+                if (self.projectDetail.planYearsMoneyList[i].status == 2) {
+                    redCount = redCount + 1;
                 }
                 self.projectDetail.planYearsMoneyList[i].status = 1;
             }
             for (var i = 0; i < self.projectDetail.planYearsTopMoneyList.length; i++) {
-                if(self.projectDetail.planYearsTopMoneyList[i].status==2){
-                    redCount = redCount +1;
+                if (self.projectDetail.planYearsTopMoneyList[i].status == 2) {
+                    redCount = redCount + 1;
                 }
                 self.projectDetail.planYearsTopMoneyList[i].status = 1;
             }
@@ -537,17 +556,26 @@ export default {
                 list[y].years = list[y].date.substring(0, 4);
             }
             var obj = Utils.mergeArr(list);
+            var culObj = _.cloneDeep(obj);
+            //计算当年累计安排，次年累计安排，第三年累计安排
+            var thisYears = Number(self.projectDetail.projectBeginTime.substring(0, 4));
+            for (var a = 0; a < culObj.length; a++) {
+                var years = Number(culObj[a].years.substring(0, 4));
+                if (years == thisYears) {//当年累计拨付
+                    data.thisYearGiveMoney = Number(culObj[a].money);
+                }
+            }
             var redCount = 0;
             //把所有的审核的status变成1
             for (var i = 0; i < self.projectDetail.appropriateBudgetList.length; i++) {
-                if(self.projectDetail.appropriateBudgetList[i].status==2){
-                    redCount = redCount+1;
+                if (self.projectDetail.appropriateBudgetList[i].status == 2) {
+                    redCount = redCount + 1;
                 }
                 self.projectDetail.appropriateBudgetList[i].status = 1;
             }
             for (var j = 0; j < self.projectDetail.appropriateTopBudgetList.length; j++) {
-                if(self.projectDetail.appropriateTopBudgetList[j].status==2){
-                    redCount = redCount+1;
+                if (self.projectDetail.appropriateTopBudgetList[j].status == 2) {
+                    redCount = redCount + 1;
                 }
                 self.projectDetail.appropriateTopBudgetList[j].status = 1;
             }
@@ -561,7 +589,7 @@ export default {
             data.approTotalPlanMoneyNo = Utils.countTotalPlanMoney(obj);
             //对象
             data.approTotalMoney = JSON.stringify(obj);
-            data.nonPaymentTotalMoneyNo = -Number(data.approTotalPlanMoneyNo - self.projectDetail.yearsPlanTotalMoneyNo);
+            data.nonPaymentTotalMoneyNo = Number( self.projectDetail.yearsPlanTotalMoneyNo-data.approTotalPlanMoneyNo);
             data.redCount = redCount;
             self.$http.post('/api/project/approvalProject', data).then(res => {
                 let status = res.status;
@@ -621,14 +649,14 @@ export default {
             var redCount = 0;
             //把所有的审核的status变成1
             for (var i = 0; i < self.addBudget.length; i++) {
-                if(self.addBudget[i].status==2){
-                    redCount = redCount+1;
+                if (self.addBudget[i].status == 2) {
+                    redCount = redCount + 1;
                 }
                 self.addBudget[i].status = 1;
             }
             for (var j = 0; j < self.cutBudget.length; j++) {
-                if(self.cutBudget[j].status==2){
-                    redCount = redCount+1;
+                if (self.cutBudget[j].status == 2) {
+                    redCount = redCount + 1;
                 }
                 self.cutBudget[j].status = 1;
             }
@@ -699,9 +727,9 @@ export default {
             //三方信息审核通过，把所有status为2的改成1
             var redCount = 0;
             var list = _.cloneDeep(self.projectDetail.triInfoList);
-            for(var i=0;i<list.length;i++){
-                if(list[i].status==2){
-                   redCount = redCount +1;
+            for (var i = 0; i < list.length; i++) {
+                if (list[i].status == 2) {
+                    redCount = redCount + 1;
                 }
                 list[i].status = 1;
             }
@@ -819,13 +847,13 @@ export default {
                 //删除未审核的数据
                 for (var i = 0; i < self.projectDetail.planYearsMoneyList.length; i++) {
                     if (self.projectDetail.planYearsMoneyList[i].status == 2) {
-                        redCount = redCount +1;
+                        redCount = redCount + 1;
                         self.projectDetail.planYearsMoneyList.splice(i, 1);
                     }
                 }
                 for (var i = 0; i < self.projectDetail.planYearsTopMoneyList.length; i++) {
                     if (self.projectDetail.planYearsTopMoneyList[i].status == 2) {
-                        redCount = redCount +1;
+                        redCount = redCount + 1;
                         self.projectDetail.planYearsTopMoneyList.splice(i, 1);
                     }
                 }
@@ -833,6 +861,25 @@ export default {
                 var list2 = _.cloneDeep(self.projectDetail.planYearsTopMoneyList);
                 var list = list1.concat(list2);
                 var obj = self.mergeArr(list);
+                var culObj = _.cloneDeep(obj);
+                //计算当年累计安排，次年累计安排，第三年累计安排
+                var thisYears = Number(self.projectDetail.projectBeginTime.substring(0, 4));
+                var nextYears = thisYears + 1;
+                var nextYearsA = thisYears + 2;
+                var beforeYearPlanMoney = 0;
+                for (var a = 0; a < culObj.length; a++) {
+                    var years = Number(culObj[a].years.substring(0, 4));
+                    if (years == thisYears) {//当年累计安排
+                        data.thisYearPlanMoney = Number(culObj[a].money);
+                    } else if (years == nextYears) {
+                        data.nextYearPlanMoney = Number(culObj[a].money);
+                    } else if (years == nextYearsA) {
+                        data.nextAYearPlanMoney = Number(culObj[a].money);
+                    } else if (years < thisYears) {
+                        beforeYearPlanMoney = beforeYearPlanMoney + Number(culObj[a].money);
+                    }
+                }
+                data.beforeYearPlanMoney = beforeYearPlanMoney;
                 if (self.projectDetail.planYearsMoneyList.length > 0) {
                     data.planYearsMoney = JSON.stringify(self.projectDetail.planYearsMoneyList);
                 } else {
@@ -855,13 +902,13 @@ export default {
                 //删除未审核的数据
                 for (var i = 0; i < self.projectDetail.appropriateBudgetList.length; i++) {
                     if (self.projectDetail.appropriateBudgetList[i].status == 2) {
-                        redCount = redCount +1;
+                        redCount = redCount + 1;
                         self.projectDetail.appropriateBudgetList.splice(i, 1);
                     }
                 }
                 for (var j = 0; j < self.projectDetail.appropriateTopBudgetList.length; j++) {
                     if (self.projectDetail.appropriateTopBudgetList[j].status == 2) {
-                        redCount = redCount +1;
+                        redCount = redCount + 1;
                         self.projectDetail.appropriateTopBudgetList.splice(j, 1);
                     }
                 }
@@ -887,21 +934,21 @@ export default {
                 data.approTotalPlanMoneyNo = Utils.countTotalPlanMoney(obj);
                 //对象
                 data.approTotalMoney = JSON.stringify(obj);
-                data.nonPaymentTotalMoneyNo = -Number(data.approTotalPlanMoneyNo - self.projectDetail.yearsPlanTotalMoneyNo);
+                data.nonPaymentTotalMoneyNo = Number( self.projectDetail.yearsPlanTotalMoneyNo-data.approTotalPlanMoneyNo);
             } else if (self.step == 5) {
                 data.oldSuggestion = self.projectDetail.stepFiveApp;
                 data.stepFiveApp = 0;
                 var redCount = 0;
                 //变更审核不通过，把所有status为2的去掉
-                for(var i=0;i<self.cutBudget.length;i++){
+                for (var i = 0; i < self.cutBudget.length; i++) {
                     if (self.cutBudget[i].status == 2) {
-                        redCount = redCount +1;
+                        redCount = redCount + 1;
                         self.cutBudget.splice(i, 1);
                     }
                 }
-                for(var i=0;i<self.addBudget.length;i++){
+                for (var i = 0; i < self.addBudget.length; i++) {
                     if (self.addBudget[i].status == 2) {
-                        redCount = redCount +1;
+                        redCount = redCount + 1;
                         self.addBudget.splice(i, 1);
                     }
                 }
@@ -917,9 +964,9 @@ export default {
                 data.stepSixApp = 0;
                 var redCount = 0;
                 //三方信息审核通过，把所有status为2的去掉
-                for(var i=0;i<self.projectDetail.triInfoList.length;i++){
+                for (var i = 0; i < self.projectDetail.triInfoList.length; i++) {
                     if (self.projectDetail.triInfoList[i].status == 2) {
-                        redCount = redCount +1;
+                        redCount = redCount + 1;
                         self.projectDetail.triInfoList.splice(i, 1);
                     }
                 }
@@ -946,7 +993,7 @@ export default {
                         });
                         //重新查询一下表格
                         var data = res.data.recordsets[0];
-                        if(data){
+                        if (data) {
                             if (self.step == 1) {
                                 //当stepOne=0的时候发送到前端消除小红点
                                 if (data.stepOne == 0) {

@@ -367,8 +367,7 @@
             <div class="demo-drawer__footer margin-t-25" style="text-align: center;">
                 <el-button type="primary" @click="approvalProject" :loading="loading">{{ loading ? '提交中 ...' : '审核通过' }}
                 </el-button>
-                <el-button type="primary" @click="disApprovalProject" :loading="loading">{{ loading ? '提交中 ...' :
-                    '审核不通过' }}
+                <el-button type="primary" @click="disApprovalProject" :loading="loading">{{ loading ? '提交中 ...' : '审核不通过' }}
                 </el-button>
             </div>
         </div>

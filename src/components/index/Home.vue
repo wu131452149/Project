@@ -321,27 +321,27 @@
                         <el-table-column show-overflow-tooltip prop="yearsPlanTotalMoney" label="以前年度累计安排（万元）"
                                          width="80">
                             <template slot-scope="scope">
-                                <span>{{scope.row.yearsPlanTotalMoney|renderBeforeYearPlanTotalMoney}}</span>
+                                <span>{{scope.row.beforeYearPlanMoney}}</span>
                             </template>
                         </el-table-column>
                         <el-table-column show-overflow-tooltip prop="yearsPlanTotalMoney" label="当年安排（万元）" width="80">
                             <template slot-scope="scope">
-                                <span>{{scope.row.yearsPlanTotalMoney|renderThisYearPlanTotalMoney}}</span>
+                                <span>{{scope.row.thisYearPlanMoney}}</span>
                             </template>
                         </el-table-column>
                         <el-table-column show-overflow-tooltip prop="yearsPlanTotalMoney" label="次年安排（万元）" width="80">
                             <template slot-scope="scope">
-                                <span>{{scope.row.yearsPlanTotalMoney|renderNextYearsPlanTotalMoney}}</span>
+                                <span>{{scope.row.nextYearPlanMoney}}</span>
                             </template>
                         </el-table-column>
                         <el-table-column show-overflow-tooltip prop="yearsPlanTotalMoney" label="第三年安排（万元）" width="80">
                             <template slot-scope="scope">
-                                <span>{{scope.row.yearsPlanTotalMoney|renderThirdYearsPlanTotalMoney}}</span>
+                                <span>{{scope.row.nextAYearPlanMoney}}</span>
                             </template>
                         </el-table-column>
                         <el-table-column show-overflow-tooltip prop="approTotalMoney" label="资金当年拨付（万元）" width="80">
                             <template slot-scope="scope">
-                                <span>{{scope.row.approTotalMoney|renderAppThisYearMoney}}</span>
+                                <span>{{scope.row.thisYearGiveMoney}}</span>
                             </template>
                         </el-table-column>
                         <el-table-column show-overflow-tooltip prop="approTotalPlanMoneyNo" label="资金累计拨付（万元）"

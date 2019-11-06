@@ -41,106 +41,20 @@ const excelTitleConfig = [{
     name: 'yearsPlanTotalMoneyNo',
     title: '三年滚动预算合计',
 }, {
-    name: 'yearsPlanTotalMoney',
+    name: 'beforeYearPlanMoney',
     title: '以前年度累计安排',
-    format: function (data) {
-        let value = "0";
-        var thisYears = new Date().getFullYear()+"年度";
-        //var thisYears = 2020;
-        if (data) {
-            let money = JSON.parse(data);
-            var list = money.filter(function (item) {
-                return item.years < thisYears;
-            });
-            var totalMoney = 0;
-            if (list.length > 0) {
-                for (var i = 0; i < list.length; i++) {
-                    totalMoney = totalMoney + Number(list[i].money);
-                }
-                return totalMoney;
-            } else {
-                return value;
-            }
-        } else {
-            return value;
-        }
-    }
 }, {
-    name: 'yearsPlanTotalMoney',
+    name: 'thisYearPlanMoney',
     title: '当年安排',
-    format: function (data) {
-        let value = "0";
-        var thisYears = new Date().getFullYear()+"年度";
-        if (data) {
-            let money = JSON.parse(data);
-            var index = money.find(function(x) {
-                return x.years == thisYears;
-            });
-            if(index){
-                value = index.money;
-            }
-            return value;
-        } else {
-            return value;
-        }
-    }
 }, {
-    name: 'yearsPlanTotalMoney',
+    name: 'nextYearPlanMoney',
     title: '次年安排',
-    format: function (data) {
-        let value = "0";
-        var nextYears = new Date().getFullYear() + 1+"年度";
-        if (data) {
-            let money = JSON.parse(data);
-            var index = money.find(function(x) {
-                return x.years == nextYears;
-            });
-            if(index){
-                value = index.money;
-            }
-            return value;
-        } else {
-            return value;
-        }
-    }
 }, {
-    name: 'yearsPlanTotalMoney',
+    name: 'nextAYearPlanMoney',
     title: '第三年安排',
-    format: function (data) {
-        let value = "0";
-        var nextYearsA = new Date().getFullYear() + 2+"年度";
-        if (data) {
-            let money = JSON.parse(data);
-            var index = money.find(function(x) {
-                return x.years == nextYearsA;
-            });
-            if(index){
-                value = index.money;
-            }
-            return value;
-        } else {
-            return value;
-        }
-    }
 }, {
-    name: 'approTotalMoney',
+    name: 'thisYearGiveMoney',
     title: '资金当年拨付',
-    format: function (data) {
-        let value = "0";
-        var thisYears = new Date().getFullYear();
-        if (data) {
-            let money = JSON.parse(data);
-            var index = money.find(function(x) {
-                return x.years == thisYears;
-            });
-            if(index){
-                value = index.money;
-            }
-            return value;
-        } else {
-            return value;
-        }
-    }
 }, {
     name: 'approTotalPlanMoneyNo',
     title: '资金累计拨付',

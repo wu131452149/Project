@@ -57,7 +57,7 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="拟开工时间">
+            <el-form-item label="拟开工时间" prop="projectBeginTime">
                 <el-date-picker type="date" placeholder="选择拟开工时间" v-model="createProject.projectBeginTime"
                                 style="width: 100%;"></el-date-picker>
             </el-form-item>

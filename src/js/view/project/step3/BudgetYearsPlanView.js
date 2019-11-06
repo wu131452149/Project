@@ -89,8 +89,8 @@ export default {
             },
             user: {},
             budgetYearsPlanMoneyList: [],
-            projectInstitutionList: []
-
+            projectInstitutionList: [],
+            showSelfMoney:true,
         }
     },
     mounted: function () {
@@ -110,14 +110,14 @@ export default {
         self.queryBudgetYearsPlanMoney();
     },
     methods: {
-        ifHasPlanYearsSelfMoney:function(){
+        ifHasPlanYearsSelfMoney:function(thisYears){
             //查询当前自筹金额是不是全部填写过了，只可以填写一次
             var self = this;
-            var thisYears = new Date().getFullYear()+"年度";
-            var nextYears = new Date().getFullYear()+1+"年度";
-            var nextAYears = new Date().getFullYear()+2+"年度";
+            var thisYears = Number(thisYears)+"年度";
+            var nextYears = thisYears+1+"年度";
+            var nextAYears = thisYears+2+"年度";
             if(!self.projectDetail.planYearsSelfMoney){
-                return true;
+                self.showSelfMoney = true;
             }else{
                 var list = JSON.parse(self.projectDetail.planYearsSelfMoney);
                 if(self.projectDetail.projectYears==1){
@@ -125,9 +125,9 @@ export default {
                         return o.years == thisYears;
                     });
                     if(index>-1){
-                        return false
+                        self.showSelfMoney = false;
                     }else{
-                        return true;
+                        self.showSelfMoney = true;
                     }
                 }else if(self.projectDetail.projectYears==2){
                     var index = _.findIndex(list, function (o) {
@@ -137,9 +137,9 @@ export default {
                         return o.years == nextYears;
                     });
                     if(index>-1&&index1>-1){//说明都存在，那就不显示自筹
-                        return false
+                        self.showSelfMoney = false;
                     }else{
-                        return true;
+                        self.showSelfMoney = true;
                     }
                 }else if(self.projectDetail.projectYears==3){
                     var index = _.findIndex(list, function (o) {
@@ -152,17 +152,12 @@ export default {
                         return o.years == nextAYears;
                     });
                     if(index>-1&&index1>-1&&index2>-1){//说明都存在，那就不显示自筹
-                        return false
+                        self.showSelfMoney = false;
                     }else{
-                        return true;
+                        self.showSelfMoney = true;
                     }
                 }
             }
-
-
-            for(var i=0;i<self.projectDetail.planYearsSelfMoney.length;i++){
-
-           }
         },
         //查询单位
         queryInstitution: function (callback) {
@@ -216,15 +211,12 @@ export default {
                 self.queryBudgetYearsPlanProject(true);
             }
         },
-        editOptionYears: function (data) {
+        editOptionYears: function (data,thisYears) {
             var self = this;
             self.years = data;
-            var thisYears = new Date().getFullYear();
-            var nextYears = new Date().getFullYear() + 1;
-            var nextYearsA = new Date().getFullYear() + 2;
-            self.thisYears = new Date().getFullYear();
-            self.nextYears = new Date().getFullYear() + 1;
-            self.nextYearsA = new Date().getFullYear() + 2;
+            var thisYears = Number(thisYears);
+            var nextYears = thisYears + 1;
+            var nextYearsA = thisYears + 2;
             if (self.years == 1) {
                 self.options = [{name: thisYears + "年度", value: thisYears + "年度"}];
             } else if (self.years == 2) {
@@ -384,7 +376,11 @@ export default {
             self.drawerDetails = true;
             self.projectDetail = data;
             self.showEdit = true;
-            self.editOptionYears(data.projectYears);
+            var thisYears = Number(data.projectBeginTime.substring(0,4));
+            //显示当前年份
+            self.editOptionYears(data.projectYears,thisYears);
+            //是否显示自筹金额
+            self.ifHasPlanYearsSelfMoney(thisYears);
         },
         closeForm: function () {
             var self = this;
