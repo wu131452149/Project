@@ -91,6 +91,7 @@ export default {
             budgetYearsPlanMoneyList: [],
             projectInstitutionList: [],
             showSelfMoney:true,
+            showButton: true,
         }
     },
     mounted: function () {

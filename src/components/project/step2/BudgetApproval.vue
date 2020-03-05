@@ -164,6 +164,7 @@
                                      @unAppStep2="handleAppStep2"
                                      :projectDetail="projectDetail"
                                      :step="2"
+                                     :showButton = "showButton"
                                      :activeNames="activeNames"
                                      :showEdit="showEdit"
                                      :grade="user.grade">

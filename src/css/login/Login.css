@@ -7,7 +7,14 @@
     right: 0;
 }
 .login .el-main {
-    background: url("../../assets/images/background.jpg") no-repeat;
+    background: url("../../assets/images/home.jpg") no-repeat;
+    height: 68%;
+    max-height: 1100px;
+    min-height: 420px;
+    background-color: #f0f0f0;
+    background-size: 100% 100%;
+    position: relative;
+    cursor: pointer;
 }
 .login-envelope {
     float: left;
@@ -20,10 +27,24 @@
     line-height: 80px;
     float: right;
 }
+.login-font{
+    font-size: 32px;
+    letter-spacing: 0;
+    color: #f5175f;
+    text-shadow: 0px 1px 0px #999, 0px 2px 0px #888, 0px 3px 0px #777, 0px 4px 0px #666, 0px 5px 0px #555, 0px 6px 0px #444, 0px 7px 0px #333, 0px 8px 7px #001135;
+}
+.login-font2{
+    font-size: 32px;
+    color: transparent;
+    -webkit-text-stroke: 1px black;
+    letter-spacing: 0.04em;
+}
 .bg-login {
     background-color: #FFFFFF;
     border-radius: 4px;
     height: 280px;
+    position: absolute;
+    /*right: 50px;*/
     box-shadow: 0 4px 23px 5px rgba(0, 0, 0, .2),
     0 2px 6px rgba(0, 0, 0, .15);
     -webkit-box-shadow: 0 4px 23px 5px rgba(0, 0, 0, .2),
@@ -32,6 +53,7 @@
     margin-top:-80px;
     min-width: 338px;
     min-height: 290px;
+    opacity: 0.8;
 }
 .login .el-form-item__content {
     margin-left: 25px;

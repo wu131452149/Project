@@ -56,6 +56,7 @@ export default {
                 ]
             },
             user: {},
+            showButton: true,
             budgetYearsPlanMoneyList: [],
             projectInstitutionList:[]
         };

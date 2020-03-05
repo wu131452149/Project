@@ -363,16 +363,16 @@
             </el-collapse-item>
             <!--决算信息 end-->
         </el-collapse>
-        <div v-if="user.grade==0||user.grade==2">
-            <div class="demo-drawer__footer margin-t-25" style="text-align: center;">
-                <el-button type="primary" @click="approvalProject" :loading="loading">{{ loading ? '提交中 ...' : '审核通过' }}
-                </el-button>
-                <el-button type="primary" @click="disApprovalProject" :loading="loading">{{ loading ? '提交中 ...' : '审核不通过' }}
-                </el-button>
+        <div v-if="showButton">
+            <div v-if="user.grade==0||user.grade==2">
+                <div class="demo-drawer__footer margin-t-25" style="text-align: center;">
+                    <el-button type="primary" @click="approvalProject" :loading="loading">{{ loading ? '提交中 ...' : '审核通过' }}
+                    </el-button>
+                    <el-button type="primary" @click="disApprovalProject" :loading="loading">{{ loading ? '提交中 ...' : '审核不通过' }}
+                    </el-button>
+                </div>
             </div>
         </div>
-
-
     </div>
 </template>
 <script src="../../js/view/project/ShowProjectDetailView.js"></script>

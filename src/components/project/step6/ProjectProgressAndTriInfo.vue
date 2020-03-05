@@ -181,6 +181,7 @@
                                      :step="6"
                                      :activeNames="activeNames"
                                      :showEdit="showEdit"
+                                     :showButton = "showButton"
                                      :grade="user.grade">
 
                 </show-project-Detail>

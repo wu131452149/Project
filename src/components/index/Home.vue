@@ -398,6 +398,7 @@
                         <show-project-Detail @onListen="handleClose"
                                              :projectDetail="projectDetail"
                                              :step="7"
+                                             :showButton = "showButton"
                                              :activeNames="activeNames">
 
                         </show-project-Detail>

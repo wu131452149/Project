@@ -87,9 +87,11 @@ export default {
             if (_this.isCollapse) {
                 _this.isCollapse = false;
                 _this.$emit("update:isCollapse", false);
+                $("#app").removeClass("app-mini");
             } else {
                 _this.$emit("update:isCollapse", true);
                 _this.isCollapse = true;
+                $("#app").addClass("app-mini");
             }
         },
         handleOpen(key, keyPath) {

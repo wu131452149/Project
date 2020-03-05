@@ -8,7 +8,7 @@ import EventBus from "../../lib/event/EventBus";
 
 export default {
     name: "ShowProjectDetailView",
-    props: ["projectDetail", "step", "activeNames", "showEdit", "grade"],
+    props: ["projectDetail", "step", "activeNames", "showEdit", "grade","showButton"],
     data() {
         return {
             loading: false,

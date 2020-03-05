@@ -10,7 +10,7 @@ export default {
     },
     data() {
         return {
-            sum:[],
+            sum: [],
             activeNames: [],
             userInfoActiveName: "pro-monitor",
             o: 2,
@@ -41,16 +41,17 @@ export default {
             IsNewMediaSessionLargeData: '',
             projectDetail: {},
             user: {},
-            allBudgetReviewMoney:{},
-            allAppropriateMoney:{},//拨付
-            allBudgetPlanMoney:{},//安排
+            allBudgetReviewMoney: {},
+            allAppropriateMoney: {},//拨付
+            allBudgetPlanMoney: {},//安排
             monitor: {
                 newProjectCount: 0,
                 approvalProject: 0,
                 finishedProjectCount: 0,
                 returnedProjectCount: 0,
             },
-            excelTitleConfig:[],
+            excelTitleConfig: [],
+            showButton: false,
         }
     },
     mounted: function () {
@@ -309,7 +310,7 @@ export default {
                         var columns = excelConfig[0];
                         temp.shift();
                         var data = temp;
-                        var sums = self.getSummaries(columns,data);
+                        var sums = self.getSummaries(columns, data);
                         self.sum = sums;
                     } else {
                         self.$message({
@@ -439,14 +440,14 @@ export default {
 
         },
         //合计
-        getSummaries:function(columns,data){
+        getSummaries: function (columns, data) {
             const sums = [];
             columns.forEach((column, index) => {
                 if (index === 0) {
                     sums[index] = '总金额(万元）';
                     return;
                 }
-                if (index === 1 || index === 2 ||index === 3||index === 4) {
+                if (index === 1 || index === 2 || index === 3 || index === 4) {
                     sums[index] = 'N/A';
                     return;
                 }
@@ -468,19 +469,19 @@ export default {
             return sums;
         },
         //
-        getSummary:function(param){
+        getSummary: function (param) {
             var self = this;
-            const { columns, data } = param;
+            const {columns, data} = param;
             const sums = [];
             columns.forEach((column, index) => {
                 if (index === 0) {
                     sums[index] = '合计';    //这里就是显示你要写的啥名字,是合计还是汇总什么
                     return;
-                }else if(index === 5){
+                } else if (index === 5) {
                     sums[index] = 'N/A';    //这里就是显示你要写的啥名字,是合计还是汇总什么
                     return;
-                }else{
-                    sums[index] = self.sum[index+1];
+                } else {
+                    sums[index] = self.sum[index + 1];
                 }
             });
             return sums;

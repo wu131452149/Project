@@ -13,7 +13,7 @@ export default {
     },
     data() {
         return {
-            activeNames:[],
+            activeNames: [],
             showEdit: false,
             showTri: false,
             showPro: false,
@@ -51,9 +51,9 @@ export default {
                 triCardNo: ""
             },
             options: [],
-            levelOneList:[],
-            levelOne:"",
-            newInstituation:[],
+            levelOneList: [],
+            levelOne: "",
+            newInstituation: [],
             changeType: Utils.getChangeType(),
             rules1: {
                 speed: [
@@ -68,6 +68,7 @@ export default {
             user: {},
             budgetYearsPlanMoneyList: [],
             projectInstitutionList: [],
+            showButton: true,
         };
     },
     mounted: function () {
@@ -75,11 +76,11 @@ export default {
         self.user = JSON.parse(sessionStorage.getItem('user'));
         //var list = JSON.parse(window.sessionStorage.getItem('institution'));
         self.queryInstitution(function (list) {
-            if(self.user.grade==1){
+            if (self.user.grade == 1) {
                 self.projectInstitutionList = list;
-            }else{
+            } else {
                 self.levelOneList = Utils.initLevelOne(list);
-                self.projectInstitutionList = Utils.initLevelTwo(self.levelOneList,list);
+                self.projectInstitutionList = Utils.initLevelTwo(self.levelOneList, list);
             }
         })
         self.queryProAndTriProject();
@@ -141,7 +142,7 @@ export default {
         //查询预算变更
         queryProAndTriProject: function (flag) {
             let self = this;
-            let data =  _.cloneDeep(self.proAndTriProject.formData);
+            let data = _.cloneDeep(self.proAndTriProject.formData);
             data.page = flag ? 1 : self.proAndTriProject.currentPage;
             data.step = 6;
             data.stepSixApp = 1;//后台查的not in
@@ -259,7 +260,7 @@ export default {
             self.drawerDetails = true;
             self.projectDetail = data;
             self.showEdit = false;
-            self.activeNames = ['1','2','3','4','5','6'];
+            self.activeNames = ['1', '2', '3', '4', '5', '6'];
         },
         initCommitMoney: function () {
 
@@ -332,9 +333,9 @@ export default {
                     var triInfo = _.cloneDeep(self.TriInfo);
                     var triList = [];
                     //如果是第一次提交合同
-                    if(!self.projectDetail.triInfo){
+                    if (!self.projectDetail.triInfo) {
                         triList.push(triInfo);
-                    }else{
+                    } else {
                         //之前有提交过
                         triList = JSON.parse(self.projectDetail.triInfo);
                         triList.push(triInfo);
@@ -402,7 +403,7 @@ export default {
             self.TriInfo.triCardNo = "";
         },
         //关闭表格查询当前页数据
-        handleAppStep6:function(){
+        handleAppStep6: function () {
             var self = this;
             self.closeForm();
             //查询当前页数据

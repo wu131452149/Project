@@ -42,6 +42,7 @@ export default {
             levelOneList: [],
             levelOne: "",
             newInstituation: [],
+            showButton: true,
             user: {
                 grade: 0,
                 userName: "",

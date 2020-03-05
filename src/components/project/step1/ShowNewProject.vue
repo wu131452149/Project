@@ -203,6 +203,7 @@
                                  @unAppStep1="handleAppStep1"
                                  :projectDetail="projectDetail"
                                  :step="1"
+                                 :showButton = "showButton"
                                  :activeNames="activeNames">
 
             </show-project-Detail>

@@ -177,6 +177,7 @@
                                      @appStep5="handleAppStep5"
                                      @unAppStep5="handleAppStep5"
                                      :step="5"
+                                     :showButton = "showButton"
                                      :activeNames="activeNames"
                                      :showEdit="showEdit"
                                      :grade="user.grade">

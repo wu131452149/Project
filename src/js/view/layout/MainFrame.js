@@ -118,9 +118,14 @@ export default {
             return menu1;
 
         },
-        changeCollapse(isCollapse) {
-            console.log("-====")
-            console.log(isCollapse)
+    },
+    watch: {
+        "isCollapse": function (val) {
+            if(val){
+                var menuWidth = document.getElementsByClassName('main-content');
+            }else{
+                var menuWidth = document.getElementsByClassName('main-content');
+            }
         }
-    }
+    },
 }

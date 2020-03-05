@@ -1,7 +1,8 @@
 <template>
     <div>
         <el-row :gutter="20" style="color:#FFFFFF;">
-            <el-col :span="8" :push=14>
+            <span style="position: absolute;font-size: 22px;left: 0px;">临猗县财政资金建设项目库平台</span>
+            <el-col :span="8" :push=16>
                 欢迎您，{{user.role}}管理员
             </el-col>
             <el-col :span="2" :push=13>
