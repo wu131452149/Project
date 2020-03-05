@@ -163,7 +163,7 @@
             :direction="direction"
             ref = "approMoney"
             custom-class="demo-drawer"
-            size=55%
+            size=66%
             :before-close="handleClose">
             <div style="overflow: auto;">
                 <show-project-Detail @onListen="handleClose"

@@ -196,7 +196,7 @@
             :direction="direction"
             custom-class="demo-drawer"
             ref="editProjectNew"
-            size=55%
+            size=66%
             :before-close="handleClose">
             <show-project-Detail @onListen="handleClose"
                                  @appStep1="handleAppStep1"

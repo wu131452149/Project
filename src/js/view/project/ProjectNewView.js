@@ -7,7 +7,7 @@ import Utils from "../../lib/utils/Utils";
 
 export default {
     name: "ProjectNewView",
-    props: ['returnProjectInfo', 'type','drawerClick','reCommitProjectInfo'],
+    props: ['returnProjectInfo', 'type', 'drawerClick', 'reCommitProjectInfo'],
     data() {
         return {
             dialog: false,
@@ -15,7 +15,7 @@ export default {
             drawerCreated: false,
             loading: false,
             direction: 'rtl',
-            defaultDate:new Date(),
+            defaultDate: new Date(),
             newProject: [],
             projectInstitution: [],
             createProject: {
@@ -45,13 +45,13 @@ export default {
                 projectName: [
                     {required: true, message: '请输入项目名称', trigger: 'blur'},
                 ],
-                projectMoney:[
+                projectMoney: [
                     {required: true, message: '请输入投资估算总额', trigger: 'blur'},
                 ],
-                projectYears:[
+                projectYears: [
                     {required: true, message: '请选择项目建设周期', trigger: 'change'},
                 ],
-                projectBeginTime:[
+                projectBeginTime: [
                     {required: true, message: '请选择项目开工时间', trigger: 'change'},
                 ]
             },
@@ -111,14 +111,14 @@ export default {
             self.$refs.createProject.validate((valid) => {
                 if (valid) {
                     let createProject = _.cloneDeep(self.createProject);
-                    if(createProject.projectIndustry.first){
+                    if (createProject.projectIndustry.first) {
                         createProject.projectIndustry = '{"' + createProject.projectIndustry.first + '","' + createProject.projectIndustry.second + '"}';
-                    }else{
-                        createProject.projectIndustry = "" ;
+                    } else {
+                        createProject.projectIndustry = "";
                     }
-                    if(createProject.projectMoneyFrom){
+                    if (createProject.projectMoneyFrom) {
                         createProject.projectMoneyFrom = JSON.stringify(createProject.projectMoneyFrom).replace("[", "{").replace("]", "}");
-                    }else{
+                    } else {
                         createProject.projectMoneyFrom = [];
                     }
                     createProject.approvalStep = 1;
@@ -204,48 +204,76 @@ export default {
         //重新入库
         updateForm: function (oldStep) {
             let self = this;
-            //更新新建表的退库状态为false，更新表的step为1
-            let data = _.cloneDeep(self.createProject);
-            data.step = 1;
-            data.ifReturned = 0;
-            data.oldStep = oldStep;
-            if (oldStep == 1){
-                data.stepOneApp = 2;
-            }
-            self.$http.post('/api/project/updateProject', data).then(res => {
-                let status = res.status;
-                let statusText = res.statusText;
-                if (status !== 200) {
-                    self.$message({
-                        message: statusText,
-                        type: 'error'
-                    });
-                } else {
-                    if (res.data.length != 0) {
-                        self.$message({
-                            message: "提交成功",
-                            type: 'success'
-                        });
-                        if (oldStep == 0) {
-                            self.$emit('updateReturnForm');
-                        }else{
-                            self.$emit('refreshPro');
-                        }
-                    } else {
-                        self.$message({
-                            message: "提交失败",
-                            type: 'warning'
-                        });
+            self.$refs.createProject.validate((valid) => {
+                if (valid) {
+                    //更新新建表的退库状态为false，更新表的step为1
+                    let data = _.cloneDeep(self.createProject);
+                    data.step = 1;
+                    data.ifReturned = 0;
+                    data.oldStep = oldStep;
+                    if (oldStep == 1) {
+                        data.stepOneApp = 2;
                     }
+                    if (data.projectIndustry.first) {
+                        data.projectIndustry = '{"' + data.projectIndustry.first + '","' + data.projectIndustry.second + '"}';
+                    } else {
+                        data.projectIndustry = "";
+                    }
+                    if (data.projectMoneyFrom) {
+                        data.projectMoneyFrom = JSON.stringify(data.projectMoneyFrom).replace("[", "{").replace("]", "}");
+                    } else {
+                        data.projectMoneyFrom = [];
+                    }
+                    data.commitName = self.user.role;
+                    data.projectCommitTime = Utils.formatDate(new Date()) + ".000";
+                    for (var i = 0; i < self.getProjectYears.length; i++) {
+                        if (data.projectYears == self.getProjectYears[i].name) {
+                            data.projectYears = self.getProjectYears[i].value;
+                        }
+                    }
+                    self.$http.post('/api/project/updateProject', data).then(res => {
+                        let status = res.status;
+                        let statusText = res.statusText;
+                        if (status !== 200) {
+                            self.$message({
+                                message: statusText,
+                                type: 'error'
+                            });
+                        } else {
+                            if (res.data.length != 0) {
+                                self.$message({
+                                    message: "提交成功",
+                                    type: 'success'
+                                });
+                                //关闭当前页，并清空表格数据
+                                self.clearFormData();
+                                self.closeForm();
+                                //刷新当前页
+                                if (oldStep == 0) {
+                                    self.$emit('updateReturnForm');
+                                } else {
+                                    self.$emit('refreshPro');
+                                }
+                            } else {
+                                self.$message({
+                                    message: "提交失败",
+                                    type: 'warning'
+                                });
+                            }
+                        }
+                    })
+                        .catch(error =>
+                            self.$message({
+                                message: error.message,
+                                type: 'error'
+                            }),
+                        );
                 }
-            })
-                .catch(error =>
-                    self.$message({
-                        message: error.message,
-                        type: 'error'
-                    }),
-                );
-
+                else {
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
 
         }
         ,
@@ -316,7 +344,7 @@ export default {
             immediate: true,
             handler: function (val) {
                 var self = this;
-                if(val){
+                if (val) {
                     self.createProject.id = val.id;
                     self.createProject.projectInstitution = val.projectInstitution;
                     self.createProject.projectFinance = val.projectFinance;
@@ -324,10 +352,10 @@ export default {
                     self.createProject.projectType = val.projectType;
                     self.createProject.projectMoney = val.projectMoney;
                     self.createProject.projectIndustry = val.projectIndustry;
-                    if(val.projectIndustry){
-                        var ins1 = val.projectIndustry.split(",")[0].replace("{","");
-                        var ins2 = val.projectIndustry.split(",")[1].replace("}","");
-                    }else{
+                    if (val.projectIndustry) {
+                        var ins1 = val.projectIndustry.split(",")[0].replace("{", "");
+                        var ins2 = val.projectIndustry.split(",")[1].replace("}", "");
+                    } else {
                         var ins1 = "";
                         var ins2 = "";
                     }
@@ -336,10 +364,10 @@ export default {
                     // console.log(ins2);
                     // self.createProject.projectIndustry.first = ins1;
                     // self.createProject.projectIndustry.second = ins2;
-                    self.createProject.projectIndustry = {first:ins1,second:ins2};
-                    if(val.projectMoneyFrom){
+                    self.createProject.projectIndustry = {first: ins1, second: ins2};
+                    if (val.projectMoneyFrom) {
                         self.createProject.projectMoneyFrom = JSON.parse(val.projectMoneyFrom.replace("{", "[").replace("}", "]"));
-                    }else{
+                    } else {
                         self.createProject.projectMoneyFrom = [];
                     }
                     self.createProject.projectBeginTime = val.projectBeginTime;
@@ -355,7 +383,7 @@ export default {
             immediate: true,
             handler: function (val) {
                 var self = this;
-                if(val){
+                if (val) {
                     self.createProject.id = val.id;
                     self.createProject.projectInstitution = val.projectInstitution;
                     self.createProject.projectFinance = val.projectFinance;
@@ -363,10 +391,10 @@ export default {
                     self.createProject.projectType = val.projectType;
                     self.createProject.projectMoney = val.projectMoney;
                     self.createProject.projectIndustry = val.projectIndustry;
-                    if(val.projectIndustry){
-                        var ins1 = val.projectIndustry.split(",")[0].replace("{","");
-                        var ins2 = val.projectIndustry.split(",")[1].replace("}","");
-                    }else{
+                    if (val.projectIndustry) {
+                        var ins1 = val.projectIndustry.split(",")[0].replace("{", "");
+                        var ins2 = val.projectIndustry.split(",")[1].replace("}", "");
+                    } else {
                         var ins1 = "";
                         var ins2 = "";
                     }
@@ -375,10 +403,10 @@ export default {
                     // console.log(ins2);
                     // self.createProject.projectIndustry.first = ins1;
                     // self.createProject.projectIndustry.second = ins2;
-                    self.createProject.projectIndustry = {first:ins1,second:ins2};
-                    if(val.projectMoneyFrom){
+                    self.createProject.projectIndustry = {first: ins1, second: ins2};
+                    if (val.projectMoneyFrom) {
                         self.createProject.projectMoneyFrom = JSON.parse(val.projectMoneyFrom.replace("{", "[").replace("}", "]"));
-                    }else{
+                    } else {
                         self.createProject.projectMoneyFrom = [];
                     }
                     self.createProject.projectBeginTime = val.projectBeginTime;
@@ -390,11 +418,11 @@ export default {
             }
 
         },
-        'type':{
+        'type': {
             immediate: true,
             handler: function (val) {
                 var self = this;
-                if(val=='new'){
+                if (val == 'new') {
                     self.clearFormData();
                 }
             }

@@ -392,7 +392,7 @@
                     :visible.sync="drawerDetails"
                     :direction="direction"
                     custom-class="demo-drawer"
-                    size=55%
+                    size=66%
                     :before-close="handleClose">
                     <div class="scrollBar-inner" style="height: 500px;">
                         <show-project-Detail @onListen="handleClose"

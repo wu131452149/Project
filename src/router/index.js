@@ -19,7 +19,7 @@ export default new Router({
         },
         {
             path: '/*',
-            name: 'mainFrame',
+            name: 'default',
             component: MainFrame,
             meta: {
                 keepAlive: false // 不需要被缓存

@@ -154,7 +154,7 @@
             :direction="direction"
             ref = "drawerBudgetPlan"
             custom-class="demo-drawer"
-            size=55%
+            size=66%
             :before-close="handleClose">
             <div class="scrollBar-inner">
                 <show-project-Detail @onListen="handleClose"

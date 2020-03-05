@@ -1051,4 +1051,33 @@ table {
 .el-drawer{
     overflow-y: auto;
 }
+.el-collapse {
+    border-top: 1px solid #333!important;
+    border-bottom: 1px solid #333!important;
+}
+.el-collapse-item__wrap{
+    border-bottom: 1px solid #333 !important;
+}
+.el-drawer__header>:first-child {
+    font-size: 25px !important;
+}
+.el-collapse-item__header{
+    border-bottom: 1px solid #333 !important;
+}
+.font25{
+    font-size: 25px;
+}
+.font20{
+    font-size: 20px;
+}
+.font18{
+    font-size: 18px;
+}
+.bottom-solid{
+    border-bottom: 1px solid #969393 !important;
+}
+.el-badge__content.is-fixed.is-dot {
+    right: 0 !important;
+    margin-top: 20px !important;
+}
 /*public style end*/

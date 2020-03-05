@@ -3,7 +3,7 @@
     <div v-if="user.grade==0">
         <div class="edit-department scrollBar-inner wrap">
             <!--查询条件 start-->
-            <div class="general-search" >
+            <div class="general-search">
                 <div><i class="el-icon-search cursor-default"></i><h5 class="inline-block">用户查询</h5></div>
                 <el-form :inline="true" ref="searchData" v-model="users.formData" style="padding-left: 30px">
                     <!--快捷查询 start-->
@@ -84,14 +84,15 @@
             <div class="text-r margin-t10">
                 <div class="f-r clearFix">
                     <div class="f-l pagination-total">
-                        <a class=""v-if="!showCountNumber && IsNewMediaSessionLargeData == '1'"  @click="queryUsersCount">查询总数</a>
-                        <span class=""  v-else >共 <span>{{users.count}}</span> 条</span>
+                        <a class="" v-if="!showCountNumber && IsNewMediaSessionLargeData == '1'"
+                           @click="queryUsersCount">查询总数</a>
+                        <span class="" v-else>共 <span>{{users.count}}</span> 条</span>
                     </div>
                     <el-pagination class="f-r"
-                                   @current-change ="queryUsers(false)"
+                                   @current-change="queryUsers(false)"
                                    layout="prev, pager, next, jumper"
                                    :total="users.count"
-                                   :current-page.sync ="users.currentPage"
+                                   :current-page.sync="users.currentPage"
                     >
                     </el-pagination>
                 </div>
@@ -104,26 +105,26 @@
             :visible.sync="drawerDetails"
             :direction="direction"
             custom-class="demo-drawer"
-            ref = "createUserDraw"
-            size=55%
+            ref="createUserDraw"
+            size=66%
             :before-close="handleClose">
             <div class="wrap wrap-crowded position-r clearfix scrollBar-inner">
                 <el-form :model="createUser" :rules="rules" class="width300" ref="createUser">
                     <el-form-item label="用户名" prop="userName" class="margin-b10">
                         <el-input v-model="createUser.userName" autocomplete="off"></el-input>
                     </el-form-item>
-                    <el-form-item label="级别"  prop="grade" class="margin-b10">
+                    <el-form-item label="级别" prop="grade" class="margin-b10">
                         <el-radio-group v-model="createUser.grade">
                             <el-radio label="1" value="1"></el-radio>
                             <el-radio label="2" value="2"></el-radio>
                             <el-radio label="3" value="3"></el-radio>
                         </el-radio-group>
                     </el-form-item>
-                    <el-form-item label="密码"  prop="password" class="margin-b10">
+                    <el-form-item label="密码" prop="password" class="margin-b10">
                         <el-input v-model="createUser.password" autocomplete="off"></el-input>
                     </el-form-item>
-                    <el-form-item label="单位"  prop="role" class="margin-b10">
-                        <el-input  v-model="createUser.role" autocomplete="off"></el-input>
+                    <el-form-item label="单位" prop="role" class="margin-b10">
+                        <el-input v-model="createUser.role" autocomplete="off"></el-input>
                     </el-form-item>
                 </el-form>
                 <div class="demo-drawer__footer margin-t-25" style="text-align: center;">
@@ -138,26 +139,26 @@
             :visible.sync="drawer"
             :direction="direction"
             custom-class="demo-drawer"
-            ref = "updateUserDrawer"
-            size=55%
+            ref="updateUserDrawer"
+            size=66%
             :before-close="handleClose">
             <div class="wrap wrap-crowded position-r clearfix scrollBar-inner" style="height: 500px;">
                 <el-form :model="updateUser" :rules="rules" class="width300" ref="updateUser">
                     <el-form-item label="用户名" prop="userName">
                         <el-input v-model="updateUser.userName" autocomplete="off"></el-input>
                     </el-form-item>
-                    <el-form-item label="级别"  prop="grade">
+                    <el-form-item label="级别" prop="grade">
                         <el-radio-group v-model="updateUser.grade">
                             <el-radio label="1" value="'1'"></el-radio>
                             <el-radio label="2" value="'2'"></el-radio>
                             <el-radio label="3" value="'3'"></el-radio>
                         </el-radio-group>
                     </el-form-item>
-                    <el-form-item label="密码"  prop="password">
+                    <el-form-item label="密码" prop="password">
                         <el-input v-model="updateUser.password" autocomplete="off"></el-input>
                     </el-form-item>
-                    <el-form-item label="单位"  prop="role">
-                        <el-input  v-model="updateUser.role" autocomplete="off"></el-input>
+                    <el-form-item label="单位" prop="role">
+                        <el-input v-model="updateUser.role" autocomplete="off"></el-input>
                     </el-form-item>
                 </el-form>
                 <div class="demo-drawer__footer margin-t-25" style="text-align: center;">

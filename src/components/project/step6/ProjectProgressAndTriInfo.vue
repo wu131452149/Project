@@ -171,7 +171,7 @@
             :direction="direction"
             custom-class="demo-drawer"
             ref = "proAndTri"
-            size=55%
+            size=66%
             :before-close="handleClose">
             <div style="overflow: auto;">
                 <show-project-Detail @onListen="handleClose"

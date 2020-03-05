@@ -153,7 +153,7 @@
             :direction="direction"
             ref = "returnedProject"
             custom-class="demo-drawer"
-            size=55%
+            size=66%
             :before-close="handleClose">
             <show-project-Detail @onListen="handleClose"
                                  :projectDetail = "projectDetail"
