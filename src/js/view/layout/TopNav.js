@@ -1,4 +1,5 @@
 import UserDialog from '../../../components/user/UserDialog.vue'
+import EventBus from "../../lib/event/EventBus";
 
 export default {
     name: "topNavView",
@@ -43,6 +44,9 @@ export default {
                 );
 
 
+        },
+        flashRed:function(){
+            EventBus.$emit("refreshRed");
         },
         exitSystem: function () {
             var self = this;

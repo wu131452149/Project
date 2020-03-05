@@ -37,6 +37,9 @@ export default {
           EventBus.$on("hideMenuBadge", function (pageID) {
               Vue.delete(self.badge, pageID);
           });
+          EventBus.$on("refreshRed", function () {
+              self.queryIfNewProject();
+          });
       },
     methods: {
         //是否要显示小红点

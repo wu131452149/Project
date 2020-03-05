@@ -56,7 +56,7 @@ export default {
                     }
                 }
             }
-            console.log("单位11:",data);
+            // console.log("单位11:",data);
             return data;
         } else {
             return list;
