@@ -129,6 +129,12 @@ export default {
 
         }
     },
+    activated: function() {
+        var self = this;
+        self.queryAppropriateMoneyProject();
+        self.queryAppropriateMoneyProjectCount();
+        self.queryAppropriateMoney();
+    },
     mounted: function () {
         var self = this;
         self.user = JSON.parse(sessionStorage.getItem('user'));
@@ -141,9 +147,9 @@ export default {
                 self.projectInstitutionList = Utils.initLevelTwo(self.levelOneList, list);
             }
         })
-        self.queryAppropriateMoneyProject();
-        self.queryAppropriateMoneyProjectCount();
-        self.queryAppropriateMoney();
+        // self.queryAppropriateMoneyProject();
+        // self.queryAppropriateMoneyProjectCount();
+        // self.queryAppropriateMoney();
     },
     methods: {
         //查询单位

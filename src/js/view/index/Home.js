@@ -54,6 +54,18 @@ export default {
             showButton: false,
         }
     },
+    activated: function() {
+        var self = this;
+        self.queryAllProject();
+        self.queryAllProjectCount();
+        self.queryNewProjectCount();
+        self.queryFinishedProjectCount();
+        self.queryReturnedProjectCount();
+        self.queryAllBudgetReviewMoney();//预算评审金额和估算总额
+        self.queryAllAppropriateMoney();//查询拨付金额
+        self.queryAllBudgetPlanMoney();//查询年度安排金额
+        self.queryAllProjectWithoutPage();
+    },
     mounted: function () {
         var self = this;
         //$('.main-content').height($(window).height() - 200);
@@ -67,15 +79,15 @@ export default {
                 self.projectInstitutionList = Utils.initLevelTwo(self.levelOneList, list);
             }
         })
-        self.queryAllProject();
-        self.queryAllProjectCount();
-        self.queryNewProjectCount();
-        self.queryFinishedProjectCount();
-        self.queryReturnedProjectCount();
-        self.queryAllBudgetReviewMoney();//预算评审金额和估算总额
-        self.queryAllAppropriateMoney();//查询拨付金额
-        self.queryAllBudgetPlanMoney();//查询年度安排金额
-        self.queryAllProjectWithoutPage();
+        // self.queryAllProject();
+        //         // self.queryAllProjectCount();
+        //         // self.queryNewProjectCount();
+        //         // self.queryFinishedProjectCount();
+        //         // self.queryReturnedProjectCount();
+        //         // self.queryAllBudgetReviewMoney();//预算评审金额和估算总额
+        //         // self.queryAllAppropriateMoney();//查询拨付金额
+        //         // self.queryAllBudgetPlanMoney();//查询年度安排金额
+        //         // self.queryAllProjectWithoutPage();
         self.excelTitleConfig = [{
             name: 'id',
             title: '项目编号',

@@ -61,6 +61,12 @@ export default {
             projectInstitutionList:[]
         };
     },
+    activated: function() {
+        var self = this;
+        self.queryBudgetChangeProject();
+        self.queryBudgetChangeProjectCount();
+        self.queryAppropriateMoney();
+    },
     mounted: function () {
         var self = this;
         self.user = JSON.parse(sessionStorage.getItem('user'));
@@ -72,10 +78,10 @@ export default {
                 self.levelOneList = Utils.initLevelOne(list);
                 self.projectInstitutionList = Utils.initLevelTwo(self.levelOneList,list);
             }
-        })
-        self.queryBudgetChangeProject();
-        self.queryBudgetChangeProjectCount();
-        self.queryAppropriateMoney();
+        });
+        // self.queryBudgetChangeProject();
+        // self.queryBudgetChangeProjectCount();
+        // self.queryAppropriateMoney();
     },
     methods: {
         //查询单位

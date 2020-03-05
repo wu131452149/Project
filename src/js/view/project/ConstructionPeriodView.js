@@ -36,6 +36,12 @@ export default {
             showStepSixRed:false,
         };
     },
+    activated: function() {
+        var self = this;
+        if(self.user.grade==2){
+            self.queryIfNewProject();
+        }
+    },
     mounted: function () {
         var self = this;
         self.user = JSON.parse(sessionStorage.getItem('user'));
@@ -70,12 +76,18 @@ export default {
                         self.ifNewPro = res.data.recordset[0];
                         if(self.ifNewPro.stepFour >0){
                             self.showStepFourRed = true;
+                        }else{
+                            self.showStepFourRed = false;
                         }
                         if(self.ifNewPro.stepFive >0){
                             self.showStepFiveRed = true;
+                        }else{
+                            self.showStepFiveRed = false;
                         }
                         if(self.ifNewPro.stepSix >0){
                             self.showStepSixRed = true;
+                        }else{
+                            self.showStepSixRed = false;
                         }
                     } else {
                         self.$message({

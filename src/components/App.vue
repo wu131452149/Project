@@ -1,37 +1,20 @@
 <template>
     <div id="app">
-        <router-view v-if="isRouterAlive"></router-view>
+        <router-view></router-view>
     </div>
 </template>
 
 <script>
     export default {
         name: 'app',
-        provide() {
-            return {
-                reload: this.reload
-            }
-        },
         data() {
             return {
                 msg: 'hello everyone',
-                isRouterAlive: true,
             }
         },
         mounted: function () {
 
         },
-        methods: {
-            reload() {
-                this.isRouterAlive = false;
-                this.$nextTick(function () {
-                    this.isRouterAlive = true
-                });
-            },
-            activated: function () {
-                this.getCase();
-            }
-        }
 
     }
 </script>

@@ -65,6 +65,11 @@ export default {
 
         }
     },
+    activated: function() {
+        var self = this;
+        self.queryBudgetPlanProject();
+        self.queryBudgetPlanProjectCount();
+    },
     mounted: function () {
         var self = this;
         self.user = JSON.parse(sessionStorage.getItem('user'));
@@ -77,8 +82,8 @@ export default {
                 self.projectInstitutionList = Utils.initLevelTwo(self.levelOneList, list);
             }
         })
-        self.queryBudgetPlanProject();
-        self.queryBudgetPlanProjectCount();
+        // self.queryBudgetPlanProject();
+        // self.queryBudgetPlanProjectCount();
     },
     methods: {
         //查询单位

@@ -43,6 +43,11 @@ export default {
             user: {},
         }
     },
+    activated: function() {
+        var self = this;
+        self.queryReturnProject();
+        self.queryReturnProjectCount();
+    },
     mounted: function () {
         var self = this;
         self.user = JSON.parse(sessionStorage.getItem('user'));
@@ -55,8 +60,8 @@ export default {
                 self.projectInstitutionList = Utils.initLevelTwo(self.levelOneList,list);
             }
         })
-        self.queryReturnProject();
-        self.queryReturnProjectCount();
+        // self.queryReturnProject();
+        // self.queryReturnProjectCount();
     },
     methods: {
         //查询单位

@@ -14,7 +14,6 @@ const EditInsituation = resolve => require(['../../../components/project/EditIns
 
 export default {
     name: "mainContentView",
-    inject: ['reload'],
     components: {
         "home": Home, // 将动态组件注册进来
         "user-manage": UserManage,
@@ -62,7 +61,7 @@ export default {
 
     },
     methods: {},
-    // activated: function() {
-    //     this.getCase()
-    // }
+    activated: function() {
+        this.getCase()
+    }
 }

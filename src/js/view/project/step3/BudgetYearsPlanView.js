@@ -94,6 +94,12 @@ export default {
             showButton: true,
         }
     },
+    activated: function() {
+        var self = this;
+        self.queryBudgetYearsPlanProject();
+        self.queryBudgetYearsPlanProjectCount();
+        self.queryBudgetYearsPlanMoney();
+    },
     mounted: function () {
         var self = this;
         self.user = JSON.parse(sessionStorage.getItem('user'));
@@ -106,9 +112,9 @@ export default {
                 self.projectInstitutionList = Utils.initLevelTwo(self.levelOneList,list);
             }
         })
-        self.queryBudgetYearsPlanProject();
-        self.queryBudgetYearsPlanProjectCount();
-        self.queryBudgetYearsPlanMoney();
+        // self.queryBudgetYearsPlanProject();
+        // self.queryBudgetYearsPlanProjectCount();
+        // self.queryBudgetYearsPlanMoney();
     },
     methods: {
         ifHasPlanYearsSelfMoney:function(thisYears){

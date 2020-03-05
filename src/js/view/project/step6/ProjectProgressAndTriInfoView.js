@@ -71,6 +71,11 @@ export default {
             showButton: true,
         };
     },
+    activated: function() {
+        var self = this;
+        self.queryProAndTriProject();
+        self.queryProAndTriProjectCount();
+    },
     mounted: function () {
         var self = this;
         self.user = JSON.parse(sessionStorage.getItem('user'));
@@ -83,8 +88,8 @@ export default {
                 self.projectInstitutionList = Utils.initLevelTwo(self.levelOneList, list);
             }
         })
-        self.queryProAndTriProject();
-        self.queryProAndTriProjectCount();
+        // self.queryProAndTriProject();
+        // self.queryProAndTriProjectCount();
     },
     methods: {
         //查询单位

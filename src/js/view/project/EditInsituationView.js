@@ -27,11 +27,16 @@ export default {
             formLabelWidth: '80px'
         };
     },
+    activated: function() {
+        var self = this;
+        self.queryInstitution();
+        self.queryInstitutionCount();
+    },
     mounted: function () {
         var self = this;
         self.user = JSON.parse(window.sessionStorage.getItem('user'));
-        self.queryInstitution();
-        self.queryInstitutionCount();
+        // self.queryInstitution();
+        // self.queryInstitutionCount();
     },
     methods: {
         /*新建单位*/

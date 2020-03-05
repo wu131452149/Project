@@ -30,6 +30,12 @@ export default {
             showStepThreeRed:false,
         };
     },
+    activated: function() {
+        var self = this;
+        if(self.user.grade==2){
+            self.queryIfNewProject();
+        }
+    },
     mounted: function () {
         var self = this;
         self.user = JSON.parse(sessionStorage.getItem('user'));
@@ -61,9 +67,13 @@ export default {
                         self.ifNewPro = res.data.recordset[0];
                         if(self.ifNewPro.stepTwo >0){
                             self.showStepTwoRed = true;
+                        }else{
+                            self.showStepTwoRed = false;
                         }
                         if(self.ifNewPro.stepThree >0){
                             self.showStepThreeRed = true;
+                        }else{
+                            self.showStepThreeRed = false;
                         }
                     } else {
                         self.$message({

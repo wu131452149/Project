@@ -57,6 +57,11 @@ export default {
             budgetYearsPlanMoneyList: [],
         };
     },
+    activated: function() {
+        var self = this;
+        self.queryFinishedProject();
+        self.queryFinishedProjectCount();
+    },
     mounted: function () {
         var self = this;
         self.user = JSON.parse(sessionStorage.getItem('user'));
@@ -69,8 +74,8 @@ export default {
                 self.projectInstitutionList = Utils.initLevelTwo(self.levelOneList,list);
             }
         })
-        self.queryFinishedProject();
-        self.queryFinishedProjectCount();
+        // self.queryFinishedProject();
+        // self.queryFinishedProjectCount();
         //this.queryAppropriateMoney();
     },
     methods: {

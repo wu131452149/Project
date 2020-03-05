@@ -67,11 +67,17 @@ export default {
             }
         })
     },
-    mounted: function () {
+    activated: function() {
         var self = this;
         //$('.main-content').height($(window).height() - 200);
         self.queryNewProject();
         self.queryNewProjectCount();
+    },
+    mounted: function () {
+        //var self = this;
+        //$('.main-content').height($(window).height() - 200);
+        // self.queryNewProject();
+        // self.queryNewProjectCount();
 
     },
     methods: {
