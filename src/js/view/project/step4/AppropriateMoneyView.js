@@ -147,9 +147,9 @@ export default {
                 self.projectInstitutionList = Utils.initLevelTwo(self.levelOneList, list);
             }
         })
-        // self.queryAppropriateMoneyProject();
-        // self.queryAppropriateMoneyProjectCount();
-        // self.queryAppropriateMoney();
+        self.queryAppropriateMoneyProject();
+        self.queryAppropriateMoneyProjectCount();
+        self.queryAppropriateMoney();
     },
     methods: {
         //查询单位
@@ -398,6 +398,8 @@ export default {
                     editBudgetData.suggestion = 1;//第一步已经通过审核
                     editBudgetData.stepFourApp = 2;//将第二步设置为待审核
                     editBudgetData.ifFourEdit = 1;
+                    //保存原来的审核结果，传入后端，红点要不要+1,因为审核的时候是一起审核的，所以只要+1次即可
+                    editBudgetData.originalStepFourApp = self.projectDetail.stepFourApp;
                     //存入数据库
                     if (editBudgetData.type == "县级预算安排") {
                         //存入数据库

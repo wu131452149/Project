@@ -79,9 +79,9 @@ export default {
                 self.projectInstitutionList = Utils.initLevelTwo(self.levelOneList,list);
             }
         });
-        // self.queryBudgetChangeProject();
-        // self.queryBudgetChangeProjectCount();
-        // self.queryAppropriateMoney();
+        self.queryBudgetChangeProject();
+        self.queryBudgetChangeProjectCount();
+        self.queryAppropriateMoney();
     },
     methods: {
         //查询单位
@@ -298,6 +298,8 @@ export default {
                     editBudgetData.suggestion = 1;//第一步已经通过审核
                     editBudgetData.stepFiveApp = 2;//将第二步设置为待审核
                     editBudgetData.ifFiveEdit = 1;
+                    //保存原来的审核结果，传入后端，红点要不要+1,因为审核的时候是一起审核的，所以只要+1次即可
+                    editBudgetData.originalStepFiveApp = self.projectDetail.stepFiveApp;
                     if (editBudgetData.type == "增加") {
                         //editBudgetData.addBudget = editBudgetData.money;
                         var obj = self.initObj(self.projectDetail.addBudget, editBudgetData);

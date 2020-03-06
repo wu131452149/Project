@@ -112,9 +112,9 @@ export default {
                 self.projectInstitutionList = Utils.initLevelTwo(self.levelOneList,list);
             }
         })
-        // self.queryBudgetYearsPlanProject();
-        // self.queryBudgetYearsPlanProjectCount();
-        // self.queryBudgetYearsPlanMoney();
+        self.queryBudgetYearsPlanProject();
+        self.queryBudgetYearsPlanProjectCount();
+        self.queryBudgetYearsPlanMoney();
     },
     methods: {
         ifHasPlanYearsSelfMoney:function(thisYears){
@@ -419,6 +419,8 @@ export default {
                     editBudgetData.suggestion = 1;//第一步已经通过审核
                     editBudgetData.stepThreeApp = 2;//将第二步设置为待审核
                     editBudgetData.ifThreeEdit = 1;
+                    //保存原来的审核结果，传入后端，红点要不要+1,因为审核的时候是一起审核的，所以只要+1次即可
+                    editBudgetData.originalStepThreeApp = self.projectDetail.stepThreeApp;
                     if (editBudgetData.type == "自筹金额") {
                         //存入数据库//只能编辑一次
                         var obj = {};

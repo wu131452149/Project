@@ -82,8 +82,8 @@ export default {
                 self.projectInstitutionList = Utils.initLevelTwo(self.levelOneList, list);
             }
         })
-        // self.queryBudgetPlanProject();
-        // self.queryBudgetPlanProjectCount();
+        self.queryBudgetPlanProject();
+        self.queryBudgetPlanProjectCount();
     },
     methods: {
         //查询单位
@@ -261,6 +261,8 @@ export default {
                     editBudgetData.suggestion = 1;//第一步已经通过审核
                     editBudgetData.stepTwoApp = 2;//将第二步设置为待审核
                     editBudgetData.ifEdit = 1;
+                    //保存原来的审核结果，传入后端，红点要不要+1,因为审核的时候是一起审核的，所以只要+1次即可
+                    editBudgetData.originalStepTwoApp = self.projectDetail.stepTwoApp;
                     if (editBudgetData.gvApproval == "是") {
                         editBudgetData.gvApproval = 1;
                     } else {

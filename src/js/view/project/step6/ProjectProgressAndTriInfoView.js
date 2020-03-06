@@ -88,8 +88,8 @@ export default {
                 self.projectInstitutionList = Utils.initLevelTwo(self.levelOneList, list);
             }
         })
-        // self.queryProAndTriProject();
-        // self.queryProAndTriProjectCount();
+        self.queryProAndTriProject();
+        self.queryProAndTriProjectCount();
     },
     methods: {
         //查询单位
@@ -352,6 +352,8 @@ export default {
                     editBudgetData.suggestion = 1;//第一步已经通过审核
                     editBudgetData.stepSixApp = 2;//将第二步设置为待审核
                     editBudgetData.ifSixEdit = 1;
+                    //保存原来的审核结果，传入后端，红点要不要+1,因为审核的时候是一起审核的，所以只要+1次即可
+                    editBudgetData.originalStepSixApp = self.projectDetail.stepSixApp;
                     editBudgetData.projectFinance = self.projectDetail.projectFinance;//传入后台取newproject表里面+1
                     //换成字符串存入triInfo里面
                     self.$http.post('/api/project/updateProject', editBudgetData).then(res => {
