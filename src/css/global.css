@@ -1076,8 +1076,16 @@ table {
 .bottom-solid{
     border-bottom: 1px solid #969393 !important;
 }
+/*更改小红点位置*/
 .el-badge__content.is-fixed.is-dot {
     right: 0 !important;
     margin-top: 20px !important;
+}
+/*更改表格颜色*/
+.el-table--border td, .el-table--border th, .el-table__body-wrapper .el-table--border.is-scrolling-left~.el-table__fixed {
+    border-right: 1px solid #c1cdea !important;
+}
+.el-table td, .el-table th.is-leaf {
+    border-bottom: 1px solid #c1cdea !important;
 }
 /*public style end*/

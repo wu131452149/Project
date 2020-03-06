@@ -9,6 +9,7 @@
             </el-tab-pane>
         </el-tabs>
 
+
 </template>
 <style src="../../css/NewMediaGlobal.css"></style>
 <script src="../../js/view/project/ProjectDoingView.js"></script>

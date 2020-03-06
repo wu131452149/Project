@@ -102,12 +102,13 @@
             <el-table
                 :data="newProject.newProjectList"
                 tooltip-effect="light"
+                border
                 @click.stop.prevent="stopPropagationPreventDef($event)"
                 style="width: 100%;height: 100%;">
-                <el-table-column show-overflow-tooltip prop="id" label="项目编号" width="50">
+                <el-table-column show-overflow-tooltip prop="id" label="编号" width="60">
                     <template slot-scope="scope">{{scope.row.id}}</template>
                 </el-table-column>
-                <el-table-column show-overflow-tooltip prop="projectInstitution" label="项目单位">
+                <el-table-column show-overflow-tooltip prop="projectInstitution" label="项目单位" width="80">
                     <template slot-scope="scope">{{scope.row.projectInstitution}}</template>
                 </el-table-column>
                 <el-table-column show-overflow-tooltip prop="projectName" label="项目名称">
@@ -117,7 +118,7 @@
                 <el-table-column show-overflow-tooltip prop="projectType" label="项目类型">
                     <template slot-scope="scope">{{scope.row.projectType}}</template>
                 </el-table-column>
-                <el-table-column show-overflow-tooltip prop="projectMoney" label="项目估算总额（万元）">
+                <el-table-column show-overflow-tooltip prop="projectMoney" label="估算额(万元)" width="80">
                     <template slot-scope="scope">{{scope.row.projectMoney}}</template>
                 </el-table-column>
                 <el-table-column show-overflow-tooltip prop="projectMoneyFrom" label="资金来源">
@@ -129,20 +130,20 @@
                 <el-table-column show-overflow-tooltip prop="projectBeginTime" label="拟开工时间" width="100">
                     <template slot-scope="scope">{{scope.row.projectBeginTime|renderBeginTime}}</template>
                 </el-table-column>
-                <el-table-column show-overflow-tooltip prop="projectYears" label="项目周期" width="50">
+                <el-table-column show-overflow-tooltip prop="projectYears" label="周期" width="50">
                     <template slot-scope="scope">{{scope.row.projectYears}}</template>
                 </el-table-column>
-                <el-table-column show-overflow-tooltip prop="projectContactUserName" label="项目联系人">
+                <el-table-column show-overflow-tooltip prop="projectContactUserName" label="项目联系人" width="100">
                     <template slot-scope="scope">{{scope.row.projectContactUserName}}</template>
                 </el-table-column>
-                <el-table-column show-overflow-tooltip prop="projectContactUserPhone" label="联系人电话">
+                <el-table-column show-overflow-tooltip prop="projectContactUserPhone" label="联系人电话" width="100">
                     <template slot-scope="scope">{{scope.row.projectContactUserPhone}}</template>
                 </el-table-column>
                 <el-table-column  show-overflow-tooltip prop="stepOneApp" label="审核意见">
                     <template slot-scope="scope">{{scope.row.stepOneApp|renderStatus}}</template>
                 </el-table-column>
                 <!--//阶段录入修改-->
-                <el-table-column label="操作" class="text-c" v-if="user.grade==0||user.grade==1" width="150">
+                <el-table-column label="操作" class="text-c" v-if="user.grade==0||user.grade==1" width="120">
                     <template slot-scope="scope">
                         <a v-if="scope.row.stepOneApp==0" @click.stop="commitProjectAgain($event,scope.row)">重新录入</a>
                         <!--如果是未审核阶段才可以退库-->

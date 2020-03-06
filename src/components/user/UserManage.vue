@@ -54,11 +54,11 @@
             <!--表格start-->
             <div class="report-form element-table less-condition">
                 <el-table
-                    ref="multipleTable"
                     :data="users.userList"
+                    border
                     tooltip-effect="light"
                     @click.stop.prevent="stopPropagationPreventDef($event)"
-                    style="width: 100%;">
+                    style="width: 100%;height: 100%;">
                     <el-table-column show-overflow-tooltip prop="userName" label="用户名">
                         <template slot-scope="scope">{{scope.row.userName}}</template>
                     </el-table-column>
@@ -106,7 +106,7 @@
             :direction="direction"
             custom-class="demo-drawer"
             ref="createUserDraw"
-            size=66%
+            size=55%
             :before-close="handleClose">
             <div class="wrap wrap-crowded position-r clearfix scrollBar-inner">
                 <el-form :model="createUser" :rules="rules" class="width300" ref="createUser">
@@ -140,7 +140,7 @@
             :direction="direction"
             custom-class="demo-drawer"
             ref="updateUserDrawer"
-            size=66%
+            size=55%
             :before-close="handleClose">
             <div class="wrap wrap-crowded position-r clearfix scrollBar-inner" style="height: 500px;">
                 <el-form :model="updateUser" :rules="rules" class="width300" ref="updateUser">

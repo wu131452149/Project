@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="wrap">
         <el-tabs v-model="activeName" @tab-click="showTabPage">
             <el-tab-pane name="budget-approval" >
                 <span slot="label">

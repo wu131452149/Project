@@ -40,6 +40,7 @@
             <el-table
                 :data="institution.institutionList"
                 tooltip-effect="light"
+                border
                 @click.stop.prevent="stopPropagationPreventDef($event)"
                 style="width: 100%;height: 100%;">
                 <el-table-column show-overflow-tooltip prop="name" label="单位名称">
