@@ -300,6 +300,12 @@ export default {
                     editBudgetData.ifFiveEdit = 1;
                     //保存原来的审核结果，传入后端，红点要不要+1,因为审核的时候是一起审核的，所以只要+1次即可
                     editBudgetData.originalStepFiveApp = self.projectDetail.stepFiveApp;
+                    //第一次录入第五步判断
+                    if(!self.projectDetail.addBudget&&!self.projectDetail.cutBudget){
+                        editBudgetData.isFirstFiveEdit = true;
+                    }else{
+                        editBudgetData.isFirstFiveEdit = false;
+                    }
                     if (editBudgetData.type == "增加") {
                         //editBudgetData.addBudget = editBudgetData.money;
                         var obj = self.initObj(self.projectDetail.addBudget, editBudgetData);

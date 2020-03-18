@@ -254,34 +254,40 @@ router.post('/updateProject', function (req, res, next) {
         delete param.projectFinance;
     }
     //跟红点有关
-    if (param.originalStepTwoApp) {
-        var originalStepTwoApp = param.originalStepTwoApp;
-        delete param.originalStepTwoApp;
+    //审核不通过是0，就不再判断了
+    var originalStepTwoApp = param.originalStepTwoApp;
+    delete param.originalStepTwoApp;
+    var originalStepThreeApp = param.originalStepThreeApp;
+    delete param.originalStepThreeApp;
+    var originalStepFourApp = param.originalStepFourApp;
+    delete param.originalStepFourApp;
+    var originalStepFiveApp = param.originalStepFiveApp;
+    delete param.originalStepFiveApp;
+    var originalStepSixApp = param.originalStepSixApp;
+    delete param.originalStepSixApp;
+    var originalStepSevenApp = param.originalStepSevenApp;
+    delete param.originalStepSevenApp;
+    //是否是第一次提交，不然不选择
+    var isFirstTwoEdit = param.isFirstTwoEdit;
+    delete param.isFirstTwoEdit;
+    var isFirstThreeEdit = param.isFirstThreeEdit;
+    delete param.isFirstThreeEdit;
+    var isFirstFourEdit = param.isFirstFourEdit;
+    delete param.isFirstFourEdit;
+    var isFirstFiveEdit = param.isFirstFiveEdit;
+    delete param.isFirstFiveEdit;
+    var isFirstSixEdit = param.isFirstSixEdit;
+    delete param.isFirstSixEdit;
+    var isFirstSevenEdit = param.isFirstSevenEdit;
+    delete param.isFirstSevenEdit;
+    var editSpeed = false;
+    if (param.editSpeed) {
+        editSpeed = param.editSpeed;
+        delete param.editSpeed;
     }
-    if (param.originalStepThreeApp) {
-        var originalStepThreeApp = param.originalStepThreeApp;
-        delete param.originalStepThreeApp;
-    }
-    if (param.originalStepFourApp) {
-        var originalStepFourApp = param.originalStepFourApp;
-        delete param.originalStepFourApp;
-    }
-    if (param.originalStepFiveApp) {
-        var originalStepFiveApp = param.originalStepFiveApp;
-        delete param.originalStepFiveApp;
-    }
-    if (param.originalStepSixApp) {
-        var originalStepSixApp = param.originalStepSixApp;
-        delete param.originalStepSixApp;
-    }
-    if (param.originalStepSevenApp) {
-        var originalStepSevenApp = param.originalStepSevenApp;
-        delete param.originalStepSevenApp;
-    }
-
     db.update(param, whereObj, dbName, function (err, result) {//查询所有news表的数据
         if (result && result.rowsAffected && result.rowsAffected.length > 0) {
-            if (!param.planYearsSelfMoney) {
+            if (!param.planYearsSelfMoney&&!editSpeed) {//更新进度的时候不需要插入红点表
                 //传入审批项目的人（插入一条表在newProject）
                 var whereSql = "where role = '" + projectFinance + "'";
                 db.select(dbNewPro, 1, whereSql, "", "order by id", function (err, res1) {
@@ -293,29 +299,58 @@ router.post('/updateProject', function (req, res, next) {
                         if (step == 1) {
                             data.stepOne = data.stepOne + 1;
                         } else if (step == 2) {
-                            if (originalStepTwoApp != 2) {//如果之前就是审核状态就不用再加1了，这样就不用红点重复加
+                            //这个地方有点问题，因为在第一次新建审核过来的时候第一次输入的时候也是待审核也是2导致红点一直都不会+1
+                            // 如果是第一次填写不用管是否审核
+                            if(isFirstTwoEdit){
                                 data.stepTwo = data.stepTwo + 1;
+                            }else{
+                                if (originalStepTwoApp != 2) {//如果之前就是审核状态就不用再加1了，这样就不用红点重复加
+                                    data.stepTwo = data.stepTwo + 1;
+                                }
                             }
                         } else if (step == 3) {
-                            if (originalStepThreeApp != 2) {//如果之前就是审核状态就不用再加1了，这样就不用红点重复加
+                            if(isFirstThreeEdit){
                                 data.stepThree = data.stepThree + 1;
+                            }else{
+                                if (originalStepThreeApp != 2) {//如果之前就是审核状态就不用再加1了，这样就不用红点重复加
+                                    data.stepThree = data.stepThree + 1;
+                                }
                             }
                         } else if (step == 4) {
-                            if (originalStepFourApp != 2) {//如果之前就是审核状态就不用再加1了，这样就不用红点重复加
+                            if(isFirstFourEdit){
                                 data.stepFour = data.stepFour + 1;
+                            }else{
+                                if (originalStepFourApp != 2) {//如果之前就是审核状态就不用再加1了，这样就不用红点重复加
+                                    data.stepFour = data.stepFour + 1;
+                                }
                             }
                         } else if (step == 5) {
-                            if (originalStepFiveApp != 2) {//如果之前就是审核状态就不用再加1了，这样就不用红点重复加
+                            if(isFirstFiveEdit){
                                 data.stepFive = data.stepFive + 1;
+                            }else{
+                                if (originalStepFiveApp != 2) {//如果之前就是审核状态就不用再加1了，这样就不用红点重复加
+                                    data.stepFive = data.stepFive + 1;
+                                }
                             }
+
                         } else if (step == 6) {
-                            if (originalStepSixApp != 2) {//如果之前就是审核状态就不用再加1了，这样就不用红点重复加
+                            if(isFirstSixEdit){
                                 data.stepSix = data.stepSix + 1;
+                            }else{
+                                if (originalStepSixApp != 2) {//如果之前就是审核状态就不用再加1了，这样就不用红点重复加
+                                    data.stepSix = data.stepSix + 1;
+                                }
                             }
+
                         } else if (step == 7) {
-                            if (originalStepSevenApp != 2) {//如果之前就是审核状态就不用再加1了，这样就不用红点重复加
+                            if(isFirstSevenEdit){
                                 data.stepSeven = data.stepSeven + 1;
+                            }else{
+                                if (originalStepSevenApp != 2) {//如果之前就是审核状态就不用再加1了，这样就不用红点重复加
+                                    data.stepSeven = data.stepSeven + 1;
+                                }
                             }
+
                         }
                         db.update(data, whereObj, dbNewPro, function (err, result2) {//插入一条新的数据
                             res.json(result);

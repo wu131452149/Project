@@ -421,6 +421,12 @@ export default {
                     editBudgetData.ifThreeEdit = 1;
                     //保存原来的审核结果，传入后端，红点要不要+1,因为审核的时候是一起审核的，所以只要+1次即可
                     editBudgetData.originalStepThreeApp = self.projectDetail.stepThreeApp;
+                    //如果是第一次录入的话红点就要+1
+                    if(!self.projectDetail.planYearsSelfMoney&&!self.projectDetail.planYearsMoney&&!self.projectDetail.planYearsTopMoney){
+                        editBudgetData.isFirstThreeEdit = true;
+                    }else{
+                        editBudgetData.isFirstThreeEdit = false;
+                    }
                     if (editBudgetData.type == "自筹金额") {
                         //存入数据库//只能编辑一次
                         var obj = {};

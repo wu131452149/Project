@@ -263,6 +263,14 @@ export default {
                     editBudgetData.ifEdit = 1;
                     //保存原来的审核结果，传入后端，红点要不要+1,因为审核的时候是一起审核的，所以只要+1次即可
                     editBudgetData.originalStepTwoApp = self.projectDetail.stepTwoApp;
+                    //如果是第一次录入的话红点就要+1
+                    //第一次录入第2步判断
+                    if(!self.projectDetail.approvalNumber){
+                        editBudgetData.isFirstTwoEdit = true;
+                    }else{
+                        editBudgetData.isFirstTwoEdit = false;
+                    }
+
                     if (editBudgetData.gvApproval == "是") {
                         editBudgetData.gvApproval = 1;
                     } else {

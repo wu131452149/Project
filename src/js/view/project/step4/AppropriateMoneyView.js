@@ -400,6 +400,12 @@ export default {
                     editBudgetData.ifFourEdit = 1;
                     //保存原来的审核结果，传入后端，红点要不要+1,因为审核的时候是一起审核的，所以只要+1次即可
                     editBudgetData.originalStepFourApp = self.projectDetail.stepFourApp;
+                    //如果是第一次录入的话红点就要+1
+                    if(!self.projectDetail.appropriateBudget&&!self.projectDetail.appropriateTopBudget){
+                        editBudgetData.isFirstFourEdit = true;
+                    }else{
+                        editBudgetData.isFirstFourEdit = false;
+                    }
                     //存入数据库
                     if (editBudgetData.type == "县级预算安排") {
                         //存入数据库

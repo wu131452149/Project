@@ -288,6 +288,7 @@ export default {
                         //editBudgetData.suggestion = 1;//第6步已经通过审核
                     }
                     editBudgetData.trueStep = 6;
+                    editBudgetData.editSpeed = true;
                     editBudgetData.projectFinance = self.projectDetail.projectFinance;//传入后台取newproject表里面+1
                     self.$http.post('/api/project/updateProject', editBudgetData).then(res => {
                         let status = res.status;
@@ -329,6 +330,7 @@ export default {
                 }
             });
         },
+        //提交第三方
         commitTri: function () {
             var self = this;
             self.$refs.TriInfo.validate((valid) => {
@@ -340,10 +342,13 @@ export default {
                     //如果是第一次提交合同
                     if (!self.projectDetail.triInfo) {
                         triList.push(triInfo);
+                        //第一次录入第6步
+                        editBudgetData.isFirstSixEdit = true;
                     } else {
                         //之前有提交过
                         triList = JSON.parse(self.projectDetail.triInfo);
                         triList.push(triInfo);
+                        editBudgetData.isFirstSixEdit = true;
                     }
                     editBudgetData.triInfo = JSON.stringify(triList);//转换一下数据
                     //根据id来改变

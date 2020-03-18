@@ -296,6 +296,12 @@ export default {
                     editBudgetData.originalStepSevenApp = self.projectDetail.stepSevenApp;
                     //存入数据库
                     editBudgetData.projectFinance = self.projectDetail.projectFinance;//传入后台取newproject表里面+1
+                    //第一次录入第7步判断
+                    if(!self.projectDetail.finishMoney){
+                        editBudgetData.isFirstSevenEdit = true;
+                    }else{
+                        editBudgetData.isFirstSevenEdit = false;
+                    }
                     self.$http.post('/api/project/updateProject', editBudgetData).then(res => {
                         let status = res.status;
                         let statusText = res.statusText;
