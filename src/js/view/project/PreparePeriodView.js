@@ -25,27 +25,27 @@ export default {
             },
             formLabelWidth: '80px',
             user: {},
-            ifNewPro:{},
-            showStepTwoRed:false,
-            showStepThreeRed:false,
+            ifNewPro: {},
+            showStepTwoRed: false,
+            showStepThreeRed: false,
         };
     },
-    activated: function() {
+    activated: function () {
         var self = this;
-        if(self.user.grade==2){
+        if (self.user.grade == 2) {
             self.queryIfNewProject();
         }
     },
     mounted: function () {
         var self = this;
         self.user = JSON.parse(sessionStorage.getItem('user'));
-        if(self.user.grade==2){
+        if (self.user.grade == 2) {
             self.queryIfNewProject();
         }
-        EventBus.$on("hideTwoBadge",function () {
+        EventBus.$on("hideTwoBadge", function () {
             self.showStepTwoRed = false;
         });
-        EventBus.$on("hideThreeBadge",function () {
+        EventBus.$on("hideThreeBadge", function () {
             self.showStepThreeRed = false;
         });
     },
@@ -65,15 +65,20 @@ export default {
                 } else {
                     if (res.data.length != 0) {
                         self.ifNewPro = res.data.recordset[0];
-                        if(self.ifNewPro.stepTwo >0){
+                        if (self.ifNewPro.stepTwo > 0) {
                             self.showStepTwoRed = true;
-                        }else{
+                        } else {
                             self.showStepTwoRed = false;
                         }
-                        if(self.ifNewPro.stepThree >0){
+                        if (self.ifNewPro.stepThree > 0) {
                             self.showStepThreeRed = true;
-                        }else{
+                        } else {
                             self.showStepThreeRed = false;
+                        }
+                        if (self.showStepTwoRed || self.showStepThreeRed) {
+                            EventBus.$emit('showPrepareBadge');
+                        } else {
+                            EventBus.$emit('hidePrepareBadge');
                         }
                     } else {
                         self.$message({
@@ -100,5 +105,31 @@ export default {
             var self = this;
             self.curComponents[tab.name] = tab.name;
         },
-    }
+    },
+    watch: {
+        "showStepTwoRed": {
+            immediate: true,
+            handler: function (val) {
+                var self = this;
+                if (self.showStepTwoRed || self.showStepThreeRed) {
+                    EventBus.$emit('showPrepareBadge');
+                } else {
+                    EventBus.$emit('hidePrepareBadge');
+                }
+            }
+
+        },
+        "showStepThreeRed": {
+            immediate: true,
+            handler: function (val) {
+                var self = this;
+                if (self.showStepTwoRed || self.showStepThreeRed) {
+                    EventBus.$emit('showPrepareBadge');
+                } else {
+                    EventBus.$emit('hidePrepareBadge');
+                }
+            }
+
+        }
+    },
 }

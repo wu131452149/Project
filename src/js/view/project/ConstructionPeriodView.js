@@ -11,17 +11,17 @@ import EventBus from "../../lib/event/EventBus";
 export default {
     name: "ConstructionPeriodView",
     components: {
-        "appropriate-money":AppropriateMoney,
-        "budget-change":BudgetChange,
-        "progress-tri":ProjectProgressAndTriInfo
+        "appropriate-money": AppropriateMoney,
+        "budget-change": BudgetChange,
+        "progress-tri": ProjectProgressAndTriInfo
     },
     data() {
         return {
             activeName: 'appropriate-money',
-            curComponents:{
+            curComponents: {
                 "appropriate-money": "appropriate-money",
-                "budget-change":"",
-                "progress-tri":""
+                "budget-change": "",
+                "progress-tri": ""
             },
             table: false,
             dialog: false,
@@ -29,32 +29,32 @@ export default {
             formLabelWidth: '80px',
             showCountNumber: true,
             IsNewMediaSessionLargeData: '',
-            user:{},
-            ifNewPro:{},
-            showStepFourRed:false,
-            showStepFiveRed:false,
-            showStepSixRed:false,
+            user: {},
+            ifNewPro: {},
+            showStepFourRed: false,
+            showStepFiveRed: false,
+            showStepSixRed: false,
         };
     },
-    activated: function() {
+    activated: function () {
         var self = this;
-        if(self.user.grade==2){
+        if (self.user.grade == 2) {
             self.queryIfNewProject();
         }
     },
     mounted: function () {
         var self = this;
         self.user = JSON.parse(sessionStorage.getItem('user'));
-        if(self.user.grade==2){
+        if (self.user.grade == 2) {
             self.queryIfNewProject();
         }
-        EventBus.$on("hideFourBadge",function () {
+        EventBus.$on("hideFourBadge", function () {
             self.showStepFourRed = false;
         });
-        EventBus.$on("hideFiveBadge",function () {
+        EventBus.$on("hideFiveBadge", function () {
             self.showStepFiveRed = false;
         });
-        EventBus.$on("hideSixBadge",function () {
+        EventBus.$on("hideSixBadge", function () {
             self.showStepSixRed = false;
         });
     },
@@ -74,20 +74,25 @@ export default {
                 } else {
                     if (res.data.length != 0) {
                         self.ifNewPro = res.data.recordset[0];
-                        if(self.ifNewPro.stepFour >0){
+                        if (self.ifNewPro.stepFour > 0) {
                             self.showStepFourRed = true;
-                        }else{
+                        } else {
                             self.showStepFourRed = false;
                         }
-                        if(self.ifNewPro.stepFive >0){
+                        if (self.ifNewPro.stepFive > 0) {
                             self.showStepFiveRed = true;
-                        }else{
+                        } else {
                             self.showStepFiveRed = false;
                         }
-                        if(self.ifNewPro.stepSix >0){
+                        if (self.ifNewPro.stepSix > 0) {
                             self.showStepSixRed = true;
-                        }else{
+                        } else {
                             self.showStepSixRed = false;
+                        }
+                        if (self.showStepFourRed || self.showStepFiveRed || self.showStepSixRed) {
+                            EventBus.$emit('showConstructionBadge');
+                        } else {
+                            EventBus.$emit('hideConstructionBadge');
                         }
                     } else {
                         self.$message({
@@ -111,7 +116,45 @@ export default {
          */
         showTabPage(tab, event) {
             var self = this;
-            self.curComponents[tab.name]=tab.name;
+            self.curComponents[tab.name] = tab.name;
         },
-    }
+    },
+    watch: {
+        "showStepFourRed": {
+            immediate: true,
+            handler: function (val) {
+                var self = this;
+                if (self.showStepFourRed || self.showStepFiveRed || self.showStepSixRed) {
+                    EventBus.$emit('showConstructionBadge');
+                } else {
+                    EventBus.$emit('hideConstructionBadge');
+                }
+            }
+
+        },
+        "showStepFiveRed": {
+            immediate: true,
+            handler: function (val) {
+                var self = this;
+                if (self.showStepFourRed || self.showStepFiveRed || self.showStepSixRed) {
+                    EventBus.$emit('showConstructionBadge');
+                } else {
+                    EventBus.$emit('hideConstructionBadge');
+                }
+            }
+
+        },
+        "showStepSixRed": {
+            immediate: true,
+            handler: function (val) {
+                var self = this;
+                if (self.showStepFourRed || self.showStepFiveRed || self.showStepSixRed) {
+                    EventBus.$emit('showConstructionBadge');
+                } else {
+                    EventBus.$emit('hideConstructionBadge');
+                }
+            }
+
+        }
+    },
 }

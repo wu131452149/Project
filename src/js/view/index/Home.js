@@ -1,4 +1,5 @@
 import ShowProjectDetail from "../../../components/project/ShowProjectDetail";
+import ShowAllDetail from "../../../components/project/ShowAllDetail";
 import Filters from "../common/Filters";
 import Utils from "../../lib/Utils/Utils";
 
@@ -7,6 +8,7 @@ export default {
     name: "Home",
     components: {
         "show-project-Detail": ShowProjectDetail,
+        "show-all-Detail": ShowAllDetail
     },
     data() {
         return {
@@ -16,6 +18,7 @@ export default {
             o: 2,
             drawerDetails: false,
             drawerCreate: false,
+            drawerEdit: false,
             showMoreQuery: false,
             direction: 'rtl',
             projectInstitutionList: [],
@@ -54,7 +57,7 @@ export default {
             showButton: false,
         }
     },
-    activated: function() {
+    activated: function () {
         var self = this;
         self.queryAllProject();
         self.queryAllProjectCount();
@@ -669,6 +672,52 @@ export default {
                     }),
                 );
         },
+        deleteWrongProject: function (e, data) {
+            let self = this;
+            self.$confirm('确定删除该项目吗?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                self.$http.post('/api/project/deleteWrongProject', data).then(res => {
+                    let status = res.status;
+                    let statusText = res.statusText;
+                    if (status !== 200) {
+                        self.$message({
+                            message: statusText,
+                            type: 'error'
+                        });
+                    } else {
+                        if (res.data.length != 0) {
+                            self.$message({
+                                message: "删除成功",
+                                type: 'success'
+                            });
+                            //查询当前页数据
+                            self.queryAllProject(true);
+                        } else {
+                            self.$message({
+                                message: "删除失败",
+                                type: 'warning'
+                            });
+                        }
+                    }
+                })
+                    .catch(error =>
+                        self.$message({
+                            message: error.message,
+                            type: 'error'
+                        }),
+                    );
+            })
+
+        },
+        /*只有root权限才能修改项目*/
+        editProject: function (e, data) {
+            let self = this;
+            self.drawerEdit = true;
+            self.projectDetail = data;
+        }
 
     },
     filters: {

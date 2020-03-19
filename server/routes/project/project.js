@@ -168,38 +168,38 @@ router.post('/approvalProject', function (req, res, next) {
                             data.stepTwo = 0;
                         }
                     } else if (step == 3) {
-                        if (redCount) {
-                            data.stepThree = data.stepThree - redCount;
-                        } else {
-                            data.stepThree = data.stepThree - 1;
-                        }
+                        // if (redCount) {
+                        //     data.stepThree = data.stepThree - redCount;
+                        // } else {
+                        data.stepThree = data.stepThree - 1;
+                        //}
                         if (data.stepThree < 0) {
                             data.stepThree = 0;
                         }
                     } else if (step == 4) {
-                        if (redCount) {
-                            data.stepFour = data.stepFour - redCount;
-                        } else {
-                            data.stepFour = data.stepFour - 1;
-                        }
+                        // if (redCount) {
+                        //     data.stepFour = data.stepFour - redCount;
+                        // } else {
+                        data.stepFour = data.stepFour - 1;
+                        //}
                         if (data.stepFour < 0) {
                             data.stepFour = 0;
                         }
                     } else if (step == 5) {
-                        if (redCount) {
-                            data.stepFive = data.stepFive - redCount;
-                        } else {
-                            data.stepFive = data.stepFive - 1;
-                        }
+                        // if (redCount) {
+                        //     data.stepFive = data.stepFive - redCount;
+                        // } else {
+                        data.stepFive = data.stepFive - 1;
+                        //}
                         if (data.stepFive < 0) {
                             data.stepFive = 0;
                         }
                     } else if (step == 6) {
-                        if (redCount) {
-                            data.stepSix = data.stepSix - redCount;
-                        } else {
-                            data.stepSix = data.stepSix - 1;
-                        }
+                        // if (redCount) {
+                        //     data.stepSix = data.stepSix - redCount;
+                        // } else {
+                        data.stepSix = data.stepSix - 1;
+                        // }
                         if (data.stepSix < 0) {
                             data.stepSix = 0;
                         }
@@ -287,7 +287,7 @@ router.post('/updateProject', function (req, res, next) {
     }
     db.update(param, whereObj, dbName, function (err, result) {//查询所有news表的数据
         if (result && result.rowsAffected && result.rowsAffected.length > 0) {
-            if (!param.planYearsSelfMoney&&!editSpeed) {//更新进度的时候不需要插入红点表
+            if (!param.planYearsSelfMoney && !editSpeed) {//更新进度的时候不需要插入红点表
                 //传入审批项目的人（插入一条表在newProject）
                 var whereSql = "where role = '" + projectFinance + "'";
                 db.select(dbNewPro, 1, whereSql, "", "order by id", function (err, res1) {
@@ -301,51 +301,51 @@ router.post('/updateProject', function (req, res, next) {
                         } else if (step == 2) {
                             //这个地方有点问题，因为在第一次新建审核过来的时候第一次输入的时候也是待审核也是2导致红点一直都不会+1
                             // 如果是第一次填写不用管是否审核
-                            if(isFirstTwoEdit){
+                            if (isFirstTwoEdit) {
                                 data.stepTwo = data.stepTwo + 1;
-                            }else{
+                            } else {
                                 if (originalStepTwoApp != 2) {//如果之前就是审核状态就不用再加1了，这样就不用红点重复加
                                     data.stepTwo = data.stepTwo + 1;
                                 }
                             }
                         } else if (step == 3) {
-                            if(isFirstThreeEdit){
+                            if (isFirstThreeEdit) {
                                 data.stepThree = data.stepThree + 1;
-                            }else{
+                            } else {
                                 if (originalStepThreeApp != 2) {//如果之前就是审核状态就不用再加1了，这样就不用红点重复加
                                     data.stepThree = data.stepThree + 1;
                                 }
                             }
                         } else if (step == 4) {
-                            if(isFirstFourEdit){
+                            if (isFirstFourEdit) {
                                 data.stepFour = data.stepFour + 1;
-                            }else{
+                            } else {
                                 if (originalStepFourApp != 2) {//如果之前就是审核状态就不用再加1了，这样就不用红点重复加
                                     data.stepFour = data.stepFour + 1;
                                 }
                             }
                         } else if (step == 5) {
-                            if(isFirstFiveEdit){
+                            if (isFirstFiveEdit) {
                                 data.stepFive = data.stepFive + 1;
-                            }else{
+                            } else {
                                 if (originalStepFiveApp != 2) {//如果之前就是审核状态就不用再加1了，这样就不用红点重复加
                                     data.stepFive = data.stepFive + 1;
                                 }
                             }
 
                         } else if (step == 6) {
-                            if(isFirstSixEdit){
+                            if (isFirstSixEdit) {
                                 data.stepSix = data.stepSix + 1;
-                            }else{
+                            } else {
                                 if (originalStepSixApp != 2) {//如果之前就是审核状态就不用再加1了，这样就不用红点重复加
                                     data.stepSix = data.stepSix + 1;
                                 }
                             }
 
                         } else if (step == 7) {
-                            if(isFirstSevenEdit){
+                            if (isFirstSevenEdit) {
                                 data.stepSeven = data.stepSeven + 1;
-                            }else{
+                            } else {
                                 if (originalStepSevenApp != 2) {//如果之前就是审核状态就不用再加1了，这样就不用红点重复加
                                     data.stepSeven = data.stepSeven + 1;
                                 }
@@ -411,6 +411,72 @@ router.post('/deleteProject', function (req, res, next) {
                     data.stepOne = data.stepOne - 1;
                     if (data.stepOne < 0) {
                         data.stepOne = 0;
+                    }
+                    db.update(data, whereObj, dbNewPro, function (err, result2) {//插入一条新的数据
+                        result.recordsets.push(data);
+                        res.json(result);
+                    });
+                }
+            })
+        } else {
+            res.json(result);
+        }
+    });
+});
+
+//删除申请
+router.post('/deleteWrongProject', function (req, res, next) {
+    var param = req.body;
+    db.del("where id = @id", {id: param.id}, dbName, function (err, result) {//删除字段
+        if (result && result.rowsAffected && result.rowsAffected.length > 0) {
+            var whereSql = "where role = '" + param.projectFinance + "'";
+            db.select(dbNewPro, 1, whereSql, "", "order by id", function (err, res1) {
+                if (res1.recordset.length > 0) {
+                    var data = res1.recordset[0];
+                    var whereObj = {id: data.id};
+                    delete data.id;
+                    //把其他红点的也都一起删除
+                    if (param.stepOneApp == 2) {
+                        data.stepOne = data.stepOne - 1;
+                        if (data.stepOne < 0) {
+                            data.stepOne = 0;
+                        }
+                    }
+                    if (param.stepTwoApp == 2) {
+                        data.stepTwo = data.stepTwo - 1;
+                        if (data.stepTwo < 0) {
+                            data.stepTwo = 0;
+                        }
+                    }
+                    if (param.stepThreeApp == 2) {
+                        data.stepThree = data.stepThree - 1;
+                        if (data.stepThree < 0) {
+                            data.stepThree = 0;
+                        }
+                    }
+                    if (param.stepFourApp == 2) {
+                        data.stepFour = data.stepFour - 1;
+                        if (data.stepFour < 0) {
+                            data.stepFour = 0;
+                        }
+                    }
+                    if (param.stepFiveApp == 2) {
+                        data.stepFive = data.stepFive - 1;
+                        if (data.stepFive < 0) {
+                            data.stepFive = 0;
+                        }
+                    }
+                    if (param.stepSixApp == 2) {
+                        data.stepSix = data.stepSix - 1;
+                        if (data.stepSix < 0) {
+                            data.stepSix = 0;
+                        }
+                    }
+                    if (param.stepSevenApp == 2) {
+                        data.stepSeven = data.stepSeven - 1;
+                        if (data.stepSeven < 0) {
+                            data.stepSeven = 0;
+                        }
                     }
                     db.update(data, whereObj, dbNewPro, function (err, result2) {//插入一条新的数据
                         result.recordsets.push(data);
@@ -512,7 +578,7 @@ router.post('/queryProject', function (req, res, next) {
         if (step == 3) {
             whereSql = whereSql + " and approvalStep>2 and approvalStep<7 "
         } else if (step == 4 || step == 5 || step == 6) {
-            whereSql = whereSql + " and approvalStep>3 and approvalStep<7 "
+            whereSql = whereSql + " and approvalStep>3 and approvalStep<7";// and approvalStep<7
         } else {
             whereSql = whereSql + " and approvalStep= " + param.step;
         }
@@ -656,7 +722,7 @@ router.post('/queryProjectCount', function (req, res, next) {
         if (step == 3) {
             whereSql = whereSql + " and approvalStep>2 and approvalStep<7 "
         } else if (step == 4 || step == 5 || step == 6) {
-            whereSql = whereSql + " and approvalStep>3 and approvalStep<7 "
+            whereSql = whereSql + " and approvalStep>3 and approvalStep<7"//and approvalStep<7
         } else {
             whereSql = whereSql + " and approvalStep= " + param.step;
         }

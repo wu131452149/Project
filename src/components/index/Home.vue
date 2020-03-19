@@ -356,6 +356,13 @@
                                 <span>{{scope.row.nonPaymentTotalMoneyNo}}</span>
                             </template>
                         </el-table-column>
+                        <!--项目修改权限-->
+                        <el-table-column label="操作" class="text-c" v-if="user.grade==0" width="120">
+                            <template slot-scope="scope">
+                                <!--<a @click.stop="editProject($event,scope.row)">修改项目</a>-->
+                                <a @click.stop="deleteWrongProject($event,scope.row)">删除项目</a>
+                            </template>
+                        </el-table-column>
                     </el-table>
                 </div>
                 <!--合计行-->
@@ -387,6 +394,7 @@
                     </div>
                 </div>
                 <!--分页 end-->
+                <!--项目信息详情 start-->
                 <el-drawer
                     title="项目信息详情"
                     :visible.sync="drawerDetails"
@@ -404,7 +412,26 @@
                         </show-project-Detail>
                     </div>
                 </el-drawer>
-                <!--新建项目页面 end-->
+                <!--项目信息详情 end-->
+                <!--修改项目信息 start-->
+                <el-drawer
+                    title="修改项目信息"
+                    :visible.sync="drawerEdit"
+                    :direction="direction"
+                    custom-class="demo-drawer"
+                    size=66%
+                    :before-close="handleClose">
+                    <div class="scrollBar-inner" style="height: 500px;">
+                        <show-all-Detail @onListen="handleClose"
+                                             :projectDetail="projectDetail"
+                                             :step="7"
+                                             :showButton = "showButton"
+                                             :activeNames="activeNames">
+
+                        </show-all-Detail>
+                    </div>
+                </el-drawer>
+                <!--修改项目信息 end-->
             </el-tab-pane>
         </el-tabs>
     </div>

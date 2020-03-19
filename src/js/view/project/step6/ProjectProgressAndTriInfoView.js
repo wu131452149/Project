@@ -348,7 +348,7 @@ export default {
                         //之前有提交过
                         triList = JSON.parse(self.projectDetail.triInfo);
                         triList.push(triInfo);
-                        editBudgetData.isFirstSixEdit = true;
+                        editBudgetData.isFirstSixEdit = false;
                     }
                     editBudgetData.triInfo = JSON.stringify(triList);//转换一下数据
                     //根据id来改变
