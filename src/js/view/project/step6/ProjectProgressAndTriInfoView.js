@@ -5,6 +5,7 @@
 import Filters from "../../common/Filters";
 import Utils from "../../../lib/Utils/Utils";
 import ShowProjectDetail from "../../../../components/project/ShowProjectDetail";
+import EventBus from "../../../lib/event/EventBus";
 
 export default {
     name: "ProjectProgressAndTriInfoView",

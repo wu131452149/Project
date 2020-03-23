@@ -243,9 +243,9 @@
                         </div>
                         <!--其他条件-->
                         <div class="width100 other-condition">
-                            <el-form-item label="项目周期" prop="projectYears" class="margin-r5">
+                            <el-form-item label="资金安排周期" prop="projectYears" class="margin-r5">
                                 <el-select v-model="allProject.formData.projectYears" clearable
-                                           placeholder="项目周期">
+                                           placeholder="资金安排周期">
                                     <el-option :label="'3年'" :value="'3'"></el-option>
                                     <el-option :label="'2年'" :value="'2'"></el-option>
                                     <el-option :label="'1年'" :value="'1'"></el-option>
@@ -303,7 +303,7 @@
                                 <span>{{scope.row.projectMoney}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="projectYears" label="项目周期" width="80">
+                        <el-table-column show-overflow-tooltip prop="projectYears" label="资金安排周期" width="80">
                             <template slot-scope="scope">
                                 <span>{{scope.row.projectYears}}</span>
                             </template>
@@ -357,9 +357,9 @@
                             </template>
                         </el-table-column>
                         <!--项目修改权限-->
-                        <el-table-column label="操作" class="text-c" v-if="user.grade==0" width="120">
+                        <el-table-column label="操作" class="text-c" v-if="user.grade==0" width="160">
                             <template slot-scope="scope">
-                                <!--<a @click.stop="editProject($event,scope.row)">修改项目</a>-->
+                                <a @click.stop="editProject($event,scope.row)">修改项目</a>
                                 <a @click.stop="deleteWrongProject($event,scope.row)">删除项目</a>
                             </template>
                         </el-table-column>
@@ -406,7 +406,7 @@
                         <show-project-Detail @onListen="handleClose"
                                              :projectDetail="projectDetail"
                                              :step="7"
-                                             :showButton = "showButton"
+                                             :showButton="showButton"
                                              :activeNames="activeNames">
 
                         </show-project-Detail>
@@ -417,16 +417,18 @@
                 <el-drawer
                     title="修改项目信息"
                     :visible.sync="drawerEdit"
+                    ref="editPane"
                     :direction="direction"
                     custom-class="demo-drawer"
                     size=66%
                     :before-close="handleClose">
                     <div class="scrollBar-inner" style="height: 500px;">
                         <show-all-Detail @onListen="handleClose"
-                                             :projectDetail="projectDetail"
-                                             :step="7"
-                                             :showButton = "showButton"
-                                             :activeNames="activeNames">
+                                         :projectDetail="projectDetail"
+                                         :drawerClick="objDrawer"
+                                         :step="7"
+                                         :showButton="showButton"
+                                         :activeNames="activeNames">
 
                         </show-all-Detail>
                     </div>

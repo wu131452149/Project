@@ -8,7 +8,7 @@ import EventBus from "../../lib/event/EventBus";
 
 export default {
     name: "ShowProjectDetailView",
-    props: ["projectDetail", "step", "activeNames", "showEdit", "grade","showButton"],
+    props: ["projectDetail", "step", "activeNames", "showEdit", "grade", "showButton"],
     data() {
         return {
             loading: false,
@@ -557,7 +557,7 @@ export default {
             }
             var obj = Utils.mergeArr(list);
             var culObj = _.cloneDeep(obj);
-            //计算当年累计安排，次年累计安排，第三年累计安排
+            //计算当年拨付
             var thisYears = Number(self.projectDetail.projectBeginTime.substring(0, 4));
             for (var a = 0; a < culObj.length; a++) {
                 var years = Number(culObj[a].years.substring(0, 4));
@@ -589,7 +589,7 @@ export default {
             data.approTotalPlanMoneyNo = Utils.countTotalPlanMoney(obj);
             //对象
             data.approTotalMoney = JSON.stringify(obj);
-            data.nonPaymentTotalMoneyNo = Number( self.projectDetail.yearsPlanTotalMoneyNo-data.approTotalPlanMoneyNo);
+            data.nonPaymentTotalMoneyNo = Number(self.projectDetail.yearsPlanTotalMoneyNo - data.approTotalPlanMoneyNo);
             data.redCount = redCount;
             self.$http.post('/api/project/approvalProject', data).then(res => {
                 let status = res.status;
@@ -934,7 +934,7 @@ export default {
                 data.approTotalPlanMoneyNo = Utils.countTotalPlanMoney(obj);
                 //对象
                 data.approTotalMoney = JSON.stringify(obj);
-                data.nonPaymentTotalMoneyNo = Number( self.projectDetail.yearsPlanTotalMoneyNo-data.approTotalPlanMoneyNo);
+                data.nonPaymentTotalMoneyNo = Number(self.projectDetail.yearsPlanTotalMoneyNo - data.approTotalPlanMoneyNo);
             } else if (self.step == 5) {
                 data.oldSuggestion = self.projectDetail.stepFiveApp;
                 data.stepFiveApp = 0;

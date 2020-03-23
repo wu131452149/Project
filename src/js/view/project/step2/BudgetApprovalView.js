@@ -5,6 +5,7 @@
 import ShowProjectDetail from "../../../../components/project/ShowProjectDetail";
 import Filters from "../../common/Filters";
 import Utils from "../../../lib/Utils/Utils";
+import EventBus from "../../../lib/event/EventBus";
 
 export default {
     name: "BudgetApprovalView",
@@ -81,7 +82,7 @@ export default {
                 self.levelOneList = Utils.initLevelOne(list);
                 self.projectInstitutionList = Utils.initLevelTwo(self.levelOneList, list);
             }
-        })
+        });
         self.queryBudgetPlanProject();
         self.queryBudgetPlanProjectCount();
     },

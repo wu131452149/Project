@@ -3,11 +3,12 @@
  *  created by LilyLee on 2020/3/18.
  **/
 import Utils from "../../lib/utils/Utils";
+import EventBus from "../../lib/event/EventBus";
 
 
 export default {
     name: "ShowAllDetailView",
-    props: ['projectDetail'],
+    props: ['projectDetail','drawerClick'],
     data() {
         return {
             dialog: false,
@@ -117,32 +118,11 @@ export default {
             self.projectInstitution = list;
         })
     },
-    computed:{
-        check3Money:()=> {
-            var self = this;
-            //累计县级预算合计小于预算评审金额总数
-            console.log("11+",this);
-            console.log(this.editProject);
-            if(this.editProject){
-                var total1 = 0;
-                for (var x = 0; x < this.editProject.planYearsMoneyList3.length; x++) {
-                    total1 = total1 + Number(this.editProject.planYearsMoneyList3[x].money);
-                }
-                var total2 = 0;
-                for (var y = 0; y < this.editProject.planYearsTopMoneyList3.length; y++) {
-                    total2 = total2 + Number(this.editProject.planYearsTopMoneyList3[y].money);
-                }
-                var total = total1 + total2 + Number(value);
-                return total
-            }else{
-                return 0
-            }
-
-        }
+    computed: {
 
     },
     methods: {
-        checkMoney4: (rule, value, callback) => {
+        checkMoney4: function (rule, value, callback) {
             var self = this;
             if (!value) {
                 return callback(new Error('请输入金额'));
@@ -193,16 +173,22 @@ export default {
                 callback();
             }
         },
-        checkMoney3: (rule, value, callback) => {
+        checkMoney3: function (rule, value, callback) {
             var self = this;
             if (!value) {
                 return callback(new Error('请输入金额'));
             }
-            console.log(this);
-            // console.log(total1);
-            // console.log(total2);
-            // console.log(total);
-            if (this.check3Money > this.editProject.budgetReviewMoney) {
+            console.log(self);
+            var total1 = 0;
+            for (var x = 0; x < self.editProject.planYearsMoneyList3.length; x++) {
+                total1 = total1 + Number(self.editProject.planYearsMoneyList3[x].money);
+            }
+            var total2 = 0;
+            for (var y = 0; y < self.editProject.planYearsTopMoneyList3.length; y++) {
+                total2 = total2 + Number(self.editProject.planYearsTopMoneyList3[y].money);
+            }
+            var total = total1 + total2 + Number(value);
+            if (total > self.editProject.budgetReviewMoney) {
                 callback(new Error('累计县级预算合计必须小于等于预算评审金额总数'));
             } else {
                 callback();
@@ -256,7 +242,18 @@ export default {
         },
         closeForm: function () {
             //this.$emit('onListen', false);
-            this.drawerClick.drawerNew.hide();
+            this.drawerClick.editPane.hide();
+        },
+        //初始化总钱数
+        mergeArr: function (arr) {
+            const result = arr.reduce((obj, item) => {
+                if (!obj[item.years]) {
+                    obj[item.years] = 0
+                }
+                obj[item.years] += Number(item.money)
+                return obj
+            }, {})
+            return Object.keys(result).map(key => ({years: key, money: result[key]}))
         },
         //新建表单，项目
         commitEditForm: function () {
@@ -264,73 +261,146 @@ export default {
             var self = this;
             self.$refs.editProject.validate((valid) => {
                 if (valid) {
-                    let editProject = _.cloneDeep(self.editProject);
-                    if (editProject.projectIndustry.first) {
-                        editProject.projectIndustry = '{"' + editProject.projectIndustry.first + '","' + editProject.projectIndustry.second + '"}';
+                    let editProjectSave = _.cloneDeep(self.editProject);
+                    if (editProjectSave.projectIndustry.first) {
+                        editProjectSave.projectIndustry = '{"' + editProjectSave.projectIndustry.first + '","' + editProjectSave.projectIndustry.second + '"}';
                     } else {
-                        editProject.projectIndustry = "";
+                        editProjectSave.projectIndustry = "";
                     }
-                    if (editProject.projectMoneyFrom) {
-                        editProject.projectMoneyFrom = JSON.stringify(editProject.projectMoneyFrom).replace("[", "{").replace("]", "}");
+                    if (editProjectSave.projectMoneyFrom) {
+                        editProjectSave.projectMoneyFrom = JSON.stringify(editProjectSave.projectMoneyFrom).replace("[", "{").replace("]", "}");
                     } else {
-                        editProject.projectMoneyFrom = [];
+                        editProjectSave.projectMoneyFrom = [];
                     }
                     for (var i = 0; i < self.getProjectYears.length; i++) {
-                        if (editProject.projectYears == self.getProjectYears[i].name) {
-                            editProject.projectYears = self.getProjectYears[i].value;
+                        if (editProjectSave.projectYears == self.getProjectYears[i].name) {
+                            editProjectSave.projectYears = self.getProjectYears[i].value;
                         }
                     }
-                    console.log(editProject);
-                    //上级安排金额
-                    var newObj1 = JSON.parse(self.planYearsMoneyList3);//先解成数组；
-                    editProject.planYearsTopMoney = JSON.stringify(self.planYearsTopMoneyList3);
+                    if (editProjectSave.gvApproval=="是") {
+                        editProjectSave.gvApproval = 1;
+                    }else {
+                        editProjectSave.gvApproval = 0;
+                    }
+                    if (editProjectSave.stateOwnedRegistration=="是") {
+                        editProjectSave.stateOwnedRegistration = 1;
+                    }else{
+                        editProjectSave.stateOwnedRegistration = 0;
+                    }
+                    if (editProjectSave.gvBuy=="是") {
+                        editProjectSave.gvBuy = 1;
+                    }else{
+                        editProjectSave.gvBuy = 0;
+                    }
+                    /************************************************************************安排******************************************************************/
+                        //上级安排金额
+                    var planYearsMoneyList3 = self.editProject.planYearsMoneyList3;
+                    for (var a = 0; a < planYearsMoneyList3.length; a++) {
+                        planYearsMoneyList3[a].money = Number(planYearsMoneyList3[a].money);
+                        planYearsMoneyList3[a].status = 1;//都设成1这样不用再审批了;
+                    }
+                    editProjectSave.planYearsMoney = JSON.stringify(planYearsMoneyList3);//设置数据库要保存的字段；
                     //本级安排金额
-                    editProject.planYearsMoney = JSON.stringify(self.planYearsMoneyList3);
-                    var obj = {};
-                    //status是审核状态
-                    // if(!self.projectDetail.planYearsMoney){//第一次录入县级预算安排
-                    //     obj = JSON.stringify([{years: editBudgetData.years, money: editBudgetData.money,status:2}]);
-                    // }else{
-                    //     var newObj = JSON.parse(self.projectDetail.planYearsMoney);//先解成数组；
-                    //     newObj.push({years: editBudgetData.years, money: Number(editBudgetData.money),status:2});
-                    //     obj = JSON.stringify(newObj);
-                    // }
-                    // //var obj = self.initObj(self.projectDetail.planYearsMoney, editBudgetData);
-                    // self.projectDetail.planYearsMoney = obj;
-                    // editBudgetData.planYearsMoney = obj;
-                    //
-                    // if(!self.projectDetail.planYearsTopMoney){//第一次录入县级预算安排
-                    //     obj = JSON.stringify([{years: editBudgetData.years, money: editBudgetData.money,status:2}]);
-                    // }else{
-                    //     var newObj = JSON.parse(self.projectDetail.planYearsTopMoney);//先解成数组；
-                    //     newObj.push({years: editBudgetData.years, money: Number(editBudgetData.money),status:2});
-                    //     obj = JSON.stringify(newObj);
-                    // }
-                    // self.projectDetail.planYearsTopMoney = obj;
-                    // editBudgetData.planYearsTopMoney = obj;
-                    //     //计算总的
-                    //     yearsPlanTotalMoney分年度安排金额总额
-                    //     本级拨付
-                    //     appropriateBudget
-                    // 上级拨付
-                    // appropriateTopBudget
-                    // //计算
-                    // approTotalMoney分年度拨付金额总额
-                    //
-                    // nonPaymentTotalMoneyNo欠付金额数字
-                    // approTotalPlanMoneyNo 拨付总额数字
+                    var planYearsTopMoneyList3 = self.editProject.planYearsTopMoneyList3;
+                    for (var b = 0; b < planYearsTopMoneyList3.length; b++) {
+                        planYearsTopMoneyList3[b].money = Number(planYearsTopMoneyList3[b].money);
+                        planYearsTopMoneyList3[b].status = 1;//都设成1这样不用再审批了;
+                    }
+                    editProjectSave.planYearsTopMoney = JSON.stringify(planYearsTopMoneyList3);//设置数据库要保存的字段；
+                    //计算总的：1、yearsPlanTotalMoney分年度安排金额总额
+                    var list3 = planYearsMoneyList3.concat(planYearsTopMoneyList3);
+                    var obj3 = self.mergeArr(list3);
                     // yearsPlanTotalMoneyNo 安排总额数字
-                    //     [thisYearPlanMoney]	当年安排金额
-                    //     [nextYearPlanMoney]	次年安排金额
-                    //     [nextAYearPlanMoney]	第三年安排金额
+                    editProjectSave.yearsPlanTotalMoneyNo = Utils.countTotalPlanMoney(obj3);
+                    editProjectSave.yearsPlanTotalMoney = JSON.stringify(obj3);
+                    var thisYears = Number(editProjectSave.projectBeginTime.substring(0, 4));
+                    var nextYears = thisYears + 1;
+                    var nextYearsA = thisYears + 2;
+                    var beforeYearPlanMoney = 0;
+                    //     [thisYearPlanMoney]	当年安排金额  [nextYearPlanMoney]	次年安排金额  [nextAYearPlanMoney]	第三年安排金额
                     //     [beforeYearPlanMoney]	以前年度累计安排金额
-                    //     [thisYearGiveMoney]	当年拨付
-                    //     [triInfo]       	三方信息
+                    for (var d = 0; d < obj3.length; d++) {
+                        var years = Number(obj3[d].years.substring(0, 4));
+                        if (years == thisYears) {//当年累计安排
+                            editProjectSave.thisYearPlanMoney = Number(obj3[d].money);
+                        } else if (years == nextYears) {
+                            editProjectSave.nextYearPlanMoney = Number(obj3[d].money);
+                        } else if (years == nextYearsA) {
+                            editProjectSave.nextAYearPlanMoney = Number(obj3[d].money);
+                        } else if (years < thisYears) {
+                            editProjectSave.beforeYearPlanMoney = beforeYearPlanMoney + Number(obj3[d].money);
+                        }
+                    }
+                    /************************************************************************拨付******************************************************************/
+                        // 上级拨付
+                        // appropriateTopBudget
+                    var appropriateTopBudgetList4 = self.editProject.appropriateTopBudgetList4;
+                    for (var h = 0; h < appropriateTopBudgetList4.length; h++) {
+                        appropriateTopBudgetList4[h].money = Number(appropriateTopBudgetList4[h].money);
+                        appropriateTopBudgetList4[h].status = 1;//都设成1这样不用再审批了;
+                    }
+                    editProjectSave.appropriateTopBudget = JSON.stringify(appropriateTopBudgetList4);//设置数据库要保存的字段；
+                    //本级拨付
+                    //appropriateBudget
+                    var appropriateBudgetList4 = self.editProject.appropriateBudgetList4;
+                    for (var c = 0; c < appropriateBudgetList4.length; c++) {
+                        appropriateBudgetList4[c].years =appropriateBudgetList4[c].date.substring(0, 4);
+                        appropriateBudgetList4[c].money = Number(appropriateBudgetList4[c].money);
+                        appropriateBudgetList4[c].status = 1;//都设成1这样不用再审批了;
+                    }
+                    for (var k = 0; k < appropriateTopBudgetList4.length; k++) {
+                        appropriateTopBudgetList4[k].years =appropriateTopBudgetList4[k].date.substring(0, 4);
+                        appropriateTopBudgetList4[k].money = Number(appropriateTopBudgetList4[k].money);
+                        appropriateTopBudgetList4[k].status = 1;//都设成1这样不用再审批了;
+                    }
+                    editProjectSave.appropriateBudget = JSON.stringify(appropriateBudgetList4);//设置数据库要保存的字段；
+                    //计算总的：1、approTotalMoney分年度拨付金额总额
+                    var list4 = appropriateBudgetList4.concat(appropriateTopBudgetList4);
+                    var obj4 = Utils.mergeArr(list4);
+                    // approTotalPlanMoneyNo 拨付总额数字  //     [thisYearGiveMoney]	当年拨付
+                    editProjectSave.approTotalPlanMoneyNo = Utils.countTotalPlanMoney(obj4);
+                    editProjectSave.approTotalMoney = JSON.stringify(obj4);
+                    for (var j = 0; j< obj4.length; j++) {
+                        var years = Number(obj4[j].years.substring(0, 4));
+                        if (years == thisYears) {//当年累计拨付
+                            editProjectSave.thisYearGiveMoney = Number(obj4[j].money);
+                        }
+                    }
+                    // nonPaymentTotalMoneyNo欠付金额数字
+                    editProjectSave.nonPaymentTotalMoneyNo = Number(editProjectSave.yearsPlanTotalMoneyNo - editProjectSave.approTotalPlanMoneyNo);
+                    /************************************************************************评审变更******************************************************************/
                     //     [addBudget]		增加金额
+                    var addBudget = self.editProject.addBudget;
+                    for (var x= 0; x < addBudget.length; x++) {
+                        addBudget[x].money = Number(addBudget[x].money);
+                        addBudget[x].status = 1;//都设成1这样不用再审批了;
+                    }
                     //     [cutBudget]		减少金额
-
-
-                    self.$http.post('/api/project/editProject', editProject).then(res => {
+                    var cutBudget = self.editProject.cutBudget;
+                    for (var y = 0; y< cutBudget.length; y++) {
+                        cutBudget[y].money = Number(cutBudget[y].money);
+                        cutBudget[y].status = 1;//都设成1这样不用再审批了;
+                    }
+                    editProjectSave.addBudget = JSON.stringify(addBudget);
+                    editProjectSave.cutBudget = JSON.stringify(cutBudget);
+                    /************************************************************************三方******************************************************************/
+                    //     [triInfo]       	三方信息
+                    var triInfoList = self.editProject.triInfoList;
+                    for (var z = 0; z< triInfoList.length; z++) {
+                        triInfoList[z].status = 1;//都设成1这样不用再审批了;
+                    }
+                    editProjectSave.triInfo = JSON.stringify(triInfoList);
+                    //删除数组字段
+                    delete editProjectSave.planYearsTopMoneyList3;//删除数组字段
+                    delete editProjectSave.planYearsMoneyList3;//删除数组字段
+                    delete editProjectSave.appropriateTopBudgetList4;//删除数组字段
+                    delete editProjectSave.appropriateBudgetList4;//删除数组字段
+                    delete editProjectSave.cutBudget;//删除数组字段
+                    delete editProjectSave.addBudget;//删除数组字段
+                    delete editProjectSave.triInfoList;//删除数组字段
+                    delete editProjectSave.rownumber;//删除数组字段
+                    console.log(editProjectSave);
+                    self.$http.post('/api/project/editProject', editProjectSave).then(res => {
                         let status = res.status;
                         let statusText = res.statusText;
                         if (status !== 200) {
@@ -348,7 +418,7 @@ export default {
                                 self.clearFormData();
                                 self.closeForm();
                                 //刷新当前页
-                                self.$emit("refreshPro");
+                                EventBus.$emit("refreshHome");
                             } else {
                                 self.$message({
                                     message: "提交失败",
@@ -399,82 +469,6 @@ export default {
         selectSecondChange(value) {
             this.editProject.projectIndustry.second = value;
         },
-        //重新入库
-        updateForm: function (oldStep) {
-            let self = this;
-            self.$refs.editProject.validate((valid) => {
-                if (valid) {
-                    //更新新建表的退库状态为false，更新表的step为1
-                    let data = _.cloneDeep(self.editProject);
-                    data.step = 1;
-                    data.ifReturned = 0;
-                    data.oldStep = oldStep;
-                    if (oldStep == 1) {
-                        data.stepOneApp = 2;
-                    }
-                    if (data.projectIndustry.first) {
-                        data.projectIndustry = '{"' + data.projectIndustry.first + '","' + data.projectIndustry.second + '"}';
-                    } else {
-                        data.projectIndustry = "";
-                    }
-                    if (data.projectMoneyFrom) {
-                        data.projectMoneyFrom = JSON.stringify(data.projectMoneyFrom).replace("[", "{").replace("]", "}");
-                    } else {
-                        data.projectMoneyFrom = [];
-                    }
-                    data.commitName = self.user.role;
-                    data.projectCommitTime = Utils.formatDate(new Date()) + ".000";
-                    for (var i = 0; i < self.getProjectYears.length; i++) {
-                        if (data.projectYears == self.getProjectYears[i].name) {
-                            data.projectYears = self.getProjectYears[i].value;
-                        }
-                    }
-                    self.$http.post('/api/project/updateProject', data).then(res => {
-                        let status = res.status;
-                        let statusText = res.statusText;
-                        if (status !== 200) {
-                            self.$message({
-                                message: statusText,
-                                type: 'error'
-                            });
-                        } else {
-                            if (res.data.length != 0) {
-                                self.$message({
-                                    message: "提交成功",
-                                    type: 'success'
-                                });
-                                //关闭当前页，并清空表格数据
-                                self.clearFormData();
-                                self.closeForm();
-                                //刷新当前页
-                                if (oldStep == 0) {
-                                    self.$emit('updateReturnForm');
-                                } else {
-                                    self.$emit('refreshPro');
-                                }
-                            } else {
-                                self.$message({
-                                    message: "提交失败",
-                                    type: 'warning'
-                                });
-                            }
-                        }
-                    })
-                        .catch(error =>
-                            self.$message({
-                                message: error.message,
-                                type: 'error'
-                            }),
-                        );
-                }
-                else {
-                    console.log('error submit!!');
-                    return false;
-                }
-            });
-
-        }
-        ,
         handleClose(done) {
             this.$confirm('确认关闭？')
                 .then(_ => {
@@ -483,59 +477,7 @@ export default {
                 .catch(_ => {
                 });
         }
-        ,
-        queryNewProject: function () {
 
-        }
-        ,
-        queryNewProjectCount: function () {
-
-        }
-        ,
-        showDefaultQuickQuery: function () {
-
-        }
-        ,
-        handleSelectionChange: function () {
-
-        }
-
-
-// //点击详情接口返回的数据
-// this.wids = res.data.result.wids                 //点击详情接口返回的 table里被选中的行的wids
-// let a = res.data.result.wids.split(',')          //分割成数组
-// console.log(a)
-// let b = []
-// this.tableData1.forEach(res=>{                  //把表格里所有的id加入到b里
-//     b.push(res.id.toString())
-// })
-// console.log(b)
-// // console.log(typeof(b[0]))
-// for(let c = 0;c<b.length;c++){                 //对b循环  如果b里面有a（a是被选中的行） 则把索引代入到first函数里 让这些行的复选框选中
-//     // console.log(b[c])
-//     // console.log(a.indexOf(b[c]))
-//     if(b.indexOf(a[c])>=0){
-//         console.log(a.indexOf(b[c]))
-//         this.first([this.tableData1[b.indexOf(a[c])]])
-//     }
-// }
-//
-//
-//
-// //封装的让table表格的复选框默认选中的函数
-// first(rows){
-//     this.$nextTick(()=>{
-//         rows.forEach(row => {
-//             this.$refs.multipleTable.toggleRowSelection(row,true);
-//         });
-//     })
-// },
-// //清除的
-// clear(){
-//     this.$nextTick(()=>{
-//         this.$refs.multipleTable.clearSelection();
-//     })
-// },
     },
     watch: {
         "projectDetail": {
@@ -544,6 +486,12 @@ export default {
                 var self = this;
                 if (val) {
                     self.editProject1 = val;
+                    for(var p in val)
+                    {
+                        var name=p;//属性名称
+                        var value=val[p];//属性对应的值
+                        self.editProject[name]=val[p];
+                    }
                     self.editProject.id = val.id;
                     self.editProject.projectInstitution = val.projectInstitution;
                     self.editProject.projectFinance = val.projectFinance;

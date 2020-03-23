@@ -55,9 +55,9 @@
                 </div>
                 <!--其他条件-->
                 <div class="width100 other-condition">
-                    <el-form-item label="项目周期" prop="projectYears" class="margin-r5">
+                    <el-form-item label="资金安排周期" prop="projectYears" class="margin-r5">
                         <el-select v-model="proAndTriProject.formData.projectYears" clearable
-                                   placeholder="项目周期">
+                                   placeholder="资金安排周期">
                             <el-option :label="'3年'" :value="'3'"></el-option>
                             <el-option :label="'2年'" :value="'2'"></el-option>
                             <el-option :label="'1年'" :value="'1'"></el-option>

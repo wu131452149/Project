@@ -33,7 +33,7 @@ const excelTitleConfig = [{
     title: '概算金额',
 }, {
     name: 'projectYears',
-    title: '项目周期',
+    title: '资金安排周期',
 }, {
     name: 'budgetReviewMoney',
     title: '预算评审金额',

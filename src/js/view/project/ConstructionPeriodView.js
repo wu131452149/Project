@@ -57,6 +57,9 @@ export default {
         EventBus.$on("hideSixBadge", function () {
             self.showStepSixRed = false;
         });
+        EventBus.$on("refreshRed", function () {
+            self.queryIfNewProject();
+        });
     },
     methods: {
         queryIfNewProject: function () {

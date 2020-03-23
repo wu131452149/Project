@@ -127,7 +127,6 @@
                     </el-input>
                 </el-form-item>
             </div>
-
             <!--step4-->
             <span v-if="editProject.appropriateBudgetList4.length>0">本级拨付：</span>
             <div v-for="(item,index41) in editProject.appropriateBudgetList4" :key="index41+'-bjbf'">

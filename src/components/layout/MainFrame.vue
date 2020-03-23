@@ -13,7 +13,7 @@
             </el-aside>
           <el-main>
               <router-view name="mainContent"></router-view>
-          </el-main>
+            </el-main>
         </el-container>
     </el-container>
 </template>

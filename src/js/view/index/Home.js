@@ -2,6 +2,7 @@ import ShowProjectDetail from "../../../components/project/ShowProjectDetail";
 import ShowAllDetail from "../../../components/project/ShowAllDetail";
 import Filters from "../common/Filters";
 import Utils from "../../lib/Utils/Utils";
+import EventBus from "../../lib/event/EventBus";
 
 
 export default {
@@ -14,6 +15,7 @@ export default {
         return {
             sum: [],
             activeNames: [],
+            objDrawer: this.$refs,
             userInfoActiveName: "pro-monitor",
             o: 2,
             drawerDetails: false,
@@ -81,7 +83,18 @@ export default {
                 self.levelOneList = Utils.initLevelOne(list);
                 self.projectInstitutionList = Utils.initLevelTwo(self.levelOneList, list);
             }
-        })
+        });
+        EventBus.$on("refreshHome",function(){
+            self.queryAllProject();
+            self.queryAllProjectCount();
+            self.queryNewProjectCount();
+            self.queryFinishedProjectCount();
+            self.queryReturnedProjectCount();
+            self.queryAllBudgetReviewMoney();//预算评审金额和估算总额
+            self.queryAllAppropriateMoney();//查询拨付金额
+            self.queryAllBudgetPlanMoney();//查询年度安排金额
+            self.queryAllProjectWithoutPage();
+        });
         // self.queryAllProject();
         //         // self.queryAllProjectCount();
         //         // self.queryNewProjectCount();
@@ -111,7 +124,7 @@ export default {
             title: '概算金额',
         }, {
             name: 'projectYears',
-            title: '项目周期',
+            title: '资金安排周期',
         }, {
             name: 'budgetReviewMoney',
             title: '预算评审金额',

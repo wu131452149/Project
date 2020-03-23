@@ -1013,6 +1013,140 @@ router.post('/queryAllBudgetPlanMoneyList', function (req, res, next) {
     });
 });
 
+
+//编辑project相关东西
+router.post('/editProject', function (req, res, next) {
+    var param = req.body;
+    if (param.id) {
+        var whereObj = {id: param.id};
+    }
+    if (param.projectFinance) {
+        var projectFinance = param.projectFinance;
+        delete param.projectFinance;
+    }
+    delete param.id;
+    //修改这个表的数据的时候
+    //跟红点有关
+    //审核不通过是0，就不再判断了
+    if (param.ifEdit) {
+        param.ifEdit = false;
+    }
+    if (param.ifFourEdit) {
+        param.ifFourEdit = false;
+    }
+    if (param.ifFiveEdit) {
+        param.ifFiveEdit = false;
+    }
+    if (param.ifSixEdit) {
+        param.ifSixEdit = false;
+    }
+    if (param.ifThreeEdit) {
+        param.ifThreeEdit = false;
+    }
+    var originalStepOneApp = param.stepOneApp;
+    var originalStepTwoApp = param.stepTwoApp;
+    var originalStepThreeApp = param.stepThreeApp;
+    var originalStepFourApp = param.stepFourApp;
+    var originalStepFiveApp = param.stepFiveApp;
+    var originalStepSixApp = param.stepSixApp;
+    var originalStepSevenApp = param.stepSevenApp;
+    if (param.stepOneApp != null && param.stepOneApp != 1) {
+        param.stepOneApp = 1;
+    }
+    if (param.stepTwoApp != null && param.stepTwoApp != 1) {
+        param.stepTwoApp = 1;
+    }
+    if (param.stepThreeApp != null && param.stepThreeApp != 1) {
+        param.stepThreeApp = 1;
+    }
+    if (param.stepFourApp != null && param.stepFourApp != 1) {
+        param.stepFourApp = 1;
+    }
+    if (param.stepFiveApp != null && param.stepFiveApp != 1) {
+        param.stepFiveApp = 1;
+    }
+    if (param.stepSixApp != null && param.stepSixApp != 1) {
+        param.stepSixApp = 1;
+    }
+    if (param.stepSevenApp != null && param.stepSevenApp != 1) {
+        param.stepSevenApp = 1;
+    }
+    db.update(param, whereObj, dbName, function (err, result) {//查询所有news表的数据
+        if (result && result.rowsAffected && result.rowsAffected.length > 0) {
+            //传入审批项目的人（插入一条表在newProject）
+            var whereSql = "where role = '" + projectFinance + "'";
+            db.select(dbNewPro, 1, whereSql, "", "order by id", function (err, res1) {
+                    if (res1.recordset.length > 0) {
+                        var data = res1.recordset[0];
+                        var whereObj = {id: data.id};
+                        delete data.id;
+                        //如果是待审核这条已经算进去了就不再+1了
+
+                        if (originalStepOneApp == 2) {
+                            data.stepOne = data.stepOne - 1;
+                        }
+                        if (data.stepOne < 0) {
+                            data.stepOne = 0;
+                        }
+
+                        if (originalStepTwoApp == 2) {//如果之前就是审核状态就不用再加1了，这样就不用红点重复加
+                            data.stepTwo = data.stepTwo - 1;
+                        }
+                        if (data.stepTwo < 0) {
+                            data.stepTwo = 0;
+                        }
+
+                        if (originalStepThreeApp == 2) {//如果之前就是审核状态就不用再加1了，这样就不用红点重复加
+                            data.stepThree = data.stepThree - 1;
+                        }
+                        if (data.stepThree < 0) {
+                            data.stepThree = 0;
+                        }
+
+                        if (originalStepFourApp == 2) {//如果之前就是审核状态就不用再加1了，这样就不用红点重复加
+                            data.stepFour = data.stepFour - 1;
+                        }
+                        if (data.stepFour < 0) {
+                            data.stepFour = 0;
+                        }
+                        if (originalStepFiveApp == 2) {//如果之前就是审核状态就不用再加1了，这样就不用红点重复加
+                            data.stepFive = data.stepFive - 1;
+                        }
+                        if (data.stepFive < 0) {
+                            data.stepFive = 0;
+                        }
+
+                        if (originalStepSixApp == 2) {//如果之前就是审核状态就不用再加1了，这样就不用红点重复加
+                            data.stepSix = data.stepSix - 1;
+                        }
+                        if (data.stepSix < 0) {
+                            data.stepSix = 0;
+                        }
+
+                        if (originalStepSevenApp == 2) {//如果之前就是审核状态就不用再加1了，这样就不用红点重复加
+                            data.stepSeven = data.stepSeven - 1;
+                        }
+                        if (data.stepSeven < 0) {
+                            data.stepSeven = 0;
+                        }
+                        db.update(data, whereObj, dbNewPro, function (err, result2) {//插入一条新的数据
+                            res.json(result);
+                        });
+                    }
+                    else {
+                        res.json(result);
+                    }
+                }
+            );
+
+        } else {
+            res.json(result);
+        }
+    })
+    ;
+})
+;
+
 module.exports = router;
 
 

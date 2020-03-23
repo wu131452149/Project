@@ -48,6 +48,9 @@ export default {
         EventBus.$on("hideThreeBadge", function () {
             self.showStepThreeRed = false;
         });
+        EventBus.$on("refreshRed", function () {
+            self.queryIfNewProject();
+        });
     },
     methods: {
         queryIfNewProject: function () {

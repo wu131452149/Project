@@ -5,7 +5,7 @@
             <el-col :span="8" :push=14>
                 欢迎您，{{user.role}}管理员
             </el-col>
-            <el-col :span="2" :push=12>
+            <el-col :span="2" :push=12  v-if="user.grade==2">
                 <i class="el-icon-message-solid" title="刷新红点" @click="flashRed"></i>
             </el-col>
             <el-col :span="2" :push=11>
