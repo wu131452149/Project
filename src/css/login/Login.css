@@ -8,9 +8,9 @@
 }
 .login .el-main {
     background: url("../../assets/images/home.jpg") no-repeat;
-    height: 68%;
+    height: 100%;
     max-height: 1100px;
-    min-height: 420px;
+    /*min-height: 600px;*/
     background-color: #f0f0f0;
     background-size: 100% 100%;
     position: relative;
@@ -42,7 +42,7 @@
 .bg-login {
     background-color: #FFFFFF;
     border-radius: 4px;
-    height: 280px;
+    /*height: 280px;*/
     position: absolute;
     /*right: 50px;*/
     box-shadow: 0 4px 23px 5px rgba(0, 0, 0, .2),
@@ -50,9 +50,10 @@
     -webkit-box-shadow: 0 4px 23px 5px rgba(0, 0, 0, .2),
     0 2px 6px rgba(0, 0, 0, .15);
     padding-top: 10px;
-    margin-top:-80px;
+    /*margin-top:-80px;*/
     min-width: 338px;
-    min-height: 290px;
+    /*bottom: -170px;*/
+    /*min-height: 290px;*/
     opacity: 0.8;
 }
 .login .el-form-item__content {

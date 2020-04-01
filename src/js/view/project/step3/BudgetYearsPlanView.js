@@ -41,7 +41,7 @@ export default {
                     // console.log(total);
                 }
                 if (total > self.projectDetail.budgetReviewMoney) {
-                    callback(new Error('累计县级预算合计必须小于等于预算评审金额总数'));
+                    callback(new Error('累计县级预算合计必须小于等于预算或合同金额总数'));
                 } else {
                     callback();
                 }

@@ -80,7 +80,7 @@ export default {
                     {required: true, message: '请选择项目开工时间', trigger: 'change'},
                 ],
                 budgetReviewMoney: [
-                    {required: true, message: '请输入预算评审金额', trigger: 'blur'},
+                    {required: true, message: '请输入预算或合同金额', trigger: 'blur'},
                 ],
                 approvalNumber: [
                     {required: true, message: '请输入评审文号', trigger: 'blur'},
@@ -189,7 +189,7 @@ export default {
             }
             var total = total1 + total2 + Number(value);
             if (total > self.editProject.budgetReviewMoney) {
-                callback(new Error('累计县级预算合计必须小于等于预算评审金额总数'));
+                callback(new Error('累计县级预算合计必须小于等于预算或合同金额总数'));
             } else {
                 callback();
             }

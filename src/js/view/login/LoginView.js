@@ -24,6 +24,7 @@ export default {
             loginForm: {
                 userName: '',
                 password: '',
+                isRemember: true
                 //verifycode: ''
             },
             rules: {
@@ -51,6 +52,14 @@ export default {
         }
     },
     mounted: function () {
+        var self = this;
+        //
+        self.user = JSON.parse(localStorage.getItem('user'));
+        if (self.user) {
+            self.loginForm.userName = self.user.userName;
+            self.loginForm.password = self.user.password;
+            self.loginForm.isRemember = self.user.isRemember;
+        }
         // 验证码初始化
         this.identifyCode = '';
         this.makeCode(this.identifyCodes, 4);
@@ -65,7 +74,7 @@ export default {
                     let loginParams = {
                         userName: self.loginForm.userName,
                         password: self.loginForm.password,
-                        verifycode: self.loginForm.verifycode
+                        isRemember: self.loginForm.isRemember,
                     };
                     self.$http.post('/api/login', loginParams).then(res => {
                         self.logining = false;
@@ -79,7 +88,9 @@ export default {
                         } else {
                             if (res.data.recordset.length != 0) {
                                 let user = res.data.recordset[0];
+                                user.isRemember = self.loginForm.isRemember;
                                 window.sessionStorage.setItem('user', JSON.stringify(user));
+                                window.localStorage.setItem('user', JSON.stringify(user));
                                 self.$router.replace({
                                     path: '/main'
                                 });

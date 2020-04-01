@@ -180,12 +180,12 @@
                                           :value="item.value"></el-radio>
                             </el-radio-group>
                         </el-form-item>
-                        <el-form-item label="预算评审金额" prop="budgetReviewMoney">
-                            <el-input placeholder="请输入预算评审金额"  type="number" v-model="editBudgetPlan.budgetReviewMoney" maxlength="15">
+                        <el-form-item label="预算或合同金额" prop="budgetReviewMoney">
+                            <el-input placeholder="请输入预算或合同金额"  type="number" v-model="editBudgetPlan.budgetReviewMoney" maxlength="15">
                                 <template slot="append">万元</template>
                             </el-input>
                         </el-form-item>
-                        <el-form-item label="评审文号" prop="approvalNumber" placeholder="请输入评审文号">
+                        <el-form-item label="文号" placeholder="请输入文号">
                             <el-input v-model="editBudgetPlan.approvalNumber" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item label="国有资产审批登记">

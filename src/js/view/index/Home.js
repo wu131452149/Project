@@ -127,7 +127,7 @@ export default {
             title: '资金安排周期',
         }, {
             name: 'budgetReviewMoney',
-            title: '预算评审金额',
+            title: '预算或合同金额',
         }, {
             name: 'yearsPlanTotalMoneyNo',
             title: '三年滚动预算合计',

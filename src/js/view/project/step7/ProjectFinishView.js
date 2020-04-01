@@ -55,6 +55,7 @@ export default {
                 finishMoney: ""
             },
             budgetYearsPlanMoneyList: [],
+            showButton: true,
         };
     },
     activated: function() {

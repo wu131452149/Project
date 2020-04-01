@@ -774,7 +774,7 @@ export default {
         },
         //7审核决算
         approvalFinish: function () {
-            //审核通过，把第一步状态改为1，并且把项目step改成6
+            //审核通过，把第一步状态改为1，并且把项目step改成7
             let self = this;
             let data = {};
             data.id = self.projectDetail.id;

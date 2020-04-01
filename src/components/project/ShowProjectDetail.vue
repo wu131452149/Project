@@ -114,7 +114,7 @@
                         </div>
                         <div class="inline-block font18 width-per45 ver-text-top margin-t-15 margin-r">
                             <div class="clearFix">
-                                <span class="info-label">预算评审金额：</span>
+                                <span class="info-label">预算或合同金额：</span>
                                 <span class="info-val">{{projectDetail.budgetReviewMoney}}（万元）</span>
                             </div>
                         </div>
@@ -399,8 +399,8 @@
                 <div class="info-content scrollBar-inner width-per100 margin-t10 padding-0-20">
                     <div class="inline-block font18 width-per45 ver-text-top margin-t-15 margin-r">
                         <div class="clearFix">
-                            <span class="info-label">决算金额：</span>
-                            <span class="info-val" v-if="projectDetail.finishMoney">{{projectDetail.finishMoney}}</span>
+                            <span class="info-label">最终金额：</span>
+                            <span class="info-val" v-if="projectDetail.finishMoney">{{projectDetail.finishMoney}}(万元）</span>
                         </div>
                     </div>
                 </div>

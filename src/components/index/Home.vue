@@ -136,7 +136,7 @@
                             <div class="el-col el-col-4">
                                 <el-card class="box-card">
                                     <div slot="header" class="clearfix">
-                                        <span>预算评审金额</span>
+                                        <span>预算或合同金额</span>
                                     </div>
                                     <div class="text item">
                                         <div>
@@ -308,7 +308,7 @@
                                 <span>{{scope.row.projectYears}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="budgetReviewMoney" label="预算评审金额（万元）" width="80">
+                        <el-table-column show-overflow-tooltip prop="budgetReviewMoney" label="预算或合同金额（万元）" width="80">
                             <template slot-scope="scope">
                                 <span>{{scope.row.budgetReviewMoney}}</span>
                             </template>

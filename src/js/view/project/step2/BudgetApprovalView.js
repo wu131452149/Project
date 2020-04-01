@@ -50,11 +50,11 @@ export default {
             booleanData: [{name: "是", value: 1}, {name: "否", value: 0}],
             rules: {
                 budgetReviewMoney: [
-                    {required: true, message: '请输入预算评审金额', trigger: 'blur'},
+                    {required: true, message: '请输入预算或合同金额', trigger: 'blur'},
                 ],
-                approvalNumber: [
-                    {required: true, message: '请输入评审文号', trigger: 'blur'},
-                ],
+                // approvalNumber: [
+                //     {required: true, message: '请输入评审文号', trigger: 'blur'},
+                // ],
             },
             user: {},
             projectInstitutionList: [],

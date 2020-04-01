@@ -124,7 +124,7 @@
                 </el-table-column>
                 <el-table-column label="操作" class="text-c" v-if="user.grade==1">
                     <template slot-scope="scope">
-                        <a @click.stop="editBudgetFinishTab($event,scope.row)">录入决算</a>
+                        <a @click.stop="editBudgetFinishTab($event,scope.row)" v-if="scope.row.stepSevenApp!=1">录入决算</a>
                     </template>
                 </el-table-column>
             </el-table>
@@ -162,17 +162,18 @@
                                      @unAppStep7="handleAppStep7"
                                      :projectDetail="projectDetail"
                                      :step="7"
+                                     :showButton = "showButton"
                                      :activeNames="activeNames"
                                      :showEdit="showEdit"
                                      :grade="user.grade">
 
                 </show-project-Detail>
                 <!--录入决算信息-->
-                <div v-if="user.grade==1 && showEdit" class="padding-0-20">
+                <div v-if="user.grade==1 && showEdit " class="padding-0-20">
                     <span>项目决算信息录入</span>
                     <el-form :model="editBudgetFinish" :rules="rules" class="width300" ref="editBudgetFinish">
-                        <el-form-item label="决算评审金额">
-                            <el-input placeholder="请输入决算评审金额" type="number" v-model="editBudgetFinish.finishMoney" maxlength="15">
+                        <el-form-item label="最终金额">
+                            <el-input placeholder="请输入最终金额" type="number" v-model="editBudgetFinish.finishMoney" maxlength="15">
                                 <template slot="append">万元</template>
                             </el-input>
                         </el-form-item>

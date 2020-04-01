@@ -190,7 +190,7 @@
                     <span>预算变更</span>
                     <el-form :model="editBudgetChange" :rules="rules" class="width200" ref="editBudgetChange">
                         <!--1年显示一次-->
-                        <el-form-item lable="预算评审金额变更" prop="money">
+                        <el-form-item lable="预算或合同金额变更" prop="money">
 
                             <el-select
                                 v-model="editBudgetChange.type"
