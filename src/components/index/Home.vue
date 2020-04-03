@@ -172,7 +172,7 @@
                             <div class="el-col el-col-4">
                                 <el-card class="box-card">
                                     <div slot="header" class="clearfix">
-                                        <span>欠付金额</span>
+                                        <span>已安排未拨付</span>
                                     </div>
                                     <div class="text item">
                                         <div>
@@ -313,6 +313,11 @@
                                 <span>{{scope.row.budgetReviewMoney}}</span>
                             </template>
                         </el-table-column>
+                        <el-table-column show-overflow-tooltip prop="finishMoney" label="最终金额（万元）" width="80">
+                            <template slot-scope="scope">
+                                <span>{{scope.row.finishMoney}}</span>
+                            </template>
+                        </el-table-column>
                         <el-table-column show-overflow-tooltip prop="yearsPlanTotalMoneyNo" label="合计安排（万元）" width="80">
                             <template slot-scope="scope">
                                 <span>{{scope.row.yearsPlanTotalMoneyNo}}</span>
@@ -350,10 +355,16 @@
                                 <span>{{scope.row.approTotalPlanMoneyNo}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="nonPaymentTotalMoneyNo" label="欠付金额（万元）"
+                        <el-table-column show-overflow-tooltip prop="nonPaymentTotalMoneyNo" label="已安排未拨付（万元）"
                                          width="80">
                             <template slot-scope="scope">
                                 <span>{{scope.row.nonPaymentTotalMoneyNo}}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column show-overflow-tooltip prop="nonPaymentTotalMoneyNo" label="总欠付（万元）"
+                                         width="80">
+                            <template slot-scope="scope">
+                                <span>{{scope.row.totalNoPay}}</span>
                             </template>
                         </el-table-column>
                         <!--项目修改权限-->

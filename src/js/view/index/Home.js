@@ -128,6 +128,9 @@ export default {
         }, {
             name: 'budgetReviewMoney',
             title: '预算或合同金额',
+        },{
+            name: 'finishMoney',
+            title: '最终金额',
         }, {
             name: 'yearsPlanTotalMoneyNo',
             title: '三年滚动预算合计',
@@ -151,7 +154,10 @@ export default {
             title: '资金累计拨付',
         }, {
             name: 'nonPaymentTotalMoneyNo',
-            title: '欠付金额',
+            title: '已安排未拨付',
+        },{
+            name: 'totalNoPay',
+            title: '总欠付',
         }]
 
     },

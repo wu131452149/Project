@@ -1,9 +1,6 @@
+
 /**
- * 这个文件主要是
- *  created by LilyLee on 2019/9/21.
- **/
-/**
- * 这个文件主要是
+ * 这个文件主要是数据库操作
  *  created by LilyLee on 2019/9/20.
  **/
 const express = require('express');
@@ -267,6 +264,10 @@ router.post('/updateProject', function (req, res, next) {
     delete param.originalStepSixApp;
     var originalStepSevenApp = param.originalStepSevenApp;
     delete param.originalStepSevenApp;
+    //拨付的审核相当于第8步吧
+    if (param.approvalSuggestion) {
+        var approvalSuggestion = param.approvalSuggestion;
+    }
     //是否是第一次提交，不然不选择
     var isFirstTwoEdit = param.isFirstTwoEdit;
     delete param.isFirstTwoEdit;
@@ -347,7 +348,9 @@ router.post('/updateProject', function (req, res, next) {
                                 data.stepSeven = data.stepSeven + 1;
                             } else {
                                 if (originalStepSevenApp != 2) {//如果之前就是审核状态就不用再加1了，这样就不用红点重复加
-                                    data.stepSeven = data.stepSeven + 1;
+                                    if (approvalSuggestion != 2) {
+                                        data.stepSeven = data.stepSeven + 1;
+                                    }
                                 }
                             }
 
@@ -530,11 +533,12 @@ router.post('/queryProject', function (req, res, next) {
         }
 
     } else if (step == 7) {//完工库都可以显示，无论是否审核
-
+        //第7步的时候还要查询拨付信息
         if (param.grade == 2) {
             suggestionStep = "stepSevenApp";
             suggestion = param.stepSevenApp;
         }
+
     }
     var whereSql = " where 1=1";
     if (param.id) {
@@ -584,7 +588,15 @@ router.post('/queryProject', function (req, res, next) {
         }
     }
     if (suggestion) {
-        whereSql = whereSql + " and " + suggestionStep + " not in ( " + suggestion + ")";
+        if(step == 7){
+            if(param.approvalSuggestion){
+                whereSql = whereSql + " and (" + suggestionStep + " not in ( " + suggestion + ") or approvalSuggestion not in (1) )";
+            }else{
+                whereSql = whereSql + " and " + suggestionStep + " not in ( " + suggestion + ")";
+            }
+        }else{
+            whereSql = whereSql + " and " + suggestionStep + " not in ( " + suggestion + ")";
+        }
     }
     if (param.ifReturned) {
         whereSql = whereSql + " and ifReturned= " + param.ifReturned;
@@ -728,7 +740,16 @@ router.post('/queryProjectCount', function (req, res, next) {
         }
     }
     if (suggestion) {
-        whereSql = whereSql + " and " + suggestionStep + " not in ( " + suggestion + ")";
+
+        if(step == 7){
+            if(param.approvalSuggestion){
+                whereSql = whereSql + " and (" + suggestionStep + " not in ( " + suggestion + ") or approvalSuggestion not in (1) )";
+            }else{
+                whereSql = whereSql + " and " + suggestionStep + " not in ( " + suggestion + ")";
+            }
+        }else{
+            whereSql = whereSql + " and " + suggestionStep + " not in ( " + suggestion + ")";
+        }
     }
     if (param.ifReturned) {
         whereSql = whereSql + " and ifReturned= " + param.ifReturned;

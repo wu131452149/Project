@@ -8,7 +8,7 @@ import EventBus from "../../lib/event/EventBus";
 
 export default {
     name: "ShowProjectDetailView",
-    props: ["projectDetail", "step", "activeNames", "showEdit", "grade", "showButton"],
+    props: ["projectDetail", "step", "activeNames", "showEdit", "grade", "showButton","showBF"],
     data() {
         return {
             loading: false,
@@ -60,7 +60,12 @@ export default {
                         } else if (self.step == 6) {
                             self.names = ['6'];
                         } else if (self.step == 7) {
-                            self.names = ['7'];
+                            if(self.showBF){
+                                self.names = ['4'];
+                            }else{
+                                self.names = ['7'];
+                            }
+
                         }
 
                     } else {
@@ -174,19 +179,32 @@ export default {
             if (self.projectDetail.cutBudget || self.projectDetail.addBudget) {
                 var total1 = 0;
                 var total2 = 0;
+                var appTotal1 = 0;
+                var appTotal2 = 0;
                 if (self.cutBudget.length > 0) {
                     for (var x = 0; x < self.cutBudget.length; x++) {
                         total1 = total1 + Number(self.cutBudget[x].money);
+                        if(self.cutBudget[x].status==2){
+                            appTotal1 = appTotal1 + Number(self.cutBudget[x].money);
+                        }
                     }
                 }
                 if (self.addBudget.length > 0) {
                     for (var y = 0; y < self.addBudget.length; y++) {
                         total2 = total2 + Number(self.addBudget[y].money);
+                        if(self.addBudget[y].status==2){
+                            appTotal2 = appTotal2 + Number(self.addBudget[y].money);
+                        }
                     }
                 }
                 self.totalCut = total1;
                 self.totalAdd = total2;
-                self.totalMoney = Number(self.projectDetail.budgetReviewMoney) - Number(total1) + Number(total2);
+                if (appTotal2 != 0 ||appTotal1 != 0) {//增加或减少的预算都不为0的时候
+                    self.totalMoney = Number(self.projectDetail.budgetReviewMoney) - Number(total1) + Number(total2);
+                }else{
+                    self.totalMoney = Number(self.projectDetail.budgetReviewMoney);
+                }
+
             }
         },
         downloadUrl: function (data) {
@@ -246,7 +264,11 @@ export default {
             } else if (self.step == 6) {
                 self.approvalTri();
             } else if (self.step == 7) {
-                self.approvalFinish();
+                if(self.showBF){
+                    self.approvalAppMoney();
+                }else{
+                    self.approvalFinish();
+                }
             }
 
         },
@@ -539,14 +561,22 @@ export default {
             let self = this;
             let data = {};
             data.id = self.projectDetail.id;
-            if (self.projectDetail.approvalStep <= 4) {
-                data.approvalStep = 5;
+            if(self.showBF){//第7步的审核
+                data.approvalStep = 7;
+                data.oldStep = 7;
+                data.approvalSuggestion = 1;
+                data.projectPeriod = 7;
+                data.ifEdit = 0;
+            }else{
+                if (self.projectDetail.approvalStep <= 4) {
+                    data.approvalStep = 5;
+                }
+                data.oldStep = 4;
+                data.stepFourApp = 1;
+                data.stepFiveApp = 2;
+                data.oldSuggestion = 2;
+                data.ifFourEdit = 0;
             }
-            data.oldStep = 4;
-            data.stepFourApp = 1;
-            data.stepFiveApp = 2;
-            data.oldSuggestion = 2;
-            data.ifFourEdit = 0;
             data.projectFinance = self.user.role;
             //存入总字段
             var list1 = _.cloneDeep(self.projectDetail.appropriateBudgetList);
@@ -589,7 +619,13 @@ export default {
             data.approTotalPlanMoneyNo = Utils.countTotalPlanMoney(obj);
             //对象
             data.approTotalMoney = JSON.stringify(obj);
-            data.nonPaymentTotalMoneyNo = Number(self.projectDetail.yearsPlanTotalMoneyNo - data.approTotalPlanMoneyNo);
+            data.nonPaymentTotalMoneyNo = Number(Number(self.projectDetail.yearsPlanTotalMoneyNo) - data.approTotalPlanMoneyNo);
+            //计算总欠付：
+            if(self.showBF) {//第7步的审核
+                data.totalNoPay = Number(Number(self.projectDetail.finishMoney) - Number(data.approTotalPlanMoneyNo));
+            }else{
+                data.totalNoPay = Number(Number(self.projectDetail.budgetReviewMoney) - data.approTotalPlanMoneyNo);
+            }
             data.redCount = redCount;
             self.$http.post('/api/project/approvalProject', data).then(res => {
                 let status = res.status;
@@ -608,13 +644,22 @@ export default {
                             type: 'success'
                         });
                         var data = res.data.recordsets[0];
-                        if (data && data.stepFour == 0) {
-                            EventBus.$emit('hideFourBadge');
+                        if(self.showBF) {//第7步的审核
+                            if (data && data.stepSeven == 0) {
+                                EventBus.$emit('hideMenuBadge', 'project_finish');
+                            }
+                            //关闭当前页，查询当前表格
+                            self.$emit('appStep7');
+                        }else{
+                            if (data && data.stepFour == 0) {
+                                EventBus.$emit('hideFourBadge');
+                            }
+                            //去除在建库的小红点
+                            self.eventBusToDeleteRed(data);
+                            //关闭当前页，查询当前表格
+                            self.$emit('appStep4');
                         }
-                        //去除在建库的小红点
-                        self.eventBusToDeleteRed(data);
-                        //关闭当前页，查询当前表格
-                        self.$emit('appStep4');
+
                     } else {
                         self.$message({
                             message: "审核失败",
@@ -667,6 +712,10 @@ export default {
                 data.cutBudget = JSON.stringify(self.cutBudget);
             }
             data.redCount = redCount;
+            //把预算总金额改成totalMoney的数字，更新到数据库
+            data.budgetReviewMoney = self.totalMoney;
+            //计算总欠付：
+            data.totalNoPay = Number(Number(data.budgetReviewMoney) - Number(self.projectDetail.approTotalPlanMoneyNo));
             self.$http.post('/api/project/approvalProject', data).then(res => {
                 let status = res.status;
                 let statusText = res.statusText;
@@ -784,6 +833,8 @@ export default {
             data.oldSuggestion = 1;//第7步审核通过
             data.ifEdit = 0;
             data.projectFinance = self.user.role;
+            data.projectPeriod = 7;//把项目阶段设置为7，判断有这个变量之后就可以在完工之后录入拨付
+            data.totalNoPay = Number(Number(self.projectDetail.finishMoney) - Number(self.projectDetail.approTotalPlanMoneyNo));
             self.$http.post('/api/project/approvalProject', data).then(res => {
                 let status = res.status;
                 let statusText = res.statusText;
@@ -935,6 +986,8 @@ export default {
                 //对象
                 data.approTotalMoney = JSON.stringify(obj);
                 data.nonPaymentTotalMoneyNo = Number(self.projectDetail.yearsPlanTotalMoneyNo - data.approTotalPlanMoneyNo);
+                //计算总欠付：
+                data.totalNoPay = Number(Number(self.projectDetail.budgetReviewMoney) - data.approTotalPlanMoneyNo);
             } else if (self.step == 5) {
                 data.oldSuggestion = self.projectDetail.stepFiveApp;
                 data.stepFiveApp = 0;
@@ -954,9 +1007,13 @@ export default {
                 }
                 if (self.addBudget.length > 0) {
                     data.addBudget = JSON.stringify(self.addBudget);
+                }else{
+                    data.addBudget = "";
                 }
                 if (self.cutBudget.length > 0) {
                     data.cutBudget = JSON.stringify(self.cutBudget);
+                }else{
+                    data.cutBudget = "";
                 }
                 data.redCount = redCount;
             } else if (self.step == 6) {
@@ -973,10 +1030,54 @@ export default {
                 data.redCount = redCount;
                 data.triInfo = JSON.stringify(self.projectDetail.triInfoList);
             } else if (self.step == 7) {
-                data.oldSuggestion = self.projectDetail.stepSevenApp;
-                data.stepSevenApp = 0;
+                if(self.showBF){
+                    //审核拨付不通过
+                    data.approvalSuggestion = 0;
+                    data.projectPeriod = 7;
+                    var redCount = 0;
+                    //删除未审核的数据
+                    for (var i = 0; i < self.projectDetail.appropriateBudgetList.length; i++) {
+                        if (self.projectDetail.appropriateBudgetList[i].status == 2) {
+                            redCount = redCount + 1;
+                            self.projectDetail.appropriateBudgetList.splice(i, 1);
+                        }
+                    }
+                    for (var j = 0; j < self.projectDetail.appropriateTopBudgetList.length; j++) {
+                        if (self.projectDetail.appropriateTopBudgetList[j].status == 2) {
+                            redCount = redCount + 1;
+                            self.projectDetail.appropriateTopBudgetList.splice(j, 1);
+                        }
+                    }
+                    var list1 = _.cloneDeep(self.projectDetail.appropriateBudgetList);
+                    var list2 = _.cloneDeep(self.projectDetail.appropriateTopBudgetList);
+                    var list = list1.concat(list2);
+                    for (var y = 0; y < list.length; y++) {
+                        list[y].years = list[y].date.substring(0, 4);
+                    }
+                    var obj = self.mergeArr(list);
+                    if (self.projectDetail.appropriateBudgetList.length > 0) {
+                        data.appropriateBudget = JSON.stringify(self.projectDetail.appropriateBudgetList);
+                    } else {
+                        data.appropriateBudget = "";
+                    }
+                    if (self.projectDetail.appropriateTopBudgetList.length > 0) {
+                        data.appropriateTopBudget = JSON.stringify(self.projectDetail.appropriateTopBudgetList);
+                    } else {
+                        data.appropriateTopBudget = "";
+                    }
+                    data.redCount = redCount;
+                    //计算合计累计拨付
+                    data.approTotalPlanMoneyNo = Utils.countTotalPlanMoney(obj);
+                    //对象
+                    data.approTotalMoney = JSON.stringify(obj);
+                    data.nonPaymentTotalMoneyNo = Number(self.projectDetail.yearsPlanTotalMoneyNo - data.approTotalPlanMoneyNo);
+                    //计算总欠付：
+                    data.totalNoPay = Number(Number(self.projectDetail.budgetReviewMoney) - data.approTotalPlanMoneyNo);
+                }else{
+                    data.oldSuggestion = self.projectDetail.stepSevenApp;
+                    data.stepSevenApp = 0;
+                }
             }
-
             self.$http.post('/api/project/approvalProject', data).then(res => {
                 let status = res.status;
                 let statusText = res.statusText;

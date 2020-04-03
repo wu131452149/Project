@@ -68,7 +68,7 @@ export default {
                 status = "未通过审核";
                 break;
             default:
-                status = "未知类型";
+                status = "";
         }
 
         return status;

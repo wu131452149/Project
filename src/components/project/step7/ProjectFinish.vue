@@ -122,9 +122,13 @@
                 <el-table-column show-overflow-tooltip prop="stepSevenApp" label="审核意见">
                     <template slot-scope="scope">{{scope.row.stepSevenApp|renderStatus}}</template>
                 </el-table-column>
+                <el-table-column show-overflow-tooltip prop="approvalSuggestion" label="拨付审核意见">
+                    <template slot-scope="scope">{{scope.row.approvalSuggestion|renderStatus}}</template>
+                </el-table-column>
                 <el-table-column label="操作" class="text-c" v-if="user.grade==1">
                     <template slot-scope="scope">
                         <a @click.stop="editBudgetFinishTab($event,scope.row)" v-if="scope.row.stepSevenApp!=1">录入决算</a>
+                        <a @click.stop="editBudgetAppMoneyTab7($event,scope.row)" v-if="scope.row.projectPeriod">录入拨付</a>
                     </template>
                 </el-table-column>
             </el-table>
@@ -162,6 +166,7 @@
                                      @unAppStep7="handleAppStep7"
                                      :projectDetail="projectDetail"
                                      :step="7"
+                                     :showBF="showBF"
                                      :showButton = "showButton"
                                      :activeNames="activeNames"
                                      :showEdit="showEdit"
@@ -181,6 +186,40 @@
                     <div class="demo-drawer__footer margin-t-25" style="text-align: center;">
                         <el-button @click="closeForm">取 消</el-button>
                         <el-button type="primary" @click="commitFinishMoneyForm" :loading="loading">{{ loading ? '提交中 ...' : '确定' }}
+                        </el-button>
+                    </div>
+                </div>
+                <!--录入拨付信息-->
+                <div v-if="user.grade==1 && showBFEdit " class="padding-0-20">
+                    <span>预算拨付</span>
+                    <el-form :model="editAppropriateMoneyProject7" :rules="rules1" class="width300"
+                             ref="editAppropriateMoneyProject7">
+                        <el-form-item prop="type">
+                            <el-date-picker type="date" placeholder="选择预算拨付时间"
+                                            v-model="editAppropriateMoneyProject7.years"></el-date-picker>
+                            <el-select
+                                v-model="editAppropriateMoneyProject7.type"
+                                style="margin-left: 20px;"
+                                placeholder="请选择" required>
+                                <el-option
+                                    v-for="item in yearsPlanType"
+                                    :key="item.value"
+                                    :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item prop="money">
+                            <el-input style="width: 100px;" placeholder="请输入金额" type="number"
+                                      v-model="editAppropriateMoneyProject7.money" maxlength="15" required>
+                                <template slot="append">万元</template>
+                            </el-input>
+                        </el-form-item>
+                        <!--1年显示一次-->
+
+                    </el-form>
+                    <div class="demo-drawer__footer margin-t-25" style="text-align: center;">
+                        <el-button @click="closeForm">取 消</el-button>
+                        <el-button type="primary" @click="commitAppMoneyForm7" :loading="loading">{{ loading ? '提交中 ...' : '确定' }}
                         </el-button>
                     </div>
                 </div>

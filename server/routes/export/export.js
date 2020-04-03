@@ -38,6 +38,9 @@ const excelTitleConfig = [{
     name: 'budgetReviewMoney',
     title: '预算或合同金额',
 }, {
+    name: 'finishMoney',
+    title: '最终金额',
+}, {
     name: 'yearsPlanTotalMoneyNo',
     title: '三年滚动预算合计',
 }, {
@@ -60,7 +63,10 @@ const excelTitleConfig = [{
     title: '资金累计拨付',
 }, {
     name: 'nonPaymentTotalMoneyNo',
-    title: '欠付金额',
+    title: '已安排未拨付',
+}, {
+    name: 'totalNoPay',
+    title: '总欠付',
 }]
 router.post('/exportExcel', jsonParser, async (req, res) => {
     console.log(req.body);
@@ -114,7 +120,7 @@ router.post('/exportExcel', jsonParser, async (req, res) => {
         var columns = excelConfig[0];
         temp.shift();
         var data = temp;
-        var sums = getSummaries(columns,data);
+        var sums = getSummaries(columns, data);
         excelConfig.push(sums);
         var excelName = "report";
         let buffer = nodeExcel.build([{name: excelName, data: excelConfig}]);
@@ -125,14 +131,15 @@ router.post('/exportExcel', jsonParser, async (req, res) => {
     });
 
 });
-function getSummaries(columns,data){
+
+function getSummaries(columns, data) {
     const sums = [];
     columns.forEach((column, index) => {
         if (index === 0) {
             sums[index] = '总金额(万元）';
             return;
         }
-        if (index === 1 || index === 2 ||index === 3||index === 4) {
+        if (index === 1 || index === 2 || index === 3 || index === 4) {
             sums[index] = 'N/A';
             return;
         }

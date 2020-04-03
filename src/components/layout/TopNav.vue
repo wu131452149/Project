@@ -6,13 +6,13 @@
                 欢迎您，{{user.role}}管理员
             </el-col>
             <el-col :span="2" :push=12  v-if="user.grade==2">
-                <i class="el-icon-message-solid" title="刷新红点" @click="flashRed"></i>
+                <i class="el-icon-message-solid font22" title="刷新红点" @click="flashRed"></i>
             </el-col>
             <el-col :span="2" :push=11>
-                <i class="fa fa-user" title="修改密码" @click="toggleDialog($event,'changePassWord')"></i>
+                <i class="fa fa-user font22" title="修改密码" @click="toggleDialog($event,'changePassWord')"></i>
             </el-col>
             <el-col :span="2" :push=10>
-                <i class="fa fa-sign-out" title="退出系统" @click="exitSystem"></i>
+                <i class="fa fa-sign-out font22" title="退出系统" @click="exitSystem"></i>
             </el-col>
         </el-row>
         <user-dialog ref="userDialog"
