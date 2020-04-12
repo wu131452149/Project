@@ -80,7 +80,7 @@ export default {
                     {required: true, message: '请选择项目开工时间', trigger: 'change'},
                 ],
                 budgetReviewMoney: [
-                    {required: true, message: '请输入预算或合同金额', trigger: 'blur'},
+                    {required: true, message: '请输入预算评审金额', trigger: 'blur'},
                 ],
                 approvalNumber: [
                     {required: true, message: '请输入评审文号', trigger: 'blur'},
@@ -126,6 +126,10 @@ export default {
             var self = this;
             if (!value) {
                 return callback(new Error('请输入金额'));
+            }
+            var reg = /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/;
+            if (!reg.test(value)){
+                return callback(new Error('金额不正确请重新输入'));
             }
             //累计拨付小于累计安排，累计安排总数yearsPlanTotalMoneyNo，累计拨付总数approTotalPlanMoneyNo
             if (!self.editProject1.approTotalPlanMoneyNo) {
@@ -178,6 +182,10 @@ export default {
             if (!value) {
                 return callback(new Error('请输入金额'));
             }
+            var reg = /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/;
+            if (!reg.test(value)){
+                return callback(new Error('金额不正确请重新输入'));
+            }
             console.log(self);
             var total1 = 0;
             for (var x = 0; x < self.editProject.planYearsMoneyList3.length; x++) {
@@ -189,7 +197,7 @@ export default {
             }
             var total = total1 + total2 + Number(value);
             if (total > self.editProject.budgetReviewMoney) {
-                callback(new Error('累计县级预算合计必须小于等于预算或合同金额总数'));
+                callback(new Error('累计县级预算合计必须小于等于预算评审金额总数'));
             } else {
                 callback();
             }
@@ -523,6 +531,8 @@ export default {
                         self.editProject.gvApproval = "是";
                     }
                     self.editProject.budgetReviewMoney = val.budgetReviewMoney;
+                    self.editProject.contractMoney = val.contractMoney;
+                    self.editProject.contractNumber = val.contractNumber;
                     self.editProject.approvalNumber = val.approvalNumber;
                     if (val.gvApproval != false) {
                         self.editProject.stateOwnedRegistration = "是";
@@ -563,6 +573,16 @@ export default {
                         self.editProject.addBudget = JSON.parse(val.addBudget);
                     } else {
                         self.editProject.addBudget = [];
+                    }
+                    if (val.cutContractBudget) {
+                        self.editProject.cutContractBudget = JSON.parse(val.cutContractBudget);
+                    } else {
+                        self.editProject.cutContractBudget = [];
+                    }
+                    if (val.addContractBudget) {
+                        self.editProject.addContractBudget = JSON.parse(val.addContractBudget);
+                    } else {
+                        self.editProject.addContractBudget = [];
                     }
                     //6
                     if (val.triInfo) {//第三方

@@ -113,7 +113,7 @@
                 <el-table-column show-overflow-tooltip prop="projectType" label="项目类型">
                     <template slot-scope="scope">{{scope.row.projectType}}</template>
                 </el-table-column>
-                <el-table-column show-overflow-tooltip prop="projectMoney" label="估算额(万元)" width="80">
+                <el-table-column show-overflow-tooltip prop="projectMoney" label="估算额(元)" width="80">
                     <template slot-scope="scope">{{scope.row.projectMoney}}</template>
                 </el-table-column>
                 <el-table-column show-overflow-tooltip prop="projectMoneyFrom" label="资金来源">
@@ -138,7 +138,7 @@
                     <template slot-scope="scope">{{scope.row.stepFiveApp|renderStatus}}</template>
                 </el-table-column>
                 <!--//阶段录入修改-->
-                <el-table-column label="操作" class="text-c"  v-if="user.grade==1">
+                <el-table-column label="操作" class="text-c" v-if="user.grade==1">
                     <template slot-scope="scope">
                         <a @click.stop="editBudgetChangeTab($event,scope.row)">评审变更</a>
                     </template>
@@ -169,7 +169,7 @@
             :visible.sync="drawerDetails"
             :direction="direction"
             custom-class="demo-drawer"
-            ref = "budgetChange"
+            ref="budgetChange"
             size=66%
             :before-close="handleClose">
             <div style="overflow: auto;">
@@ -178,7 +178,7 @@
                                      @appStep5="handleAppStep5"
                                      @unAppStep5="handleAppStep5"
                                      :step="5"
-                                     :showButton = "showButton"
+                                     :showButton="showButton"
                                      :activeNames="activeNames"
                                      :showEdit="showEdit"
                                      :grade="user.grade">
@@ -190,11 +190,9 @@
                     <span>预算变更</span>
                     <el-form :model="editBudgetChange" :rules="rules" class="width200" ref="editBudgetChange">
                         <!--1年显示一次-->
-                        <el-form-item lable="预算或合同金额变更" prop="money">
-
+                        <el-form-item label="预算评审金额变更" prop="money">
                             <el-select
                                 v-model="editBudgetChange.type"
-                                style="margin-left: 67px;"
                                 placeholder="请选择">
                                 <el-option
                                     v-for="item in changeType"
@@ -202,18 +200,41 @@
                                     :value="item.value">
                                 </el-option>
                             </el-select>
-                            <el-input style="vertical-align: middle;" placeholder="请输入金额" type="number" v-model="editBudgetChange.money" maxlength="15">
-                                <template slot="append">万元</template>
+                            <el-input style="vertical-align: middle;" placeholder="请输入金额" type="number"
+                                      v-model="editBudgetChange.money" maxlength="15">
+                                <template slot="append">元</template>
                             </el-input>
                         </el-form-item>
-                        <el-form-item label="评审文号" prop="approvalChangeNo" >
-                            <el-input v-model="editBudgetChange.approvalChangeNo" placeholder="请输入评审文号" autocomplete="off"></el-input>
+                        <el-form-item label="评审文号" prop="approvalChangeNo">
+                            <el-input v-model="editBudgetChange.approvalChangeNo" placeholder="请输入评审文号"
+                                      autocomplete="off"></el-input>
+                        </el-form-item>
+
+                        <el-form-item label="合同金额变更" prop="money1">
+                            <el-select
+                                v-model="editBudgetChange.type1"
+                                placeholder="请选择">
+                                <el-option
+                                    v-for="item in changeType"
+                                    :key="item.value"
+                                    :value="item.value">
+                                </el-option>
+                            </el-select>
+                            <el-input style="vertical-align: middle;" placeholder="请输入金额" type="number"
+                                      v-model="editBudgetChange.money1" maxlength="15">
+                                <template slot="append">元</template>
+                            </el-input>
+                        </el-form-item>
+                        <el-form-item label="合同文号" prop="changeContractNo">
+                            <el-input v-model="editBudgetChange.changeContractNo" placeholder="请输入合同文号"
+                                      autocomplete="off"></el-input>
                         </el-form-item>
 
                     </el-form>
                     <div class="demo-drawer__footer margin-t-25" style="text-align: center;">
                         <el-button @click="closeForm">取 消</el-button>
-                        <el-button type="primary" @click="commitBudgetChangeForm" :loading="loading">{{ loading ? '提交中...' : '确定' }}
+                        <el-button type="primary" @click="commitBudgetChangeForm" :loading="loading">{{ loading ?
+                            '提交中...' : '确定' }}
                         </el-button>
                     </div>
                 </div>

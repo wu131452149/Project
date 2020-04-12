@@ -36,7 +36,7 @@
             </el-form-item>
             <el-form-item label="投资估算总额" prop="projectMoney">
                 <el-input placeholder="请输入投资估算总额" type="number" v-model="editProject.projectMoney" maxlength="15">
-                    <template slot="append">万元</template>
+                    <template slot="append">元</template>
                 </el-input>
             </el-form-item>
             <el-form-item label="资金来源">
@@ -82,14 +82,23 @@
                               :value="item.value"></el-radio>
                 </el-radio-group>
             </el-form-item>
-            <el-form-item label="预算或合同金额" prop="budgetReviewMoney">
-                <el-input placeholder="请输入预算或合同金额" type="number" v-model="editProject.budgetReviewMoney"
+            <el-form-item label="预算评审金额" prop="budgetReviewMoney">
+                <el-input placeholder="请输入预算评审金额" type="number" v-model="editProject.budgetReviewMoney"
                           maxlength="15">
-                    <template slot="append">万元</template>
+                    <template slot="append">元</template>
                 </el-input>
             </el-form-item>
-            <el-form-item label="文号" prop="approvalNumber" placeholder="请输入文号">
+            <el-form-item label="评审文号" prop="approvalNumber" placeholder="请输入评审文号">
                 <el-input v-model="editProject.approvalNumber" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="合同金额" prop="contractMoney">
+                <el-input placeholder="请输入合同金额" type="number" v-model="editProject.contractMoney"
+                          maxlength="15">
+                    <template slot="append">元</template>
+                </el-input>
+            </el-form-item>
+            <el-form-item label="合同文号" prop="contractNumber" placeholder="请输入合同文号">
+                <el-input v-model="editProject.contractNumber" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item label="国有资产审批登记">
                 <el-radio-group v-model="editProject.stateOwnedRegistration">
@@ -111,7 +120,7 @@
                               :rules="[{required: true, trigger: 'blur', validator: checkMoney3}]">
                     <!--累计县级预算安排总数 需小于等于预算评审金额-->
                     <el-input placeholder="请输入金额" type="number" v-model="item.money" maxlength="15">
-                        <template slot="append">万元</template>
+                        <template slot="append">元</template>
                     </el-input>
                 </el-form-item>
             </div>
@@ -123,7 +132,7 @@
                               :rules="[{required: true, trigger: 'blur', validator: checkMoney3}]">
                     <!--累计县级预算安排总数 需小于等于预算评审金额-->
                     <el-input placeholder="请输入金额" type="number" v-model="item.money" maxlength="15">
-                        <template slot="append">万元</template>
+                        <template slot="append">元</template>
                     </el-input>
                 </el-form-item>
             </div>
@@ -135,7 +144,7 @@
                               :rules="[{required: true, trigger: 'blur', validator: checkMoney4}]">
                     <!--累计县级预算安排总数 需小于等于预算评审金额-->
                     <el-input placeholder="请输入金额" type="number" v-model="item.money" maxlength="15">
-                        <template slot="append">万元</template>
+                        <template slot="append">元</template>
                     </el-input>
                 </el-form-item>
             </div>
@@ -147,7 +156,7 @@
                               :rules="[{required: true, trigger: 'blur', validator: checkMoney4}]">
                     <!--累计县级预算安排总数 需小于等于预算评审金额-->
                     <el-input placeholder="请输入金额" type="number" v-model="item.money" maxlength="15">
-                        <template slot="append">万元</template>
+                        <template slot="append">元</template>
                     </el-input>
                 </el-form-item>
             </div>
@@ -159,7 +168,7 @@
                               :label="item.date"
                               :rules="[{required: true, trigger: 'blur', validator: check2Money}]">
                     <el-input placeholder="请输入金额" type="number" v-model="item.money" maxlength="15">
-                        <template slot="append">万元</template>
+                        <template slot="append">元</template>
                     </el-input>
                 </el-form-item>
                 <el-form-item :prop="'addBudget.'+index1+'.No'"
@@ -176,7 +185,7 @@
                 <el-form-item :prop="'cutBudget.'+index+'.money'" :label="item.date"
                               :rules="[{required: true, trigger: 'blur', validator: checkMoney}]">
                     <el-input placeholder="请输入金额" type="number" v-model="item.money" maxlength="15">
-                        <template slot="append">万元</template>
+                        <template slot="append">元</template>
                     </el-input>
                 </el-form-item>
                 <el-form-item :prop="'cutBudget.'+index+'.No'" label="评审文号"
@@ -204,7 +213,7 @@
                 </el-form-item>
                 <el-form-item label="合同金额" prop="triMoney" class="padding-10">
                     <el-input placeholder="请输入金额" v-model="item.triMoney" type="number" maxlength="15">
-                        <template slot="append">万元</template>
+                        <template slot="append">元</template>
                     </el-input>
                 </el-form-item>
                 <el-form-item label="负责人" prop="triUserName" class="padding-10">
@@ -231,7 +240,7 @@
             <el-form-item label="最终金额">
                 <el-input placeholder="请输入最终金额" type="number" v-model="editProject.finishMoney"
                           maxlength="15">
-                    <template slot="append">万元</template>
+                    <template slot="append">元</template>
                 </el-input>
             </el-form-item>
         </el-form>
@@ -242,7 +251,7 @@
         <!--<el-form-item prop="money" :label="item.years"  v-for="(item,index) in editProject.planYearsMoneyList3">-->
         <!--&lt;!&ndash;累计县级预算安排总数 需小于等于预算评审金额&ndash;&gt;-->
         <!--<el-input placeholder="请输入金额" type="number" v-model="item.money" maxlength="15">-->
-        <!--<template slot="append">万元</template>-->
+        <!--<template slot="append">元</template>-->
         <!--</el-input>-->
         <!--</el-form-item>-->
         <!--</el-form>-->
@@ -252,7 +261,7 @@
         <!--<el-form-item prop="money" :label="item.years" v-for="(item,index) in editProject.planYearsTopMoneyList3">-->
         <!--&lt;!&ndash;累计县级预算安排总数 需小于等于预算评审金额&ndash;&gt;-->
         <!--<el-input placeholder="请输入金额" type="number" v-model="item.money" maxlength="15">-->
-        <!--<template slot="append">万元</template>-->
+        <!--<template slot="append">元</template>-->
         <!--</el-input>-->
         <!--</el-form-item>-->
         <!--</el-form>-->
@@ -264,7 +273,7 @@
         <!--<el-form-item prop="money" :label="item.date" v-for="(item,index) in editProject.appropriateBudgetList4">-->
         <!--&lt;!&ndash;累计县级预算安排总数 需小于等于预算评审金额&ndash;&gt;-->
         <!--<el-input placeholder="请输入金额" type="number" v-model="item.money" maxlength="15">-->
-        <!--<template slot="append">万元</template>-->
+        <!--<template slot="append">元</template>-->
         <!--</el-input>-->
         <!--</el-form-item>-->
         <!--</el-form>-->
@@ -274,7 +283,7 @@
         <!--<el-form-item prop="money" :label="item.date" v-for="(item,index) in editProject.appropriateTopBudgetList4">-->
         <!--&lt;!&ndash;累计县级预算安排总数 需小于等于预算评审金额&ndash;&gt;-->
         <!--<el-input placeholder="请输入金额" type="number" v-model="item.money" maxlength="15">-->
-        <!--<template slot="append">万元</template>-->
+        <!--<template slot="append">元</template>-->
         <!--</el-input>-->
         <!--</el-form-item>-->
         <!--</el-form>-->
@@ -285,14 +294,14 @@
         <!--<el-form-item prop="money" :label="item.date">-->
         <!--&lt;!&ndash;累计县级预算安排总数 需小于等于预算评审金额&ndash;&gt;-->
         <!--<el-input placeholder="请输入金额" type="number" v-model="item.money" maxlength="15">-->
-        <!--<template slot="append">万元</template>-->
+        <!--<template slot="append">元</template>-->
         <!--</el-input>-->
 
         <!--</el-form-item>-->
         <!--<el-form-item prop="approvalChangeNo" label="评审文号">-->
         <!--&lt;!&ndash;累计县级预算安排总数 需小于等于预算评审金额&ndash;&gt;-->
         <!--<el-input placeholder="请输入评审文号" type="number" v-model="item.No" maxlength="15">-->
-        <!--<template slot="append">万元</template>-->
+        <!--<template slot="append">元</template>-->
         <!--</el-input>-->
         <!--</el-form-item>-->
         <!--<el-form-item>-->
@@ -305,14 +314,14 @@
         <!--<el-form-item prop="money" :label="item.date">-->
         <!--&lt;!&ndash;累计县级预算安排总数 需小于等于预算评审金额&ndash;&gt;-->
         <!--<el-input placeholder="请输入金额" type="number" v-model="item.money" maxlength="15">-->
-        <!--<template slot="append">万元</template>-->
+        <!--<template slot="append">元</template>-->
         <!--</el-input>-->
 
         <!--</el-form-item>-->
         <!--<el-form-item prop="approvalChangeNo" label="评审文号">-->
         <!--&lt;!&ndash;累计县级预算安排总数 需小于等于预算评审金额&ndash;&gt;-->
         <!--<el-input placeholder="请输入评审文号" type="number" v-model="item.No" maxlength="15">-->
-        <!--<template slot="append">万元</template>-->
+        <!--<template slot="append">元</template>-->
         <!--</el-input>-->
         <!--</el-form-item>-->
         <!--<el-form-item>-->
@@ -328,7 +337,7 @@
         <!--</el-form-item>-->
         <!--<el-form-item label="合同金额" prop="triMoney" class="padding-10">-->
         <!--<el-input placeholder="请输入金额" v-model="item.triMoney" type="number" maxlength="15">-->
-        <!--<template slot="append">万元</template>-->
+        <!--<template slot="append">元</template>-->
         <!--</el-input>-->
         <!--</el-form-item>-->
         <!--<el-form-item label="负责人" prop="triUserName" class="padding-10">-->

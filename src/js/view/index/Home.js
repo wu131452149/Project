@@ -127,7 +127,10 @@ export default {
             title: '资金安排周期',
         }, {
             name: 'budgetReviewMoney',
-            title: '预算或合同金额',
+            title: '预算评审金额',
+        }, {
+            name: 'contractMoney',
+            title: '合同金额',
         },{
             name: 'finishMoney',
             title: '最终金额',
@@ -153,12 +156,13 @@ export default {
             name: 'approTotalPlanMoneyNo',
             title: '资金累计拨付',
         }, {
-            name: 'nonPaymentTotalMoneyNo',
-            title: '已安排未拨付',
-        },{
             name: 'totalNoPay',
             title: '总欠付',
         }]
+        /*{
+            name: 'nonPaymentTotalMoneyNo',
+            title: '已安排未拨付',
+        },*/
 
     },
     methods: {
@@ -478,7 +482,7 @@ export default {
             const sums = [];
             columns.forEach((column, index) => {
                 if (index === 0) {
-                    sums[index] = '总金额(万元）';
+                    sums[index] = '总金额(元）';
                     return;
                 }
                 if (index === 1 || index === 2 || index === 3 || index === 4) {

@@ -103,7 +103,7 @@ export default {
             for (var i in obj) {
                 if (obj[i]) {
                     var string = "";
-                    string = obj[i].years + "，自筹安排" + Number(obj[i].money) + "万元，";
+                    string = obj[i].years + "，自筹安排" + Number(obj[i].money) + "元，";
                     money = money + string;
                 }
             }
@@ -119,7 +119,7 @@ export default {
             for (var i in obj) {
                 if (obj[i]) {
                     var string = "";
-                    string = obj[i].years + ", 上级累计安排" + Number(obj[i].money) + "万元，";
+                    string = obj[i].years + ", 上级累计安排" + Number(obj[i].money) + "元，";
                     money = money + string;
                 }
             }

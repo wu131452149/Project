@@ -24,6 +24,10 @@ export default {
             if (!self.editAppropriateMoneyProject.type) {
                 return callback(new Error('请选择类型'));
             }
+            var reg = /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/;
+            if (!reg.test(value)){
+                return callback(new Error('金额不正确请重新输入'));
+            }
             setTimeout(() => {
                 //累计拨付小于累计安排，累计安排总数yearsPlanTotalMoneyNo，累计拨付总数approTotalPlanMoneyNo
                 if (!self.projectDetail.approTotalPlanMoneyNo) {

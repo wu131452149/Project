@@ -41,7 +41,7 @@
                         <div class="inline-block font18 width-per45 ver-text-top margin-t-15 margin-r">
                             <div class="clearFix">
                                 <span class="info-label">投资估算总额：</span>
-                                <span class="info-val">{{projectDetail.projectMoney}}(万元）</span>
+                                <span class="info-val">{{projectDetail.projectMoney}}(元）</span>
                             </div>
                         </div>
                         <div class="inline-block font18 width-per45 ver-text-top margin-t-15 margin-r">
@@ -114,26 +114,42 @@
                         </div>
                         <div class="inline-block font18 width-per45 ver-text-top margin-t-15 margin-r">
                             <div class="clearFix">
-                                <span class="info-label">预算或合同金额：</span>
-                                <span class="info-val">{{projectDetail.budgetReviewMoney}}（万元）</span>
+                                <span class="info-label">国有资产审批登记：</span>
+                                <span class="info-val">{{projectDetail.stateOwnedRegistration|renderBoolean}}</span>
                             </div>
                         </div>
+
                     </div>
 
                    <div class="bottom-solid">
+                       <div class="inline-block font18 width-per45 ver-text-top margin-t-15 margin-r">
+                           <div class="clearFix">
+                               <span class="info-label">预算评审金额：</span>
+                               <span class="info-val">{{projectDetail.budgetReviewMoney}}（元）</span>
+                           </div>
+                       </div>
                        <div class="inline-block font18 width-per45 ver-text-top margin-t-15 margin-r">
                            <div class="clearFix">
                                <span class="info-label">评审文号：</span>
                                <span class="info-val">{{projectDetail.approvalNumber}}</span>
                            </div>
                        </div>
-                       <div class="inline-block font18 width-per45 ver-text-top margin-t-15 margin-r">
-                           <div class="clearFix">
-                               <span class="info-label">国有资产审批登记：</span>
-                               <span class="info-val">{{projectDetail.stateOwnedRegistration|renderBoolean}}</span>
-                           </div>
-                       </div>
                    </div>
+
+                    <div class="bottom-solid">
+                        <div class="inline-block font18 width-per45 ver-text-top margin-t-15 margin-r">
+                            <div class="clearFix">
+                                <span class="info-label">合同金额：</span>
+                                <span class="info-val">{{projectDetail.contractMoney}}（元）</span>
+                            </div>
+                        </div>
+                        <div class="inline-block font18 width-per45 ver-text-top margin-t-15 margin-r">
+                            <div class="clearFix">
+                                <span class="info-label">合同文号：</span>
+                                <span class="info-val">{{projectDetail.contractNumber}}</span>
+                            </div>
+                        </div>
+                    </div>
 
                     <div>
                         <div class="inline-block font18 width-per45 ver-text-top margin-t-15 margin-r">
@@ -170,22 +186,22 @@
                                 <span class="info-val plan-years" v-if="projectDetail.planYearsSelfMoney">{{projectDetail.planYearsSelfMoney|renderPlanYearsSelfMoney}}</span>
                                 <span class="info-val plan-years" v-for="item in projectDetail.planYearsMoneyList">
                                     <font color="red"
-                                          v-if="item.status==2">{{item.years}},本级年度安排{{item.money}}(万元)</font>
-                                    <font v-else>{{item.years}},本级年度安排{{item.money}}(万元)</font>
+                                          v-if="item.status==2">{{item.years}},本级年度安排{{item.money}}(元)</font>
+                                    <font v-else>{{item.years}},本级年度安排{{item.money}}(元)</font>
                                 </span>
                                 <span class="info-val plan-years" v-for="item in projectDetail.planYearsTopMoneyList">
                                     <font color="red"
-                                          v-if="item.status==2">{{item.years}},上级年度安排{{item.money}}(万元)</font>
-                                    <font v-else>{{item.years}},上级年度安排{{item.money}}(万元)</font>
+                                          v-if="item.status==2">{{item.years}},上级年度安排{{item.money}}(元)</font>
+                                    <font v-else>{{item.years}},上级年度安排{{item.money}}(元)</font>
                                 </span>
                                 <!--总计-->
                                 <span class="info-label">累计：</span>
                                 <span class="info-val plan-years" v-for="item in projectDetail.yearsPlanTotalMoneyList">
-                                    <font>{{item.years}},本级累计年度安排{{item.money}}(万元)</font>
+                                    <font>{{item.years}},本级累计年度安排{{item.money}}(元)</font>
                                 </span>
                                 <span class="info-val plan-years"
                                       v-for="item in projectDetail.yearsPlanTotalTopMoneyList">
-                                    <font>{{item.years}},上级累计年度安排{{item.money}}(万元)</font>
+                                    <font>{{item.years}},上级累计年度安排{{item.money}}(元)</font>
                                 </span>
                             </div>
                         </div>
@@ -208,24 +224,24 @@
                                 <span class="info-val plan-years"
                                       v-for="item in projectDetail.appropriateBudgetList">
                                     <font color="red"
-                                          v-if="item.status==2">{{item.date}},本级年度拨付{{item.money}}(万元)</font>
-                                    <font v-else>{{item.date}},本级年度拨付{{item.money}}(万元)</font>
+                                          v-if="item.status==2">{{item.date}},本级年度拨付{{item.money}}(元)</font>
+                                    <font v-else>{{item.date}},本级年度拨付{{item.money}}(元)</font>
                                 </span>
                                 <span class="info-val plan-years"
                                       v-for="item in projectDetail.appropriateTopBudgetList">
                                     <font color="red"
-                                          v-if="item.status==2">{{item.date}},上级年度拨付{{item.money}}(万元)</font>
-                                    <font v-else>{{item.date}},上级年度拨付{{item.money}}(万元)</font>
+                                          v-if="item.status==2">{{item.date}},上级年度拨付{{item.money}}(元)</font>
+                                    <font v-else>{{item.date}},上级年度拨付{{item.money}}(元)</font>
                                 </span>
                                 <!--总计-->
                                 <span class="info-label">累计：</span>
                                 <span class="info-val plan-years"
                                       v-for="item in projectDetail.appropriateTotalBudgetList">
-                                    <font>{{item.years}}年度,本级累计年度拨付{{item.money}}(万元)</font>
+                                    <font>{{item.years}}年度,本级累计年度拨付{{item.money}}(元)</font>
                                 </span>
                                 <span class="info-val plan-years"
                                       v-for="item in projectDetail.appropriateTopTotalBudgetList">
-                                    <font>{{item.years}}年度,上级累计年度拨付{{item.money}}(万元)</font>
+                                    <font>{{item.years}}年度,上级累计年度拨付{{item.money}}(元)</font>
                                 </span>
 
                             </div>
@@ -246,25 +262,51 @@
                             <span class="info-label">预算变更：</span>
                             <div v-for="item in cutBudget" v-if="projectDetail.cutBudget">
                             <span class="info-val plan-years color-red2" v-if="item.status==2">
-                                {{item.date}},{{item.type}}{{Number(item.money)}}（万元）,评审文号为{{item.No}}
+                                {{item.date}},{{item.type}}{{Number(item.money)}}（元）,评审文号为{{item.No}}
                             </span>
                                 <span class="info-val plan-years" v-else>
-                                {{item.date}},{{item.type}}{{Number(item.money)}}（万元）,评审文号为{{item.No}}
+                                {{item.date}},{{item.type}}{{Number(item.money)}}（元）,评审文号为{{item.No}}
                             </span>
                             </div>
                             <div v-for="item in addBudget" v-if="projectDetail.addBudget">
                             <span class="info-val plan-years color-red2" v-if="item.status==2">
-                                {{item.date}},{{item.type}}{{Number(item.money)}}（万元）,评审文号为{{item.No}}
+                                {{item.date}},{{item.type}}{{Number(item.money)}}（元）,评审文号为{{item.No}}
                             </span>
                                 <span class="info-val plan-years" v-else>
-                                {{item.date}},{{item.type}}{{Number(item.money)}}（万元）,评审文号为{{item.No}}
+                                {{item.date}},{{item.type}}{{Number(item.money)}}（元）,评审文号为{{item.No}}
                             </span>
                             </div>
-                            <span class="info-val plan-years">累计增加金额为：{{totalAdd}}（万元）</span>
-                            <span class="info-val plan-years">累计减少金额为：{{totalCut}}（万元）</span>
-                            <span class="info-val plan-years">预算总金额变为：{{totalMoney}}（万元）</span>
-                            <!--<span class="info-val" v-if="projectDetail.cutBudget">减少{{projectDetail.cutBudget}}万元</span>-->
-                            <!--<span class="info-val" v-if="projectDetail.addBudget">增加{{projectDetail.addBudget}}万元</span>-->
+                            <span class="info-val plan-years">累计增加金额为：{{totalAdd}}（元）</span>
+                            <span class="info-val plan-years">累计减少金额为：{{totalCut}}（元）</span>
+                            <span class="info-val plan-years">预算总金额变为：{{totalMoney}}（元）</span>
+                            <!--<span class="info-val" v-if="projectDetail.cutBudget">减少{{projectDetail.cutBudget}}元</span>-->
+                            <!--<span class="info-val" v-if="projectDetail.addBudget">增加{{projectDetail.addBudget}}元</span>-->
+                        </div>
+                    </div>
+                </div>
+                <div class="info-content scrollBar-inner width-per100 margin-t10 padding-0-20">
+                    <div class="inline-block font18 ver-text-top margin-t-15 margin-r">
+                        <div class="clearFix">
+                            <span class="info-label">合同变更：</span>
+                            <div v-for="item in cutContractBudget" v-if="projectDetail.cutContractBudget">
+                            <span class="info-val plan-years color-red2" v-if="item.status==2">
+                                {{item.date}},{{item.type}}{{Number(item.money)}}（元）,合同文号为{{item.No}}
+                            </span>
+                                <span class="info-val plan-years" v-else>
+                                {{item.date}},{{item.type}}{{Number(item.money)}}（元）,合同文号为{{item.No}}
+                            </span>
+                            </div>
+                            <div v-for="item in addContractBudget" v-if="projectDetail.addContractBudget">
+                            <span class="info-val plan-years color-red2" v-if="item.status==2">
+                                {{item.date}},{{item.type}}{{Number(item.money)}}（元）,合同文号为{{item.No}}
+                            </span>
+                                <span class="info-val plan-years" v-else>
+                                {{item.date}},{{item.type}}{{Number(item.money)}}（元）,合同文号为{{item.No}}
+                            </span>
+                            </div>
+                            <span class="info-val plan-years">累计增加金额为：{{totalContractAdd}}（元）</span>
+                            <span class="info-val plan-years">累计减少金额为：{{totalContractCut}}（元）</span>
+                            <span class="info-val plan-years">合同总金额变为：{{totalContractMoney}}（元）</span>
                         </div>
                     </div>
                 </div>
@@ -302,7 +344,7 @@
                                 <div class="inline-block font18 width-per45 ver-text-top margin-t-15 margin-r">
                                     <div class="clearFix">
                                         <span class="info-label">合同金额：</span>
-                                        <span class="info-val">{{item.triMoney}}(万元）</span>
+                                        <span class="info-val">{{item.triMoney}}(元）</span>
                                     </div>
                                 </div>
                             </div>
@@ -350,7 +392,7 @@
                                 <div class="inline-block font18 width-per45 ver-text-top margin-t-15 margin-r">
                                     <div class="clearFix">
                                         <span class="info-label">合同金额：</span>
-                                        <span class="info-val">{{item.triMoney}}(万元）</span>
+                                        <span class="info-val">{{item.triMoney}}(元）</span>
                                     </div>
                                 </div>
                             </div>
@@ -400,7 +442,7 @@
                     <div class="inline-block font18 width-per45 ver-text-top margin-t-15 margin-r">
                         <div class="clearFix">
                             <span class="info-label">最终金额：</span>
-                            <span class="info-val" v-if="projectDetail.finishMoney">{{projectDetail.finishMoney}}(万元）</span>
+                            <span class="info-val" v-if="projectDetail.finishMoney">{{projectDetail.finishMoney}}(元）</span>
                         </div>
                     </div>
                 </div>

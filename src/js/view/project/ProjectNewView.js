@@ -46,7 +46,7 @@ export default {
                     {required: true, message: '请输入项目名称', trigger: 'blur'},
                 ],
                 projectMoney: [
-                    {required: true, message: '请输入投资估算总额', trigger: 'blur'},
+                    {required: true, message: '请输入投资估算总额', trigger: 'blur', validator:Utils.validateMoney},
                 ],
                 projectYears: [
                     {required: true, message: '请选择项目建设周期', trigger: 'change'},

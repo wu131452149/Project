@@ -98,7 +98,7 @@
                 <el-table-column show-overflow-tooltip prop="projectType" label="项目类型">
                     <template slot-scope="scope">{{scope.row.projectType}}</template>
                 </el-table-column>
-                <el-table-column show-overflow-tooltip prop="projectMoney" label="估算额(万元)"  width="80">
+                <el-table-column show-overflow-tooltip prop="projectMoney" label="估算额(元)"  width="80">
                     <template slot-scope="scope">{{scope.row.projectMoney}}</template>
                 </el-table-column>
                 <el-table-column show-overflow-tooltip prop="projectMoneyFrom" label="资金来源">
@@ -125,9 +125,10 @@
                 <el-table-column show-overflow-tooltip prop="approvalSuggestion" label="拨付审核意见">
                     <template slot-scope="scope">{{scope.row.approvalSuggestion|renderStatus}}</template>
                 </el-table-column>
-                <el-table-column label="操作" class="text-c" v-if="user.grade==1">
+                <el-table-column label="操作" class="text-c" v-if="user.grade==1" width="170">
                     <template slot-scope="scope">
                         <a @click.stop="editBudgetFinishTab($event,scope.row)" v-if="scope.row.stepSevenApp!=1">录入决算</a>
+                        <a @click.stop="editBudgetYearsMoney7($event,scope.row)" v-if="scope.row.projectPeriod">录入安排</a>
                         <a @click.stop="editBudgetAppMoneyTab7($event,scope.row)" v-if="scope.row.projectPeriod">录入拨付</a>
                     </template>
                 </el-table-column>
@@ -179,7 +180,7 @@
                     <el-form :model="editBudgetFinish" :rules="rules" class="width300" ref="editBudgetFinish">
                         <el-form-item label="最终金额">
                             <el-input placeholder="请输入最终金额" type="number" v-model="editBudgetFinish.finishMoney" maxlength="15">
-                                <template slot="append">万元</template>
+                                <template slot="append">元</template>
                             </el-input>
                         </el-form-item>
                     </el-form>
@@ -211,7 +212,7 @@
                         <el-form-item prop="money">
                             <el-input style="width: 100px;" placeholder="请输入金额" type="number"
                                       v-model="editAppropriateMoneyProject7.money" maxlength="15" required>
-                                <template slot="append">万元</template>
+                                <template slot="append">元</template>
                             </el-input>
                         </el-form-item>
                         <!--1年显示一次-->
@@ -220,6 +221,45 @@
                     <div class="demo-drawer__footer margin-t-25" style="text-align: center;">
                         <el-button @click="closeForm">取 消</el-button>
                         <el-button type="primary" @click="commitAppMoneyForm7" :loading="loading">{{ loading ? '提交中 ...' : '确定' }}
+                        </el-button>
+                    </div>
+                </div>
+
+                <!--录入安排信息-->
+                <div v-if="user.grade==1 && showAPEdit " class="padding-0-20">
+                    <span>预算安排</span>
+                    <el-form :model="editBudgetYearsPlan7" :rules="rules" class="width300" ref="editBudgetYearsPlan7">
+                        <!--1年显示一次-->
+                        <el-form-item prop="money">
+                            <el-select v-model="editBudgetYearsPlan7.years" placeholder="请选择年份">
+                                <el-option
+                                    v-for="item in options3"
+                                    :key="item.value"
+                                    :value="item.value">
+                                </el-option>
+                            </el-select>
+                            <!--2个选项-->
+                            <el-select
+                                v-model="editBudgetYearsPlan7.type"
+                                style="margin-left: 20px;"
+                                placeholder="请选择">
+                                <el-option
+                                    v-for="item in yearsOptionType"
+                                    :key="item.value"
+                                    :value="item.value">
+                                </el-option>
+                            </el-select>
+                            <!--累计县级预算安排总数 需小于等于预算评审金额-->
+                            <el-input placeholder="请输入金额" type="number" v-model="editBudgetYearsPlan7.money" maxlength="15">
+                                <template slot="append">元</template>
+                            </el-input>
+                        </el-form-item>
+                        <!--1年显示一次-->
+
+                    </el-form>
+                    <div class="demo-drawer__footer margin-t-25" style="text-align: center;">
+                        <el-button @click="closeForm">取 消</el-button>
+                        <el-button type="primary" @click="commitMoneyPlanForm7" :loading="loading">{{ loading ? '提交中 ...' : '确定' }}
                         </el-button>
                     </div>
                 </div>

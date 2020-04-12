@@ -24,6 +24,10 @@ export default {
             if (!self.editAppropriateMoneyProject7.type) {
                 return callback(new Error('请选择类型'));
             }
+            var reg = /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/;
+            if (!reg.test(value)){
+                return callback(new Error('金额不正确请重新输入'));
+            }
             setTimeout(() => {
                 //累计拨付小于累计安排，累计安排总数yearsPlanTotalMoneyNo，累计拨付总数approTotalPlanMoneyNo
                 if (!self.projectDetail.approTotalPlanMoneyNo) {
@@ -83,8 +87,10 @@ export default {
         return {
             activeNames: [],
             showBF:false,
+            showAP:false,
             showEdit: false,
             showBFEdit: false,
+            showAPEdit: false,
             drawerDetails: false,
             drawerCreate: false,
             direction: 'rtl',
@@ -113,6 +119,12 @@ export default {
                 type: "",
                 money: "",
             },
+            editBudgetYearsPlan7: {
+                years: "",
+                type: "",
+                money: "",
+            },
+            yearsOptionType: Utils.getOptionYears(),//如果有自筹金额了就不用显示自筹的修改了
             yearsPlanType: Utils.getOptionYears(),
             rules1: {
                 money: [
@@ -126,11 +138,11 @@ export default {
             IsNewMediaSessionLargeData: '',
             formLabelWidth: '80px',
             projectDetail: {},
-            options: [],
+            options3: [],
             changeType: Utils.getChangeType(),
             rules: {
                 finishMoney: [
-                    {required: true, message: '请输入金额', trigger: 'blur'},
+                    {required: true, message: '请输入金额', trigger: 'blur',validator:Utils.validateMoney},
                 ],
             },
             user: {},
@@ -352,6 +364,7 @@ export default {
             self.projectDetail = data;
             self.showEdit = false;
             self.showBFEdit = false;
+            self.showAPEdit = false;
             if(data.approvalSuggestion){
                 self.showBF = true;//审核的时候显示拨付
             }
@@ -365,16 +378,37 @@ export default {
             self.projectDetail = data;
             self.showEdit = true;
             self.showBFEdit = false;
+            self.showAPEdit = false;
         },
-        //录入拨付
+        //第7步录入拨付
         editBudgetAppMoneyTab7: function (e, data) {
             var self = this;
             //显示项目详情，并且显示预算信息
             self.drawerDetails = true;
             self.projectDetail = data;
             self.showEdit = false;
+            self.showAPEdit = false;
             self.showBFEdit = true;
             self.showBF = true;//审核的时候显示拨付
+        },
+        //第7步录入预算
+        editBudgetYearsMoney7: function (e, data) {
+            var self = this;
+            //显示项目详情，并且显示预算信息
+            self.drawerDetails = true;
+            self.projectDetail = data;
+            self.showEdit = false;
+            self.showBFEdit = false;
+            self.showAPEdit = true;
+            self.showAP = true;//审核的时候显示预算
+            var thisYears = Number(data.projectBeginTime.substring(0,4));
+            //显示当前年份
+            self.editOptionYears(data.projectYears,thisYears);
+        },
+        editOptionYears: function (data,thisYears) {
+            var self = this;
+            self.years = data;
+            self.options3 = Utils.editOptionYears(data,thisYears);
         },
         //提交预算拨付填写
         commitAppMoneyForm7: function () {
@@ -472,6 +506,92 @@ export default {
                                 message: error.message,
                                 type: 'error'
                             }),
+                        );
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
+        },
+        //提交安排
+        commitMoneyPlanForm7:function(){
+            var self = this;
+            self.$refs.editBudgetYearsPlan7.validate((valid) => {
+                if (valid) {
+                    let editBudgetData = _.cloneDeep(self.editBudgetYearsPlan7);
+                    //根据id来改变
+                    editBudgetData.id = self.projectDetail.id;
+                    //因为预算填写可以多次录入，所以步骤就不要了，也许已经在其他步骤了，
+                    //editBudgetData.step = 3;//新建的并且已经通过审核了的才能提交预算
+                    editBudgetData.trueStep = 3;
+                    editBudgetData.suggestion = 1;//第一步已经通过审核
+                    editBudgetData.stepThreeApp = 2;//将第二步设置为待审核
+                    editBudgetData.ifThreeEdit = 1;
+                    //保存原来的审核结果，传入后端，红点要不要+1,因为审核的时候是一起审核的，所以只要+1次即可
+                    editBudgetData.originalStepThreeApp = self.projectDetail.stepThreeApp;
+                    //如果是第一次录入的话红点就要+1
+                    if(!self.projectDetail.planYearsSelfMoney&&!self.projectDetail.planYearsMoney&&!self.projectDetail.planYearsTopMoney){
+                        editBudgetData.isFirstThreeEdit = true;
+                    }else{
+                        editBudgetData.isFirstThreeEdit = false;
+                    }
+                   if (editBudgetData.type == "县级预算安排") {
+                        //存入数据库
+                        var obj = {};
+                        //status是审核状态
+                        if(!self.projectDetail.planYearsMoney){//第一次录入县级预算安排
+                            obj = JSON.stringify([{years: editBudgetData.years, money: editBudgetData.money,status:2}]);
+                        }else{
+                            var newObj = JSON.parse(self.projectDetail.planYearsMoney);//先解成数组；
+                            newObj.push({years: editBudgetData.years, money: Number(editBudgetData.money),status:2});
+                            obj = JSON.stringify(newObj);
+                        }
+                        //var obj = self.initObj(self.projectDetail.planYearsMoney, editBudgetData);
+                        self.projectDetail.planYearsMoney = obj;
+                        editBudgetData.planYearsMoney = obj;
+                    } else if (editBudgetData.type == "上级专款") {
+                        var obj = {};
+                        //status是审核状态
+                        if(!self.projectDetail.planYearsTopMoney){//第一次录入县级预算安排
+                            obj = JSON.stringify([{years: editBudgetData.years, money: editBudgetData.money,status:2}]);
+                        }else{
+                            var newObj = JSON.parse(self.projectDetail.planYearsTopMoney);//先解成数组；
+                            newObj.push({years: editBudgetData.years, money: Number(editBudgetData.money),status:2});
+                            obj = JSON.stringify(newObj);
+                        }
+                        self.projectDetail.planYearsTopMoney = obj;
+                        editBudgetData.planYearsTopMoney = obj;
+                    }
+                    delete editBudgetData.years;
+                    delete editBudgetData.type;
+                    delete editBudgetData.money;
+                    editBudgetData.projectFinance = self.projectDetail.projectFinance;//传入后台取newproject表里面+1
+                    self.$http.post('/api/project/updateProject', editBudgetData).then(res => {
+                        let status = res.status;
+                        let statusText = res.statusText;
+                        if (status !== 200) {
+                            self.$message({
+                                message: statusText,
+                                type: 'error'
+                            });
+                        } else {
+                            if (res.data.length != 0) {
+                                //插入预算表
+                                self.saveBudget();
+                            } else {
+                                self.$message({
+                                    message: "提交失败",
+                                    type: 'warning'
+                                });
+                            }
+                        }
+                    })
+                        .catch(error =>
+                                self.$message({
+                                    message: error.message,
+                                    type: 'error'
+                                }),
+                            self.logining = false
                         );
                 } else {
                     console.log('error submit!!');

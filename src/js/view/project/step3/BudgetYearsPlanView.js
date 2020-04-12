@@ -18,6 +18,10 @@ export default {
             if (!value) {
                 return callback(new Error('请输入金额'));
             }
+            var reg = /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/;
+            if (!reg.test(value)){
+                return callback(new Error('金额不正确请重新输入'));
+            }
             setTimeout(() => {
                 //累计县级预算合计小于预算评审金额总数
                 if (self.projectDetail.planYearsMoney || self.projectDetail.planYearsTopMoney) {
@@ -41,7 +45,7 @@ export default {
                     // console.log(total);
                 }
                 if (total > self.projectDetail.budgetReviewMoney) {
-                    callback(new Error('累计县级预算合计必须小于等于预算或合同金额总数'));
+                    callback(new Error('累计县级预算合计必须小于等于预算评审金额总数'));
                 } else {
                     callback();
                 }
@@ -222,22 +226,7 @@ export default {
         editOptionYears: function (data,thisYears) {
             var self = this;
             self.years = data;
-            var thisYears = Number(thisYears);
-            var nextYears = thisYears + 1;
-            var nextYearsA = thisYears + 2;
-            if (self.years == 1) {
-                self.options = [{name: thisYears + "年度", value: thisYears + "年度"}];
-            } else if (self.years == 2) {
-                self.options = [{name: thisYears + "年度", value: thisYears + "年度"}, {
-                    name: nextYears + "年度",
-                    value: nextYears + "年度"
-                }];
-            } else if (self.years == 3) {
-                self.options = [{name: thisYears + "年度", value: thisYears + "年度"}, {
-                    name: nextYears + "年度",
-                    value: nextYears + "年度"
-                }, {name: nextYearsA+ "年度", value: nextYearsA+ "年度"}];
-            }
+            self.options = Utils.editOptionYears(data,thisYears);
         },
         //查询在建项目年度预算评审
         //可以多次录入，审核通过也可以查询

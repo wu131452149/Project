@@ -17,6 +17,39 @@ export default {
         }
         return data;
     },
+    validateMoney:function(rule, money, callback){
+        if (!money) {
+            return callback(new Error('请输入金额'));
+        }
+        var reg = /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/;
+        if (!reg.test(money)){
+            return callback(new Error('金额不正确请重新输入'));
+        }else{
+            return callback();
+        }
+
+    },
+    editOptionYears: function (data,thisYears) {
+        var years = data;
+        var thisYears = Number(thisYears);
+        var nextYears = thisYears + 1;
+        var nextYearsA = thisYears + 2;
+        var options = [];
+        if (years == 1) {
+            options = [{name: thisYears + "年度", value: thisYears + "年度"}];
+        } else if (years == 2) {
+            options = [{name: thisYears + "年度", value: thisYears + "年度"}, {
+                name: nextYears + "年度",
+                value: nextYears + "年度"
+            }];
+        } else if (years == 3) {
+            options = [{name: thisYears + "年度", value: thisYears + "年度"}, {
+                name: nextYears + "年度",
+                value: nextYears + "年度"
+            }, {name: nextYearsA+ "年度", value: nextYearsA+ "年度"}];
+        }
+        return options;
+    },
     initLevelOne: function (list) {
         if (list.length > 0) {
             var obj = {};

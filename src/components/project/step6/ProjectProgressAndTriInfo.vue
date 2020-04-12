@@ -114,7 +114,7 @@
                 <el-table-column show-overflow-tooltip prop="projectType" label="项目类型">
                     <template slot-scope="scope">{{scope.row.projectType}}</template>
                 </el-table-column>
-                <el-table-column show-overflow-tooltip prop="projectMoney" label="估算额(万元)" width="80">
+                <el-table-column show-overflow-tooltip prop="projectMoney" label="估算额(元)" width="80">
                     <template slot-scope="scope">{{scope.row.projectMoney}}</template>
                 </el-table-column>
                 <el-table-column show-overflow-tooltip prop="projectMoneyFrom" label="资金来源">
@@ -214,7 +214,7 @@
                             </el-form-item>
                             <el-form-item label="合同金额" prop="triMoney"  class="padding-10">
                                 <el-input placeholder="请输入金额" v-model="TriInfo.triMoney" type="number" maxlength="15">
-                                    <template slot="append">万元</template>
+                                    <template slot="append">元</template>
                                 </el-input>
                             </el-form-item>
                             <el-form-item label="负责人" prop="triUserName"  class="padding-10">

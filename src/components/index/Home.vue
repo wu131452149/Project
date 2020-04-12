@@ -128,7 +128,7 @@
                                     </div>
                                     <div class="text item">
                                         <div>
-                                            <span>{{ allBudgetReviewMoney.projectMoney}}(万元）</span>
+                                            <span>{{ allBudgetReviewMoney.projectMoney}}(元）</span>
                                         </div>
                                     </div>
                                 </el-card>
@@ -136,11 +136,11 @@
                             <div class="el-col el-col-4">
                                 <el-card class="box-card">
                                     <div slot="header" class="clearfix">
-                                        <span>预算或合同金额</span>
+                                        <span>预算评审金额</span>
                                     </div>
                                     <div class="text item">
                                         <div>
-                                            <span>{{ allBudgetReviewMoney.budgetReviewMoney}}(万元）</span>
+                                            <span>{{ allBudgetReviewMoney.budgetReviewMoney}}(元）</span>
                                         </div>
                                     </div>
                                 </el-card>
@@ -152,7 +152,7 @@
                                     </div>
                                     <div class="text item">
                                         <div>
-                                            <span>{{ allBudgetPlanMoney.money}}(万元）</span>
+                                            <span>{{ allBudgetPlanMoney.money}}(元）</span>
                                         </div>
                                     </div>
                                 </el-card>
@@ -164,7 +164,7 @@
                                     </div>
                                     <div class="text item">
                                         <div>
-                                            <span>{{ allAppropriateMoney.money}}(万元）</span>
+                                            <span>{{ allAppropriateMoney.money}}(元）</span>
                                         </div>
                                     </div>
                                 </el-card>
@@ -176,7 +176,7 @@
                                     </div>
                                     <div class="text item">
                                         <div>
-                                            <span>{{ allBudgetReviewMoney.nonPaymentTotalMoneyNo}}(万元）</span>
+                                            <span>{{ allBudgetReviewMoney.nonPaymentTotalMoneyNo}}(元）</span>
                                         </div>
                                     </div>
                                 </el-card>
@@ -298,7 +298,7 @@
                         <el-table-column show-overflow-tooltip prop="projectType" label="项目类型">
                             <template slot-scope="scope">{{scope.row.projectType}}</template>
                         </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="projectMoney" label="项目估算总额（万元）" width="80">
+                        <el-table-column show-overflow-tooltip prop="projectMoney" label="项目估算总额（元）" width="80">
                             <template slot-scope="scope">
                                 <span>{{scope.row.projectMoney}}</span>
                             </template>
@@ -308,60 +308,65 @@
                                 <span>{{scope.row.projectYears}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="budgetReviewMoney" label="预算或合同金额（万元）" width="80">
+                        <el-table-column show-overflow-tooltip prop="budgetReviewMoney" label="预算评审金额（元）" width="80">
                             <template slot-scope="scope">
                                 <span>{{scope.row.budgetReviewMoney}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="finishMoney" label="最终金额（万元）" width="80">
+                        <el-table-column show-overflow-tooltip prop="contractMoney" label="合同金额（元）" width="80">
+                            <template slot-scope="scope">
+                                <span>{{scope.row.contractMoney}}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column show-overflow-tooltip prop="finishMoney" label="最终金额（元）" width="80">
                             <template slot-scope="scope">
                                 <span>{{scope.row.finishMoney}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="yearsPlanTotalMoneyNo" label="合计安排（万元）" width="80">
+                        <el-table-column show-overflow-tooltip prop="yearsPlanTotalMoneyNo" label="合计安排（元）" width="80">
                             <template slot-scope="scope">
                                 <span>{{scope.row.yearsPlanTotalMoneyNo}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="yearsPlanTotalMoney" label="以前年度累计安排（万元）"
+                        <el-table-column show-overflow-tooltip prop="yearsPlanTotalMoney" label="以前年度累计安排（元）"
                                          width="80">
                             <template slot-scope="scope">
                                 <span>{{scope.row.beforeYearPlanMoney}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="yearsPlanTotalMoney" label="当年安排（万元）" width="80">
+                        <el-table-column show-overflow-tooltip prop="yearsPlanTotalMoney" label="当年安排（元）" width="80">
                             <template slot-scope="scope">
                                 <span>{{scope.row.thisYearPlanMoney}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="yearsPlanTotalMoney" label="次年安排（万元）" width="80">
+                        <el-table-column show-overflow-tooltip prop="yearsPlanTotalMoney" label="次年安排（元）" width="80">
                             <template slot-scope="scope">
                                 <span>{{scope.row.nextYearPlanMoney}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="yearsPlanTotalMoney" label="第三年安排（万元）" width="80">
+                        <el-table-column show-overflow-tooltip prop="yearsPlanTotalMoney" label="第三年安排（元）" width="80">
                             <template slot-scope="scope">
                                 <span>{{scope.row.nextAYearPlanMoney}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="approTotalMoney" label="资金当年拨付（万元）" width="80">
+                        <el-table-column show-overflow-tooltip prop="approTotalMoney" label="资金当年拨付（元）" width="80">
                             <template slot-scope="scope">
                                 <span>{{scope.row.thisYearGiveMoney}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="approTotalPlanMoneyNo" label="资金累计拨付（万元）"
+                        <el-table-column show-overflow-tooltip prop="approTotalPlanMoneyNo" label="资金累计拨付（元）"
                                          width="80">
                             <template slot-scope="scope">
                                 <span>{{scope.row.approTotalPlanMoneyNo}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="nonPaymentTotalMoneyNo" label="已安排未拨付（万元）"
-                                         width="80">
-                            <template slot-scope="scope">
-                                <span>{{scope.row.nonPaymentTotalMoneyNo}}</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column show-overflow-tooltip prop="nonPaymentTotalMoneyNo" label="总欠付（万元）"
+                        <!--<el-table-column show-overflow-tooltip prop="nonPaymentTotalMoneyNo" label="已安排未拨付（元）"-->
+                                         <!--width="80">-->
+                            <!--<template slot-scope="scope">-->
+                                <!--<span>{{scope.row.nonPaymentTotalMoneyNo}}</span>-->
+                            <!--</template>-->
+                        <!--</el-table-column>-->
+                        <el-table-column show-overflow-tooltip prop="nonPaymentTotalMoneyNo" label="总欠付（元）"
                                          width="80">
                             <template slot-scope="scope">
                                 <span>{{scope.row.totalNoPay}}</span>
@@ -413,7 +418,7 @@
                     custom-class="demo-drawer"
                     size=66%
                     :before-close="handleClose">
-                    <div class="scrollBar-inner" style="height: 500px;">
+                    <div class="scrollBar-inner">
                         <show-project-Detail @onListen="handleClose"
                                              :projectDetail="projectDetail"
                                              :step="7"

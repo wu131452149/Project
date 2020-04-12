@@ -107,7 +107,7 @@
                 <el-table-column show-overflow-tooltip prop="projectType" label="项目类型">
                     <template slot-scope="scope">{{scope.row.projectType}}</template>
                 </el-table-column>
-                <el-table-column show-overflow-tooltip prop="projectMoney" label="估算额(万元)" width="80">
+                <el-table-column show-overflow-tooltip prop="projectMoney" label="估算额(元)" width="80">
                     <template slot-scope="scope">{{scope.row.projectMoney}}</template>
                 </el-table-column>
                 <el-table-column show-overflow-tooltip prop="projectMoneyFrom" label="资金来源">
@@ -200,7 +200,7 @@
                         <el-form-item prop="money">
                             <el-input style="width: 100px;" placeholder="请输入金额" type="number"
                                       v-model="editAppropriateMoneyProject.money" maxlength="15" required>
-                                <template slot="append">万元</template>
+                                <template slot="append">元</template>
                             </el-input>
                         </el-form-item>
                         <!--1年显示一次-->

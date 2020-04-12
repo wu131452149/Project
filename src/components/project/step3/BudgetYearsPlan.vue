@@ -98,7 +98,7 @@
                 <el-table-column show-overflow-tooltip prop="projectType" label="项目类型">
                     <template slot-scope="scope">{{scope.row.projectType}}</template>
                 </el-table-column>
-                <el-table-column show-overflow-tooltip prop="projectMoney" label="估算额(万元)" width="80">
+                <el-table-column show-overflow-tooltip prop="projectMoney" label="估算额(元)" width="80">
                     <template slot-scope="scope">{{scope.row.projectMoney}}</template>
                 </el-table-column>
                 <el-table-column show-overflow-tooltip prop="projectMoneyFrom" label="资金来源">
@@ -206,7 +206,7 @@
                             </el-select>
                             <!--累计县级预算安排总数 需小于等于预算评审金额-->
                             <el-input placeholder="请输入金额" type="number" v-model="editBudgetYearsPlan.money" maxlength="15">
-                                <template slot="append">万元</template>
+                                <template slot="append">元</template>
                             </el-input>
                         </el-form-item>
                         <!--1年显示一次-->

@@ -36,7 +36,7 @@
             </el-form-item>
             <el-form-item label="投资估算总额" prop="projectMoney">
                 <el-input placeholder="请输入投资估算总额" type="number" v-model="createProject.projectMoney" maxlength="15">
-                    <template slot="append">万元</template>
+                    <template slot="append">元</template>
                 </el-input>
             </el-form-item>
             <el-form-item label="资金来源">

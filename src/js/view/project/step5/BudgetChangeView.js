@@ -41,7 +41,10 @@ export default {
             editBudgetChange: {
                 type: "",
                 money: "",
-                approvalChangeNo: ""
+                approvalChangeNo: "",
+                type1: "",
+                money1: "",
+                changeContractNo: ""
             },
             options: [],
             levelOneList:[],
@@ -50,11 +53,14 @@ export default {
             changeType: Utils.getChangeType(),
             rules: {
                 money: [
-                    {required: true, message: '请输入金额', trigger: 'blur'},
+                    {required: true, message: '请输入金额', trigger: 'blur',validator:Utils.validateMoney},
                 ],
-                approvalChangeNo:[
-                    {required: true, message: '请输入评审文号', trigger: 'blur'},
-                ]
+                money1: [
+                    {required: true, message: '请输入金额', trigger: 'blur',validator:Utils.validateMoney},
+                ],
+                // approvalChangeNo:[
+                //     {required: true, message: '请输入评审文号', trigger: 'blur'},
+                // ]
             },
             user: {},
             showButton: true,
@@ -302,11 +308,12 @@ export default {
                     //保存原来的审核结果，传入后端，红点要不要+1,因为审核的时候是一起审核的，所以只要+1次即可
                     editBudgetData.originalStepFiveApp = self.projectDetail.stepFiveApp;
                     //第一次录入第五步判断
-                    if(!self.projectDetail.addBudget&&!self.projectDetail.cutBudget){
+                    if(!self.projectDetail.addBudget&&!self.projectDetail.cutBudget&&!self.projectDetail.addContractBudget&&!self.projectDetail.cutContractBudget){
                         editBudgetData.isFirstFiveEdit = true;
                     }else{
                         editBudgetData.isFirstFiveEdit = false;
                     }
+                    //预算金额
                     if (editBudgetData.type == "增加") {
                         //editBudgetData.addBudget = editBudgetData.money;
                         var obj = self.initObj(self.projectDetail.addBudget, editBudgetData);
@@ -320,9 +327,26 @@ export default {
                         self.projectDetail.cutBudget = newObj;
                         editBudgetData.cutBudget = newObj;
                     }
+                    //合同金额
+                    if (editBudgetData.type1 == "增加") {
+                        //editBudgetData.addBudget = editBudgetData.money;
+                        var obj = self.initObj1(self.projectDetail.addContractBudget, editBudgetData);
+                        var newObj = JSON.stringify(obj);
+                        self.projectDetail.addContractBudget = newObj;
+                        editBudgetData.addContractBudget = newObj;
+                    } else {
+                        //editBudgetData.cutBudget = editBudgetData.money;
+                        var obj = self.initObj1(self.projectDetail.cutContractBudget, editBudgetData);
+                        var newObj = JSON.stringify(obj);
+                        self.projectDetail.cutContractBudget = newObj;
+                        editBudgetData.cutContractBudget = newObj;
+                    }
                     delete editBudgetData.money;
                     delete editBudgetData.type;
                     delete editBudgetData.approvalChangeNo;
+                    delete editBudgetData.money1;
+                    delete editBudgetData.type1;
+                    delete editBudgetData.changeContractNo;
                     //存入数据库
                     editBudgetData.projectFinance = self.projectDetail.projectFinance;//传入后台取newproject表里面+1
                     self.$http.post('/api/project/updateProject', editBudgetData).then(res => {
@@ -378,6 +402,24 @@ export default {
                 //}
             } else {
                 returnObj = [{date: date, money: editBudgetData.money, type: editBudgetData.type,No:editBudgetData.approvalChangeNo,status:2}];
+            }
+            return returnObj;
+        },
+        initObj1: function (oldObj, editBudgetData) {
+            var returnObj;
+            var date = Utils.format(new Date());
+            if (oldObj) {
+                returnObj = JSON.parse(oldObj);
+                //因为要更改评审号，所以都是不同的
+                // var index = _.findIndex(returnObj, { 'date': date, 'type': editBudgetData.type });
+                // if (index > -1) {
+                //     returnObj[index].money = parseInt(returnObj[index].money) + parseInt(editBudgetData.money);
+                // } else {
+                var newObj = {date: date, money: editBudgetData.money1, type: editBudgetData.type1,No:editBudgetData.changeContractNo,status:2};
+                returnObj.push(newObj);
+                //}
+            } else {
+                returnObj = [{date: date, money: editBudgetData.money1, type: editBudgetData.type1,No:editBudgetData.changeContractNo,status:2}];
             }
             return returnObj;
         },

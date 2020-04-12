@@ -100,7 +100,7 @@
                 <el-table-column show-overflow-tooltip prop="projectType" label="项目类型">
                     <template slot-scope="scope">{{scope.row.projectType}}</template>
                 </el-table-column>
-                <el-table-column show-overflow-tooltip prop="projectMoney" label="估算额(万元)" width="80">
+                <el-table-column show-overflow-tooltip prop="projectMoney" label="估算额(元)" width="80">
                     <template slot-scope="scope">{{scope.row.projectMoney}}</template>
                 </el-table-column>
                 <el-table-column show-overflow-tooltip prop="projectMoneyFrom" label="资金来源">
@@ -180,13 +180,21 @@
                                           :value="item.value"></el-radio>
                             </el-radio-group>
                         </el-form-item>
-                        <el-form-item label="预算或合同金额" prop="budgetReviewMoney">
-                            <el-input placeholder="请输入预算或合同金额"  type="number" v-model="editBudgetPlan.budgetReviewMoney" maxlength="15">
-                                <template slot="append">万元</template>
+                        <el-form-item label="预算评审金额" prop="budgetReviewMoney">
+                            <el-input placeholder="请输入预算评审金额"  type="number" v-model="editBudgetPlan.budgetReviewMoney" maxlength="15">
+                                <template slot="append">元</template>
                             </el-input>
                         </el-form-item>
-                        <el-form-item label="文号" placeholder="请输入文号">
+                        <el-form-item label="评审文号" placeholder="请输入评审文号">
                             <el-input v-model="editBudgetPlan.approvalNumber" autocomplete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="合同金额" placeholder="请输入合同金额" prop="contractMoney">
+                            <el-input placeholder="请输入合同金额"  type="number" v-model="editBudgetPlan.contractMoney" maxlength="15">
+                                <template slot="append">元</template>
+                            </el-input>
+                        </el-form-item>
+                        <el-form-item label="合同文号" placeholder="请输入合同文号">
+                            <el-input v-model="editBudgetPlan.contractNumber" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item label="国有资产审批登记">
                             <el-radio-group v-model="editBudgetPlan.stateOwnedRegistration">
