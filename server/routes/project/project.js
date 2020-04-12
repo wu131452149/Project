@@ -265,6 +265,9 @@ router.post('/updateProject', function (req, res, next) {
     var originalStepSevenApp = param.originalStepSevenApp;
     delete param.originalStepSevenApp;
     //拨付的审核相当于第8步吧
+    if (param.yearsPlanSuggestion) {
+        var yearsPlanSuggestion = param.yearsPlanSuggestion;
+    }
     if (param.approvalSuggestion) {
         var approvalSuggestion = param.approvalSuggestion;
     }
@@ -349,6 +352,9 @@ router.post('/updateProject', function (req, res, next) {
                             } else {
                                 if (originalStepSevenApp != 2) {//如果之前就是审核状态就不用再加1了，这样就不用红点重复加
                                     if (approvalSuggestion != 2) {
+                                        data.stepSeven = data.stepSeven + 1;
+                                    }
+                                    if (yearsPlanSuggestion != 2) {
                                         data.stepSeven = data.stepSeven + 1;
                                     }
                                 }
@@ -589,8 +595,8 @@ router.post('/queryProject', function (req, res, next) {
     }
     if (suggestion) {
         if(step == 7){
-            if(param.approvalSuggestion){
-                whereSql = whereSql + " and (" + suggestionStep + " not in ( " + suggestion + ") or approvalSuggestion not in (1) )";
+            if(param.approvalSuggestion||param.yearsPlanSuggestion){
+                whereSql = whereSql + " and (" + suggestionStep + " not in ( " + suggestion + ") or approvalSuggestion not in (1) or yearsPlanSuggestion not in (1))";
             }else{
                 whereSql = whereSql + " and " + suggestionStep + " not in ( " + suggestion + ")";
             }
@@ -742,8 +748,8 @@ router.post('/queryProjectCount', function (req, res, next) {
     if (suggestion) {
 
         if(step == 7){
-            if(param.approvalSuggestion){
-                whereSql = whereSql + " and (" + suggestionStep + " not in ( " + suggestion + ") or approvalSuggestion not in (1) )";
+            if(param.approvalSuggestion||param.yearsPlanSuggestion){
+                whereSql = whereSql + " and (" + suggestionStep + " not in ( " + suggestion + ") or approvalSuggestion not in (1) or yearsPlanSuggestion not in (1))";
             }else{
                 whereSql = whereSql + " and " + suggestionStep + " not in ( " + suggestion + ")";
             }

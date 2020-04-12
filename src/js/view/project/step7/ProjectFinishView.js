@@ -84,6 +84,45 @@ export default {
 
             }, 1000);
         };
+        //预算填写
+        var checkMoney1 = (rule, value, callback) => {
+            var self = this;
+            if (!value) {
+                return callback(new Error('请输入金额'));
+            }
+            var reg = /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/;
+            if (!reg.test(value)){
+                return callback(new Error('金额不正确请重新输入'));
+            }
+            setTimeout(() => {
+                //累计县级预算合计小于预算评审金额总数
+                if (self.projectDetail.planYearsMoney || self.projectDetail.planYearsTopMoney) {
+                    if (self.projectDetail.planYearsMoney) {
+                        var planYearsMoney = JSON.parse(self.projectDetail.planYearsMoney);
+                        var total1 = 0;
+                        for (var x = 0; x < planYearsMoney.length; x++) {
+                            total1 = total1 + Number(planYearsMoney[x].money);
+                        }
+                    }
+                    if (self.projectDetail.planYearsTopMoney) {
+                        var total2 = 0;
+                        var planYearsTopMoney = JSON.parse(self.projectDetail.planYearsTopMoney);
+                        for (var y = 0; y < planYearsTopMoney.length; y++) {
+                            total2 = total2 + Number(planYearsTopMoney[y].money);
+                        }
+                    }
+                    var total = total1 + total2 + Number(value);
+                    // console.log(total1);
+                    // console.log(total2);
+                    // console.log(total);
+                }
+                if (total > self.projectDetail.budgetReviewMoney) {
+                    callback(new Error('累计县级预算合计必须小于等于预算评审金额总数'));
+                } else {
+                    callback();
+                }
+            }, 1000);
+        };
         return {
             activeNames: [],
             showBF:false,
@@ -129,6 +168,14 @@ export default {
             rules1: {
                 money: [
                     {required: true, trigger: 'blur', validator: checkMoney},
+                ],
+                type: [
+                    {required: true, message: '请选择拨付类型', trigger: 'change'},
+                ],
+            },
+            rules2: {
+                money: [
+                    {required: true, trigger: 'blur', validator: checkMoney1},
                 ],
                 type: [
                     {required: true, message: '请选择拨付类型', trigger: 'change'},
@@ -242,6 +289,7 @@ export default {
                 data.ifEdit = 1;
                 data.grade = 2;
                 data.approvalSuggestion = 1;//查询那些要审批的
+                data.yearsPlanSuggestion = 1;//查询那些要审批的
             }
             self.$http.post('/api/project/queryProject', data).then(res => {
                 let status = res.status;
@@ -367,6 +415,9 @@ export default {
             self.showAPEdit = false;
             if(data.approvalSuggestion){
                 self.showBF = true;//审核的时候显示拨付
+            }
+            if(data.yearsPlanSuggestion){
+                self.showAP = true;//审核的时候显示拨付
             }
             self.activeNames = ['1', '2', '3', '4', '5', '6','7'];
         },
@@ -522,28 +573,27 @@ export default {
                     //根据id来改变
                     editBudgetData.id = self.projectDetail.id;
                     //因为预算填写可以多次录入，所以步骤就不要了，也许已经在其他步骤了，
-                    //editBudgetData.step = 3;//新建的并且已经通过审核了的才能提交预算
-                    editBudgetData.trueStep = 3;
-                    editBudgetData.suggestion = 1;//第一步已经通过审核
-                    editBudgetData.stepThreeApp = 2;//将第二步设置为待审核
-                    editBudgetData.ifThreeEdit = 1;
+                    editBudgetData.step = 7;//第7步可以拨付
+                    editBudgetData.yearsPlanSuggestion = 2;//设置为待审核
+                    editBudgetData.ifEdit = 1;
+                    editBudgetData.projectPlanPeriod = Number(self.projectDetail.projectPlanPeriod) + 1;//
                     //保存原来的审核结果，传入后端，红点要不要+1,因为审核的时候是一起审核的，所以只要+1次即可
-                    editBudgetData.originalStepThreeApp = self.projectDetail.stepThreeApp;
-                    //如果是第一次录入的话红点就要+1
-                    if(!self.projectDetail.planYearsSelfMoney&&!self.projectDetail.planYearsMoney&&!self.projectDetail.planYearsTopMoney){
-                        editBudgetData.isFirstThreeEdit = true;
-                    }else{
-                        editBudgetData.isFirstThreeEdit = false;
+                    editBudgetData.originalStepSevenApp = self.projectDetail.stepSevenApp;
+                    //在第7步的时候红点+1
+                    if (self.projectDetail.projectPlanPeriod == 7) {
+                        editBudgetData.isFirstSevenEdit = true;
+                    } else {
+                        editBudgetData.isFirstSevenEdit = false;
                     }
                    if (editBudgetData.type == "县级预算安排") {
                         //存入数据库
                         var obj = {};
                         //status是审核状态
                         if(!self.projectDetail.planYearsMoney){//第一次录入县级预算安排
-                            obj = JSON.stringify([{years: editBudgetData.years, money: editBudgetData.money,status:2}]);
+                            obj = JSON.stringify([{years: editBudgetData.years, money: editBudgetData.money,status:2,step:7}]);
                         }else{
                             var newObj = JSON.parse(self.projectDetail.planYearsMoney);//先解成数组；
-                            newObj.push({years: editBudgetData.years, money: Number(editBudgetData.money),status:2});
+                            newObj.push({years: editBudgetData.years, money: Number(editBudgetData.money),status:2,step:7});
                             obj = JSON.stringify(newObj);
                         }
                         //var obj = self.initObj(self.projectDetail.planYearsMoney, editBudgetData);
@@ -553,10 +603,10 @@ export default {
                         var obj = {};
                         //status是审核状态
                         if(!self.projectDetail.planYearsTopMoney){//第一次录入县级预算安排
-                            obj = JSON.stringify([{years: editBudgetData.years, money: editBudgetData.money,status:2}]);
+                            obj = JSON.stringify([{years: editBudgetData.years, money: editBudgetData.money,status:2,step:7}]);
                         }else{
                             var newObj = JSON.parse(self.projectDetail.planYearsTopMoney);//先解成数组；
-                            newObj.push({years: editBudgetData.years, money: Number(editBudgetData.money),status:2});
+                            newObj.push({years: editBudgetData.years, money: Number(editBudgetData.money),status:2,step:7});
                             obj = JSON.stringify(newObj);
                         }
                         self.projectDetail.planYearsTopMoney = obj;
@@ -627,7 +677,7 @@ export default {
                             type: 'success'
                         });
                         //查询当前页数据
-                        self.clearProFormData();
+                        //self.clearProFormData();
                         self.closeForm();
                         self.queryFinishedProject(true);
                     } else {
@@ -643,6 +693,54 @@ export default {
                         message: error.message,
                         type: 'error'
                     }),
+                );
+        },
+        //保存年度预算
+        saveBudget: function () {
+            var self = this;
+            var editBudgetData = {
+                years: self.editBudgetYearsPlan7.years,
+                type: self.editBudgetYearsPlan7.type,
+                money: self.editBudgetYearsPlan7.money,
+                projectId: self.projectDetail.id,
+                userName: self.user.role,
+                createTime: Utils.formatDate(new Date()) + ".000",
+                appStatus:2,//待审核
+                role:self.projectDetail.projectFinance
+            };
+            self.$http.post('/api/project/addBudgetYearsPlan', editBudgetData).then(res => {
+                let status = res.status;
+                let statusText = res.statusText;
+                if (status !== 200) {
+                    self.$message({
+                        message: statusText,
+                        type: 'error'
+                    });
+                } else {
+                    if (res.data.length != 0) {
+                        self.$message({
+                            message: "提交成功",
+                            type: 'success'
+                        });
+                        //关闭当前页，并清空表格数据
+                        self.clearFormData();
+                        self.closeForm();
+                        //查询当前页数据
+                        self.queryFinishedProject(true);
+                    } else {
+                        self.$message({
+                            message: "提交失败",
+                            type: 'warning'
+                        });
+                    }
+                }
+            })
+                .catch(error =>
+                        self.$message({
+                            message: error.message,
+                            type: 'error'
+                        }),
+                    self.logining = false
                 );
         },
         //提交决算评审信息

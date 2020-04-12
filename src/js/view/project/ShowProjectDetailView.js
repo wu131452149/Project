@@ -8,7 +8,7 @@ import EventBus from "../../lib/event/EventBus";
 
 export default {
     name: "ShowProjectDetailView",
-    props: ["projectDetail", "step", "activeNames", "showEdit", "grade", "showButton", "showBF"],
+    props: ["projectDetail", "step", "activeNames", "showEdit", "grade", "showButton", "showBF","showAP"],
     data() {
         return {
             loading: false,
@@ -67,6 +67,8 @@ export default {
                         } else if (self.step == 7) {
                             if (self.showBF) {
                                 self.names = ['4'];
+                            } else if (self.showAP) {
+                                self.names = ['3'];
                             } else {
                                 self.names = ['7'];
                             }
@@ -308,6 +310,8 @@ export default {
             } else if (self.step == 7) {
                 if (self.showBF) {
                     self.approvalAppMoney();
+                } else if (self.showAP) {
+                    self.approvalBudgetYearsPlan();
                 } else {
                     self.approvalFinish();
                 }
@@ -431,14 +435,23 @@ export default {
             let self = this;
             let data = {};
             data.id = self.projectDetail.id;
-            if (self.projectDetail.approvalStep <= 3) {
-                data.approvalStep = 4;
+            if (self.showAP) {//第7步的审核
+                data.approvalStep = 7;
+                data.oldStep = 7;
+                data.yearsPlanSuggestion = 1;
+                data.projectPlanPeriod = 7;
+                data.projectPeriod = 7;
+                data.ifEdit = 0;
+            } else {
+                if (self.projectDetail.approvalStep <= 3) {
+                    data.approvalStep = 4;
+                }
+                data.oldStep = 3;
+                data.stepThreeApp = 1;
+                data.stepFourApp = 2;
+                data.oldSuggestion = 2;
+                data.ifThreeEdit = 0;
             }
-            data.oldStep = 3;
-            data.stepThreeApp = 1;
-            data.stepFourApp = 2;
-            data.oldSuggestion = 2;
-            data.ifThreeEdit = 0;
             data.projectFinance = self.user.role;
             //存入总字段
             var list1 = _.cloneDeep(self.projectDetail.planYearsMoneyList);
@@ -505,14 +518,22 @@ export default {
                             message: "审核成功",
                             type: 'success'
                         });
-                        var data = res.data.recordsets[0];
-                        if (data && data.stepThree == 0) {
-                            EventBus.$emit('hideThreeBadge');
+                        if (self.showAP) {//第7步的审核
+                            if (data && data.stepSeven == 0) {
+                                EventBus.$emit('hideMenuBadge', 'project_finish');
+                            }
+                            //关闭当前页，查询当前表格
+                            self.$emit('appStep7');
+                        } else {
+                            var data = res.data.recordsets[0];
+                            if (data && data.stepThree == 0) {
+                                EventBus.$emit('hideThreeBadge');
+                            }
+                            //去除在建库的小红点
+                            self.eventBusToDeleteRed(data);
+                            //关闭当前页，查询当前表格
+                            self.$emit('appStep3');
                         }
-                        //去除在建库的小红点
-                        self.eventBusToDeleteRed(data);
-                        //关闭当前页，查询当前表格
-                        self.$emit('appStep3');
                     } else {
                         self.$message({
                             message: "审核失败",
@@ -890,7 +911,7 @@ export default {
             data.oldSuggestion = 1;//第7步审核通过
             data.ifEdit = 0;
             data.projectFinance = self.user.role;
-            data.projectPeriod = 7;//把项目阶段设置为7，判断有这个变量之后就可以在完工之后录入拨付
+            data.projectPlanPeriod = 7;//把项目阶段设置为7，判断有这个变量之后就可以在完工之后录入安排
             data.totalNoPay = Number(Number(self.projectDetail.finishMoney) - Number(self.projectDetail.approTotalPlanMoneyNo));
             self.$http.post('/api/project/approvalProject', data).then(res => {
                 let status = res.status;
@@ -1148,6 +1169,62 @@ export default {
                     data.nonPaymentTotalMoneyNo = Number(self.projectDetail.yearsPlanTotalMoneyNo - data.approTotalPlanMoneyNo);
                     //计算总欠付：
                     data.totalNoPay = Number(Number(self.projectDetail.contractMoney) - data.approTotalPlanMoneyNo);
+                }else if (self.showAP) {
+                    //审核拨付不通过
+                    data.yearsPlanSuggestion = 0;
+                    data.projectPlanPeriod = 7;
+                    var redCount = 0;
+                    //删除未审核的数据
+                    for (var i = 0; i < self.projectDetail.planYearsMoneyList.length; i++) {
+                        if (self.projectDetail.planYearsMoneyList[i].status == 2) {
+                            redCount = redCount + 1;
+                            self.projectDetail.planYearsMoneyList.splice(i, 1);
+                        }
+                    }
+                    for (var i = 0; i < self.projectDetail.planYearsTopMoneyList.length; i++) {
+                        if (self.projectDetail.planYearsTopMoneyList[i].status == 2) {
+                            redCount = redCount + 1;
+                            self.projectDetail.planYearsTopMoneyList.splice(i, 1);
+                        }
+                    }
+                    var list1 = _.cloneDeep(self.projectDetail.planYearsMoneyList);
+                    var list2 = _.cloneDeep(self.projectDetail.planYearsTopMoneyList);
+                    var list = list1.concat(list2);
+                    var obj = self.mergeArr(list);
+                    var culObj = _.cloneDeep(obj);
+                    //计算当年累计安排，次年累计安排，第三年累计安排
+                    var thisYears = Number(self.projectDetail.projectBeginTime.substring(0, 4));
+                    var nextYears = thisYears + 1;
+                    var nextYearsA = thisYears + 2;
+                    var beforeYearPlanMoney = 0;
+                    for (var a = 0; a < culObj.length; a++) {
+                        var years = Number(culObj[a].years.substring(0, 4));
+                        if (years == thisYears) {//当年累计安排
+                            data.thisYearPlanMoney = Number(culObj[a].money);
+                        } else if (years == nextYears) {
+                            data.nextYearPlanMoney = Number(culObj[a].money);
+                        } else if (years == nextYearsA) {
+                            data.nextAYearPlanMoney = Number(culObj[a].money);
+                        } else if (years < thisYears) {
+                            beforeYearPlanMoney = beforeYearPlanMoney + Number(culObj[a].money);
+                        }
+                    }
+                    data.beforeYearPlanMoney = beforeYearPlanMoney;
+                    if (self.projectDetail.planYearsMoneyList.length > 0) {
+                        data.planYearsMoney = JSON.stringify(self.projectDetail.planYearsMoneyList);
+                    } else {
+                        data.planYearsMoney = "";
+                    }
+                    if (self.projectDetail.planYearsTopMoneyList.length > 0) {
+                        data.planYearsTopMoney = JSON.stringify(self.projectDetail.planYearsTopMoneyList);
+                    } else {
+                        data.planYearsTopMoney = "";
+                    }
+                    //计算合计累计安排
+                    data.yearsPlanTotalMoneyNo = Utils.countTotalPlanMoney(obj);
+                    //对象
+                    data.yearsPlanTotalMoney = JSON.stringify(obj);
+                    data.redCount = redCount;
                 } else {
                     data.oldSuggestion = self.projectDetail.stepSevenApp;
                     data.stepSevenApp = 0;

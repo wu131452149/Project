@@ -125,10 +125,13 @@
                 <el-table-column show-overflow-tooltip prop="approvalSuggestion" label="拨付审核意见">
                     <template slot-scope="scope">{{scope.row.approvalSuggestion|renderStatus}}</template>
                 </el-table-column>
-                <el-table-column label="操作" class="text-c" v-if="user.grade==1" width="170">
+                <el-table-column show-overflow-tooltip prop="yearsPlanSuggestion" label="安排审核意见">
+                    <template slot-scope="scope">{{scope.row.yearsPlanSuggestion|renderStatus}}</template>
+                </el-table-column>
+                <el-table-column label="操作" class="text-c" v-if="user.grade==1">
                     <template slot-scope="scope">
                         <a @click.stop="editBudgetFinishTab($event,scope.row)" v-if="scope.row.stepSevenApp!=1">录入决算</a>
-                        <a @click.stop="editBudgetYearsMoney7($event,scope.row)" v-if="scope.row.projectPeriod">录入安排</a>
+                        <a @click.stop="editBudgetYearsMoney7($event,scope.row)" v-if="scope.row.projectPlanPeriod&&!scope.row.projectPeriod">录入安排</a>
                         <a @click.stop="editBudgetAppMoneyTab7($event,scope.row)" v-if="scope.row.projectPeriod">录入拨付</a>
                     </template>
                 </el-table-column>
@@ -168,6 +171,7 @@
                                      :projectDetail="projectDetail"
                                      :step="7"
                                      :showBF="showBF"
+                                     :showAP="showAP"
                                      :showButton = "showButton"
                                      :activeNames="activeNames"
                                      :showEdit="showEdit"
@@ -228,7 +232,7 @@
                 <!--录入安排信息-->
                 <div v-if="user.grade==1 && showAPEdit " class="padding-0-20">
                     <span>预算安排</span>
-                    <el-form :model="editBudgetYearsPlan7" :rules="rules" class="width300" ref="editBudgetYearsPlan7">
+                    <el-form :model="editBudgetYearsPlan7" :rules="rules2" class="width300" ref="editBudgetYearsPlan7">
                         <!--1年显示一次-->
                         <el-form-item prop="money">
                             <el-select v-model="editBudgetYearsPlan7.years" placeholder="请选择年份">
