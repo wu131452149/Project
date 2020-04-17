@@ -723,7 +723,7 @@ export default {
                             type: 'success'
                         });
                         //关闭当前页，并清空表格数据
-                        self.clearFormData();
+                        //self.clearFormData();
                         self.closeForm();
                         //查询当前页数据
                         self.queryFinishedProject(true);

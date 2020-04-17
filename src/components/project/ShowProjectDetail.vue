@@ -98,7 +98,7 @@
                 </div>
             </el-collapse-item>
             <!--项目预算 start-->
-            <el-collapse-item name="2" v-if="projectDetail.approvalNumber">
+            <el-collapse-item name="2" v-if="projectDetail.gvApproval">
                 <template slot="title">
                     <div class="f-l line-height-30 excessEllipsis  width-per100">
                         <span class="font20 bold">项目预算评审</span></div>
@@ -251,12 +251,12 @@
             </el-collapse-item>
             <!--预算拨付 end-->
             <!--预算变更 start-->
-            <el-collapse-item name="5" v-if="projectDetail.cutBudget||projectDetail.addBudget">
+            <el-collapse-item name="5" v-if="projectDetail.cutBudget||projectDetail.addBudget||projectDetail.addContractBudget||projectDetail.cutContractBudget">
                 <template slot="title">
                     <div class="f-l line-height-30 excessEllipsis  width-per100">
                         <span class="font20 bold">预算变更</span></div>
                 </template>
-                <div class="info-content scrollBar-inner width-per100 margin-t10 padding-0-20">
+                <div class="info-content scrollBar-inner width-per100 margin-t10 padding-0-20"  v-if="projectDetail.cutBudget||projectDetail.addBudget">
                     <div class="inline-block font18 ver-text-top margin-t-15 margin-r">
                         <div class="clearFix">
                             <span class="info-label">预算变更：</span>
@@ -276,9 +276,9 @@
                                 {{item.date}},{{item.type}}{{Number(item.money)}}（元）,评审文号为{{item.No}}
                             </span>
                             </div>
-                            <span class="info-val plan-years">累计增加金额为：{{totalAdd}}（元）</span>
-                            <span class="info-val plan-years">累计减少金额为：{{totalCut}}（元）</span>
-                            <span class="info-val plan-years">预算总金额变为：{{totalMoney}}（元）</span>
+                            <span class="info-val plan-years" v-if="totalAdd!=0">累计增加金额为：{{totalAdd}}（元）</span>
+                            <span class="info-val plan-years" v-if="totalCut!=0">累计减少金额为：{{totalCut}}（元）</span>
+                            <span class="info-val plan-years" v-if="totalMoney!=0">预算总金额变为：{{totalMoney}}（元）</span>
                             <!--<span class="info-val" v-if="projectDetail.cutBudget">减少{{projectDetail.cutBudget}}元</span>-->
                             <!--<span class="info-val" v-if="projectDetail.addBudget">增加{{projectDetail.addBudget}}元</span>-->
                         </div>
@@ -304,9 +304,9 @@
                                 {{item.date}},{{item.type}}{{Number(item.money)}}（元）,合同文号为{{item.No}}
                             </span>
                             </div>
-                            <span class="info-val plan-years">累计增加金额为：{{totalContractAdd}}（元）</span>
-                            <span class="info-val plan-years">累计减少金额为：{{totalContractCut}}（元）</span>
-                            <span class="info-val plan-years">合同总金额变为：{{totalContractMoney}}（元）</span>
+                            <span class="info-val plan-years" v-if="totalContractAdd!=0">累计增加金额为：{{totalContractAdd}}（元）</span>
+                            <span class="info-val plan-years" v-if="totalContractCut!=0">累计减少金额为：{{totalContractCut}}（元）</span>
+                            <span class="info-val plan-years" v-if="totalContractMoney!=0">合同总金额变为：{{totalContractMoney}}（元）</span>
                         </div>
                     </div>
                 </div>

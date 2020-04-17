@@ -128,11 +128,11 @@
                 <el-table-column show-overflow-tooltip prop="yearsPlanSuggestion" label="安排审核意见">
                     <template slot-scope="scope">{{scope.row.yearsPlanSuggestion|renderStatus}}</template>
                 </el-table-column>
-                <el-table-column label="操作" class="text-c" v-if="user.grade==1">
+                <el-table-column label="操作" class="text-c" v-if="user.grade==1" width="200">
                     <template slot-scope="scope">
-                        <a @click.stop="editBudgetFinishTab($event,scope.row)" v-if="scope.row.stepSevenApp!=1">录入决算</a>
-                        <a @click.stop="editBudgetYearsMoney7($event,scope.row)" v-if="scope.row.projectPlanPeriod&&!scope.row.projectPeriod">录入安排</a>
-                        <a @click.stop="editBudgetAppMoneyTab7($event,scope.row)" v-if="scope.row.projectPeriod">录入拨付</a>
+                        <a @click.stop="editBudgetFinishTab($event,scope.row)">录入决算</a>
+                        <a @click.stop="editBudgetYearsMoney7($event,scope.row)" >录入安排</a>
+                        <a @click.stop="editBudgetAppMoneyTab7($event,scope.row)">录入拨付</a>
                     </template>
                 </el-table-column>
             </el-table>

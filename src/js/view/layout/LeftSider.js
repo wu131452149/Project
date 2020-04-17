@@ -22,7 +22,7 @@ export default {
               let _this = this;
               // 分割跳转到的url
               let key = to.params.pathMatch;
-              _this.activeIndex = key;
+              _this.activeIndex = "/"+key;//这个地方要加斜杆，因为menu的index的值带了斜杆，不然第一次点击不会高亮
           }
         },
       mounted: function() {
@@ -104,6 +104,7 @@ export default {
         },
         handleClose(key, keyPath) {
             let _this = this;
+            _this.activeIndex = "";
             //console.log(key, keyPath);
         }
     }

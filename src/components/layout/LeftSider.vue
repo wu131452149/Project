@@ -16,7 +16,7 @@
                      :collapse="isCollapse" :unique-opened="false" :collapse-transition="true" router>
                 <template v-for="(item,index) in menuData">
                     <template v-if="item.dropdown">
-                        <el-submenu :index="item.id" :id="item.id">
+                        <el-submenu :index="item.id" :id="item.id" :key="item.id">
                             <template slot="title">
                                 <i :class="item.icon"></i>
                                 <span slot="title" class="font14">{{item.name}}</span>

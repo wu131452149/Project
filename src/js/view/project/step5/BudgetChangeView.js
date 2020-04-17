@@ -52,9 +52,9 @@ export default {
             newInstituation:[],
             changeType: Utils.getChangeType(),
             rules: {
-                money: [
-                    {required: true, message: '请输入金额', trigger: 'blur',validator:Utils.validateMoney},
-                ],
+                // money: [
+                //     {message: '请输入金额', trigger: 'blur',validator:Utils.validateMoney},
+                // ],
                 money1: [
                     {required: true, message: '请输入金额', trigger: 'blur',validator:Utils.validateMoney},
                 ],
@@ -320,7 +320,7 @@ export default {
                         var newObj = JSON.stringify(obj);
                         self.projectDetail.addBudget = newObj;
                         editBudgetData.addBudget = newObj;
-                    } else {
+                    } else if (editBudgetData.type == "减少"){
                         //editBudgetData.cutBudget = editBudgetData.money;
                         var obj = self.initObj(self.projectDetail.cutBudget, editBudgetData);
                         var newObj = JSON.stringify(obj);
@@ -334,7 +334,7 @@ export default {
                         var newObj = JSON.stringify(obj);
                         self.projectDetail.addContractBudget = newObj;
                         editBudgetData.addContractBudget = newObj;
-                    } else {
+                    } else if (editBudgetData.type1 == "减少") {
                         //editBudgetData.cutBudget = editBudgetData.money;
                         var obj = self.initObj1(self.projectDetail.cutContractBudget, editBudgetData);
                         var newObj = JSON.stringify(obj);
@@ -428,6 +428,9 @@ export default {
             self.editBudgetChange.approvalChangeNo = "";
             self.editBudgetChange.type = "";
             self.editBudgetChange.money = "";
+            self.editBudgetChange.changeContractNo = "";
+            self.editBudgetChange.type1 = "";
+            self.editBudgetChange.money1 = "";
         },
         saveAPPNo: function () {
             var self = this;

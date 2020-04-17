@@ -51,9 +51,9 @@ export default {
             fileList: [],
             booleanData: [{name: "是", value: 1}, {name: "否", value: 0}],
             rules: {
-                budgetReviewMoney: [
-                    {required: true, message: '请输入预算评审金额', trigger: 'blur',validator: Utils.validateMoney},
-                ],
+                // budgetReviewMoney: [
+                //     {message: '请输入预算评审金额', trigger: 'blur',validator: Utils.validateMoney},
+                // ],
                 contractMoney: [
                     {required: true, message: '请输入预算合同金额', trigger: 'blur',validator: Utils.validateMoney},
                 ],
@@ -271,7 +271,7 @@ export default {
                     editBudgetData.originalStepTwoApp = self.projectDetail.stepTwoApp;
                     //如果是第一次录入的话红点就要+1
                     //第一次录入第2步判断
-                    if(!self.projectDetail.budgetReviewMoney){
+                    if(!self.projectDetail.contractMoney){
                         editBudgetData.isFirstTwoEdit = true;
                     }else{
                         editBudgetData.isFirstTwoEdit = false;
